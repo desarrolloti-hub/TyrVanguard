@@ -1,0 +1,93 @@
+<section class="login-section">
+    <div class="login-container">
+        <!-- Ambient Background -->
+        <div class="login-bg">
+            <img class="bg-texture" src="/public/assets/espada.svg" alt="" loading="lazy" />
+        </div>
+
+        <!-- Login Content -->
+        <div class="login-content">
+            <!-- Brand Header -->
+            <header class="login-header">
+                <div class="logo-ring">
+                    <img src="/public/assets/espada.svg" alt="Espada Vanguard" class="logo-sword" />
+                    <div class="logo-pulse"></div>
+                </div>
+                <h1 class="brand-title">ENTRA EN LA VANGUARDIA</h1>
+                <div class="divider-line">
+                    <div class="divider-diamond"></div>
+                </div>
+            </header>
+
+            <!-- Login Card usando componentes -->
+            <div class="login-card form-card">
+                <div class="form-scanline"></div>
+                <form class="login-form form" id="loginForm">
+                    <!-- Warrior ID -->
+                    <div class="form-group">
+                        <label class="form-label">
+                            <i class="fas fa-user label-icon"></i>
+                            WARRIOR ID
+                            <span class="label-required">*</span>
+                        </label>
+                        <div class="input-icon-wrapper">
+                            <input 
+                                class="form-input" 
+                                placeholder="NOMBRE DE GUERRERO" 
+                                type="text" 
+                                id="warriorId"
+                            />
+                            <i class="fas fa-user input-icon"></i>
+                        </div>
+                    </div>
+
+                    <!-- Access Code -->
+                    <div class="form-group">
+                        <label class="form-label">
+                            <i class="fas fa-shield label-icon"></i>
+                            CÓDIGO DE ACCESO
+                            <span class="label-required">*</span>
+                        </label>
+                        <div class="input-icon-wrapper">
+                            <input 
+                                class="form-input has-right-icon" 
+                                placeholder="••••••••" 
+                                type="password" 
+                                id="passwordInput"
+                            />
+                            <button class="input-toggle" type="button" id="togglePassword">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Submit Action -->
+                    <div class="form-actions">
+                        <button class="btn btn-primary btn-block" type="submit" id="submitBtn">
+                            <span class="btn-text">INICIAR BATALLA</span>
+                            <i class="fas fa-swords btn-icon"></i>
+                        </button>
+                    </div>
+
+                    <!-- Secondary Links -->
+                    <div class="secondary-links">
+                        <a class="link-secondary" href="#">RECUPERAR HONOR</a>
+                        <a class="link-secondary" href="#">NUEVO RECLUTA</a>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Footer Motto -->
+            <footer class="login-footer">
+                <div class="motto-divider">
+                    <i class="fas fa-grip-lines"></i>
+                    <div class="motto-line"></div>
+                    <i class="fas fa-grip-lines"></i>
+                </div>
+                <p class="motto-text">
+                    CADA DÍA UNA <span class="text-primary">BATALLA</span>. CADA DÍA UNA <span class="text-secondary">VICTORIA</span>.
+                </p>
+            </footer>
+        </div>
+    </div>
+</section>

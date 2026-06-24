@@ -1,0 +1,427 @@
+/* ============================================
+   TYR VANGUARD - LOGIN
+   Estilos específicos del login
+   ============================================ */
+
+/* ============================================
+   FIX GLOBAL - Prevenir scroll
+   ============================================ */
+html:has(.login-section),
+body:has(.login-section) {
+    overflow: hidden !important;
+    height: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    left: 0;
+}
+
+/* ============================================
+   LOGIN SECTION - Fondo completo
+   ============================================ */
+.login-section {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--bg-dark);
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+    color: var(--text-primary);
+    font-family: var(--font-family);
+    z-index: 9999;
+}
+
+/* ============================================
+   LOGIN CONTAINER - Centrado y limitado
+   ============================================ */
+.login-container {
+    width: 100%;
+    max-width: 420px;
+    position: relative;
+    z-index: var(--z-content);
+    padding: var(--spacing-md);
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+/* ============================================
+   BACKGROUND EFFECTS
+   ============================================ */
+.login-bg {
+    position: fixed;
+    inset: 0;
+    z-index: var(--z-background);
+    pointer-events: none;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.bg-texture {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.15;
+    mix-blend-mode: overlay;
+}
+
+/* ============================================
+   LOGIN CONTENT - Contenedor del contenido
+   ============================================ */
+.login-content {
+    position: relative;
+    z-index: var(--z-content);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 420px;
+    padding: 0;
+    margin: 0;
+}
+
+/* ============================================
+   BRAND HEADER - Específico del login
+   ============================================ */
+.login-header {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: var(--spacing-lg);
+    animation: fadeIn 0.6s ease-out forwards;
+}
+
+.logo-ring {
+    width: 100px;
+    height: 100px;
+    margin-bottom: var(--spacing-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    border: 1.5px solid var(--border-secondary);
+    border-radius: var(--border-radius-full);
+    flex-shrink: 0;
+    background: rgba(28, 32, 35, 0.3);
+}
+
+.logo-sword {
+    width: 56px;
+    height: 56px;
+    object-fit: contain;
+    filter: drop-shadow(0 0 20px var(--border-glow));
+    transition: all var(--transition-normal);
+    z-index: 2;
+    position: relative;
+    animation: swordFloat 3s ease-in-out infinite;
+}
+
+@keyframes swordFloat {
+    0%, 100% {
+        transform: translateY(0px) rotate(-2deg);
+    }
+    50% {
+        transform: translateY(-6px) rotate(2deg);
+    }
+}
+
+.logo-ring:hover .logo-sword {
+    filter: drop-shadow(0 0 35px rgba(124, 213, 213, 0.6));
+    transform: scale(1.06) rotate(5deg);
+    animation-play-state: paused;
+}
+
+.logo-pulse {
+    position: absolute;
+    inset: -5px;
+    border: 2px solid var(--border-secondary);
+    border-radius: var(--border-radius-full);
+    animation: ping 2.5s ease-out infinite;
+    opacity: 0;
+    pointer-events: none;
+}
+
+@keyframes ping {
+    0% {
+        transform: scale(0.9);
+        opacity: 0.5;
+        border-width: 2px;
+    }
+    50% {
+        opacity: 0.3;
+        border-width: 1.5px;
+    }
+    100% {
+        transform: scale(1.25);
+        opacity: 0;
+        border-width: 0.5px;
+    }
+}
+
+.brand-title {
+    font-size: var(--font-size-lg);
+    font-weight: 600;
+    line-height: 26px;
+    color: var(--color-primary);
+    text-transform: uppercase;
+    letter-spacing: 0.25em;
+    text-align: center;
+    word-break: break-word;
+}
+
+@media (min-width: 768px) {
+    .brand-title {
+        font-size: var(--font-size-xl);
+        line-height: 30px;
+        letter-spacing: 0.3em;
+    }
+}
+
+.divider-line {
+    width: 64px;
+    height: 1px;
+    background-color: var(--text-muted);
+    margin-top: var(--spacing-xs);
+    position: relative;
+    flex-shrink: 0;
+}
+
+.divider-diamond {
+    position: absolute;
+    top: -4px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 8px;
+    height: 8px;
+    background-color: var(--color-secondary);
+    rotate: 45deg;
+}
+
+/* ============================================
+   LOGIN CARD - Override específico del login
+   ============================================ */
+.login-card {
+    max-width: 384px;
+    padding: var(--spacing-md) var(--spacing-lg) var(--spacing-lg);
+    clip-path: polygon(0 0, 100% 0, 100% 92%, 96% 100%, 0 100%);
+    margin: 0 auto;
+}
+
+/* ============================================
+   SECONDARY LINKS - Específico del login
+   ============================================ */
+.secondary-links {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: var(--spacing-xs);
+    width: 100%;
+    flex-wrap: wrap;
+    gap: var(--spacing-xs);
+}
+
+.link-secondary {
+    font-size: var(--font-size-xs);
+    font-weight: 600;
+    line-height: 16px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: color var(--transition-fast);
+    cursor: pointer;
+    padding: var(--spacing-xs) 0;
+}
+
+.link-secondary:hover {
+    color: var(--color-secondary);
+}
+
+/* ============================================
+   FOOTER MOTTO - Específico del login
+   ============================================ */
+.login-footer {
+    margin-top: var(--spacing-md);
+    text-align: center;
+    width: 100%;
+    max-width: 384px;
+}
+
+.motto-divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    color: rgba(224, 227, 230, 0.4);
+    margin-bottom: var(--spacing-xs);
+}
+
+.motto-divider i {
+    font-size: 11px;
+}
+
+.motto-line {
+    height: 1px;
+    width: 24px;
+    background-color: var(--border-tertiary);
+    flex-shrink: 0;
+}
+
+.motto-text {
+    font-size: var(--font-size-xs);
+    font-weight: 600;
+    line-height: 16px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    opacity: 0.6;
+    letter-spacing: 0.12em;
+    word-break: break-word;
+}
+
+.text-primary {
+    color: var(--color-primary);
+}
+
+.text-secondary {
+    color: var(--color-secondary);
+}
+
+/* ============================================
+   ANIMATIONS
+   ============================================ */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-12px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ============================================
+   RESPONSIVE - Solo ajustes específicos del login
+   ============================================ */
+@media (max-width: 480px) {
+    .login-container {
+        padding: 12px;
+        max-width: 100%;
+    }
+
+    .login-content {
+        max-width: 100%;
+        padding: 0;
+    }
+
+    .login-card {
+        padding: var(--spacing-sm) var(--spacing-md) var(--spacing-md);
+        max-width: 100%;
+        width: 100%;
+    }
+
+    .brand-title {
+        font-size: var(--font-size-base);
+        letter-spacing: 0.2em;
+        line-height: 22px;
+    }
+
+    .login-header {
+        margin-bottom: var(--spacing-md);
+    }
+
+    .logo-ring {
+        width: 80px;
+        height: 80px;
+        margin-bottom: var(--spacing-xs);
+    }
+
+    .logo-sword {
+        width: 44px;
+        height: 44px;
+    }
+
+    .secondary-links {
+        flex-direction: column;
+        gap: 4px;
+        align-items: center;
+    }
+
+    .login-footer {
+        margin-top: var(--spacing-sm);
+        max-width: 100%;
+    }
+
+    .motto-text {
+        font-size: var(--font-size-xs);
+        letter-spacing: 0.1em;
+    }
+
+    .divider-line {
+        width: 48px;
+        margin-top: var(--spacing-xs);
+    }
+}
+
+@media (max-width: 380px) {
+    .login-container {
+        padding: 8px;
+    }
+
+    .login-card {
+        padding: var(--spacing-xs) var(--spacing-sm) var(--spacing-sm);
+        width: 100%;
+    }
+
+    .brand-title {
+        font-size: var(--font-size-xs);
+        letter-spacing: 0.12em;
+        line-height: 18px;
+    }
+
+    .logo-ring {
+        width: 68px;
+        height: 68px;
+        margin-bottom: var(--spacing-xs);
+    }
+
+    .logo-sword {
+        width: 38px;
+        height: 38px;
+    }
+
+    .motto-text {
+        font-size: var(--font-size-xs);
+        letter-spacing: 0.08em;
+    }
+
+    .login-footer {
+        margin-top: var(--spacing-xs);
+    }
+
+    .divider-line {
+        width: 40px;
+        margin-top: var(--spacing-xs);
+    }
+
+    .divider-diamond {
+        width: 5px;
+        height: 5px;
+        top: -2.5px;
+    }
+}

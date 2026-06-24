@@ -1,0 +1,486 @@
+/* ============================================
+   TYR VANGUARD - FORMS COMPONENT
+   ============================================ */
+
+/* ============================================
+   FORM CONTAINER
+   ============================================ */
+.form {
+    width: 100%;
+    max-width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+.form-card {
+    background: var(--bg-card);
+    padding: var(--spacing-xl) var(--spacing-xl); /* Más padding */
+    border-left: 2px solid var(--color-secondary);
+    clip-path: polygon(0 0, 100% 0, 100% 94%, 98% 100%, 0 100%);
+    position: relative;
+    overflow: hidden;
+    max-width: 520px; /* ← NUEVO: Ancho máximo del componente */
+    width: 100%;
+    margin: 0 auto;
+}
+
+/* ============================================
+   FORM GROUP
+   ============================================ */
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+    width: 100%;
+}
+
+.form-group-inline {
+    flex-direction: row;
+    align-items: center;
+    gap: var(--spacing-md);
+}
+
+.form-group-inline .form-label {
+    min-width: 120px;
+    margin-bottom: 0;
+}
+
+/* ============================================
+   FORM LABEL
+   ============================================ */
+.form-label {
+    font-size: var(--font-size-sm); /* Un poco más grande */
+    font-weight: 600;
+    line-height: 1.4;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+}
+
+.form-label .label-icon {
+    font-size: 16px; /* Más grande */
+    width: 20px; /* Más ancho */
+    text-align: center;
+    color: var(--color-secondary);
+}
+
+.form-label .label-required {
+    color: var(--color-secondary);
+    margin-left: 2px;
+}
+
+/* ============================================
+   FORM INPUTS - Más grandes
+   ============================================ */
+.form-input,
+.form-textarea,
+.form-select {
+    width: 100%;
+    padding: 14px 18px; /* Más padding */
+    background: var(--bg-input);
+    border: 1px solid var(--border-primary);
+    font-family: var(--font-family);
+    font-size: var(--font-size-base); /* Texto más grande */
+    font-weight: 400;
+    line-height: 1.5;
+    color: var(--text-secondary);
+    transition: all var(--transition-fast);
+    box-sizing: border-box;
+    min-width: 0;
+    appearance: none;
+    -webkit-appearance: none;
+}
+
+.form-input::placeholder,
+.form-textarea::placeholder {
+    color: rgba(140, 145, 150, 0.4);
+    font-size: var(--font-size-sm);
+}
+
+.form-input:focus,
+.form-textarea:focus,
+.form-select:focus {
+    border-color: var(--color-secondary);
+    box-shadow: 0 0 10px var(--border-glow);
+    outline: none;
+}
+
+.form-input:hover:not(:focus),
+.form-textarea:hover:not(:focus),
+.form-select:hover:not(:focus) {
+    border-color: rgba(124, 213, 213, 0.5);
+}
+
+.form-input:disabled,
+.form-textarea:disabled,
+.form-select:disabled {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+/* ============================================
+   FORM TEXTAREA
+   ============================================ */
+.form-textarea {
+    resize: vertical;
+    min-height: 100px; /* Más alto */
+    max-height: 300px;
+}
+
+.form-textarea-sm {
+    min-height: 80px;
+}
+
+.form-textarea-lg {
+    min-height: 140px;
+}
+
+/* ============================================
+   FORM SELECT
+   ============================================ */
+.form-select {
+    cursor: pointer;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238c9196' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    padding-right: 40px;
+}
+
+.form-select option {
+    background: var(--bg-surface-container);
+    color: var(--text-primary);
+}
+
+.form-select:focus {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 7l5-5 5 5' stroke='%237cd5d5' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+}
+
+/* ============================================
+   INPUT WITH ICON
+   ============================================ */
+.input-icon-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.input-icon-wrapper .form-input,
+.input-icon-wrapper .form-textarea {
+    padding-left: 48px; /* Más espacio para el icono */
+}
+
+.input-icon-wrapper .input-icon {
+    position: absolute;
+    left: 16px; /* Más separado */
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+    font-size: 18px; /* Icono más grande */
+    pointer-events: none;
+    transition: color var(--transition-fast);
+}
+
+.input-icon-wrapper .form-input:focus + .input-icon,
+.input-icon-wrapper .form-input:focus ~ .input-icon {
+    color: var(--color-secondary);
+}
+
+/* Icono a la derecha */
+.input-icon-wrapper .input-icon-right {
+    left: auto;
+    right: 14px;
+}
+
+.input-icon-wrapper .form-input.has-right-icon {
+    padding-left: 18px;
+    padding-right: 48px;
+}
+
+/* ============================================
+   INPUT WITH TOGGLE (Password)
+   ============================================ */
+.input-toggle {
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    padding: var(--spacing-xs);
+    font-size: 18px; /* Más grande */
+    transition: color var(--transition-fast);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.input-toggle:hover {
+    color: var(--color-secondary);
+}
+
+.input-toggle i {
+    font-size: 18px;
+}
+
+/* ============================================
+   INPUT STATES
+   ============================================ */
+
+/* Error */
+.form-input.error,
+.form-textarea.error,
+.form-select.error {
+    border-color: #ef4444;
+    box-shadow: 0 0 10px rgba(239, 68, 68, 0.15);
+}
+
+.form-input.error:focus,
+.form-textarea.error:focus,
+.form-select.error:focus {
+    box-shadow: 0 0 15px rgba(239, 68, 68, 0.25);
+}
+
+.form-error {
+    font-size: var(--font-size-sm);
+    color: #ef4444;
+    margin-top: var(--spacing-xs);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+}
+
+.form-error i {
+    font-size: 14px;
+}
+
+/* Success */
+.form-input.success,
+.form-textarea.success,
+.form-select.success {
+    border-color: #22c55e;
+    box-shadow: 0 0 10px rgba(34, 197, 94, 0.15);
+}
+
+.form-success {
+    font-size: var(--font-size-sm);
+    color: #22c55e;
+    margin-top: var(--spacing-xs);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+}
+
+/* ============================================
+   FORM HELP TEXT
+   ============================================ */
+.form-help {
+    font-size: var(--font-size-sm);
+    color: var(--text-muted);
+    margin-top: var(--spacing-xs);
+    line-height: 1.4;
+}
+
+/* ============================================
+   FORM ROW (Grid)
+   ============================================ */
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-md);
+}
+
+.form-row-3 {
+    grid-template-columns: 1fr 1fr 1fr;
+}
+
+/* ============================================
+   CHECKBOX & RADIO
+   ============================================ */
+.form-check {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--spacing-sm);
+    cursor: pointer;
+    padding: var(--spacing-xs) 0;
+}
+
+.form-check-input {
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    margin-top: 2px;
+    cursor: pointer;
+    accent-color: var(--color-secondary);
+}
+
+.form-check-label {
+    font-size: var(--font-size-base);
+    color: var(--text-secondary);
+    cursor: pointer;
+    line-height: 1.4;
+}
+
+.form-check-label a {
+    color: var(--color-secondary);
+    text-decoration: underline;
+}
+
+.form-check-label a:hover {
+    color: var(--color-secondary-light);
+}
+
+/* ============================================
+   FORM ACTIONS
+   ============================================ */
+.form-actions {
+    display: flex;
+    gap: var(--spacing-md);
+    margin-top: var(--spacing-md);
+    padding-top: var(--spacing-sm);
+}
+
+.form-actions-center {
+    justify-content: center;
+}
+
+.form-actions-end {
+    justify-content: flex-end;
+}
+
+.form-actions-stack {
+    flex-direction: column;
+}
+
+.form-actions .btn {
+    flex: 1;
+}
+
+/* ============================================
+   SCANLINE EFFECT
+   ============================================ */
+.form-scanline {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, transparent, rgba(124, 213, 213, 0.04), transparent);
+    height: 80px; /* Más alto */
+    width: 100%;
+    transform: translateY(-100%);
+    pointer-events: none;
+    animation: scanlinePulse 4s infinite ease-in-out;
+}
+
+@keyframes scanlinePulse {
+    0%, 100% {
+        opacity: 0.2;
+        transform: translateY(-100%);
+    }
+    50% {
+        opacity: 0.4;
+        transform: translateY(200%);
+    }
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 768px) {
+    .form-card {
+        padding: var(--spacing-lg) var(--spacing-md);
+        max-width: 100%;
+    }
+
+    .form-row {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-sm);
+    }
+
+    .form-row-3 {
+        grid-template-columns: 1fr;
+    }
+
+    .form-group-inline {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .form-group-inline .form-label {
+        min-width: auto;
+        margin-bottom: var(--spacing-xs);
+    }
+
+    .form-actions {
+        flex-direction: column;
+    }
+
+    .form-actions .btn {
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .form-card {
+        padding: var(--spacing-md) var(--spacing-sm);
+        clip-path: polygon(0 0, 100% 0, 100% 96%, 96% 100%, 0 100%);
+        max-width: 100%;
+    }
+
+    .form-input,
+    .form-textarea,
+    .form-select {
+        padding: 12px 14px;
+        font-size: var(--font-size-sm);
+    }
+
+    .form-label {
+        font-size: var(--font-size-xs);
+    }
+
+    .input-icon-wrapper .form-input,
+    .input-icon-wrapper .form-textarea {
+        padding-left: 40px;
+    }
+
+    .input-icon-wrapper .input-icon {
+        left: 12px;
+        font-size: 16px;
+    }
+
+    .form-check-label {
+        font-size: var(--font-size-sm);
+    }
+
+    .form-actions {
+        gap: var(--spacing-xs);
+    }
+
+    .form-textarea {
+        min-height: 80px;
+    }
+}
+
+/* ============================================
+   DARK THEME SPECIFIC
+   ============================================ */
+.dark .form-input,
+.dark .form-textarea,
+.dark .form-select {
+    color-scheme: dark;
+}
+
+/* ============================================
+   UTILITY - HIDE NUMBER ARROWS
+   ============================================ */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type="number"] {
+    -moz-appearance: textfield;
+}

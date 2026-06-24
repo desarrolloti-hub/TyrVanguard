@@ -1,0 +1,25 @@
+/* ========================================
+   MAIN CSS - RSI Enterprise
+   Punto de entrada de todos los estilos
+   ======================================== */
+
+/* base */
+@import url('./base/reset.css');
+@import url('./base/typography.css');
+@import url('./base/variables.css');
+
+/* components */
+@import url('./components/buttons.css');
+@import url('./components/forms.css');
+
+
+/* visitante */
+
+
+/* login */
+@import url('./pages/visitor/login/login.css');
+
+/* createAccount */
+@import url('./pages/visitor/createAccount/createAccount.css');
+
+

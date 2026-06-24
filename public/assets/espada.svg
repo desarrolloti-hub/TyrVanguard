@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 24.0.2, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 1920 1080" style="enable-background:new 0 0 1920 1080;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:#4FC3F7;stroke:#4FC3F7;stroke-width:1.35;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:5.4;}
+	.st1{fill:none;stroke:#4FC3F7;stroke-width:8.1;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:5.4;}
+	.st2{fill:#FFFFFF;stroke:#000000;stroke-miterlimit:10;}
+	.st3{fill:#FFFFFF;stroke:#010003;stroke-miterlimit:10;}
+</style>
+<g>
+	<polygon class="st0" points="703.5,513 710.3,522.5 703.5,531.9 696.8,522.5 	"/>
+	<polyline class="st1" points="690,553.5 703.5,567 717,553.5 	"/>
+	<path class="st1" d="M690,594v54 M717,594v54 M690,594l27,54 M717,594l-27,54"/>
+	<path class="st1" d="M696.8,675v60.8 M696.8,675l20.3,16.2l-20.3,17.5l20.3,27"/>
+	<polygon class="st0" points="703.5,762.8 710.3,772.2 703.5,781.7 696.8,772.2 	"/>
+	<polygon class="st0" points="1216.5,513 1223.3,522.5 1216.5,531.9 1209.8,522.5 	"/>
+	<path class="st1" d="M1209.8,560.3V621 M1209.8,560.3l20.3,16.2l-20.3,17.5l20.3,27"/>
+	<path class="st1" d="M1209.8,654.8v60.8 M1209.8,654.8L1230,671l-20.3,17.5l20.3,27"/>
+	<polygon class="st0" points="1216.5,742.5 1223.3,752 1216.5,761.4 1209.8,752 	"/>
+</g>
+<path class="st2" d="M944.3,1036l-53-203l-1-346c0,0-1.5-15.5-17.5-19.5l-59-24c0,0,8-12-7-4l-51-22l11,85l-48-62l-35-63l-41-71h4
+	l297,124L944.3,1036z"/>
+<path class="st2" d="M973.8,959.5l-2,76h2l53-203v-32l-16,12l6-18l9-2l1-302c0,0,1-16,19-23l115-49l-10,85l2,1l44-60l35-71v-9h7
+	l36-58l-300,126l-1,400l6,4l-7,6l1,36l2,4l-3,3l-1,65h8L973.8,959.5z"/>
+<polygon class="st2" points="958.8,407.5 927.8,385.5 920.8,385.5 920.8,263.5 929.8,249.5 939.8,221.5 939.8,216.5 860.8,267.5 
+	958.8,41.5 "/>
+<polygon class="st3" points="969.8,396.5 969.8,353.5 973.8,352.5 973.8,344.5 965.8,339.5 966.8,243.5 969.8,243.5 975.8,246.5 
+	979.8,246.5 971.8,224.5 972.8,179.5 967.8,172.5 965.8,129.5 969.8,118.5 969.8,97.5 971.8,94.5 971.8,81.5 968.8,73.5 971.8,72.5 
+	974.8,72.5 1060.8,266.5 977.8,215.5 977.8,219.5 991.8,253.5 992.8,258.5 997.8,263.5 998.8,385.5 "/>
+</svg>

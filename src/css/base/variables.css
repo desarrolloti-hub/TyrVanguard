@@ -1,0 +1,150 @@
+/* ============================================
+   TYR VANGUARD - VARIABLES
+   ============================================ */
+
+:root {
+    /* ==========================================
+       COLORES PRINCIPALES - TYR VANGUARD
+       ========================================== */
+    
+    /* Negro Base */
+    --color-black: #00121d;
+    --color-black-light: #0a1a2a;
+    
+    /* Azules Oscuros (Vanguardia) */
+    --color-dark: #0a1628;
+    --color-dark-medium: #10203a;
+    --color-dark-light: #1a2f4a;
+    
+    /* Azul Principal */
+    --color-primary: #aecae2;
+    --color-primary-dark: #7da5c9;
+    --color-primary-light: #c5dced;
+    --color-primary-extralight: #e0edf7;
+    
+    /* Secundario (Verde/Cian Épico) */
+    --color-secondary: #7cd5d5;
+    --color-secondary-dark: #4db8b8;
+    --color-secondary-light: #a8e8e8;
+    
+    /* Terciario (Para detalles) */
+    --color-tertiary: #8fb5d4;
+    --color-tertiary-container: #043c51;
+    
+    /* ==========================================
+       COLORES DE SUPERFICIE
+       ========================================== */
+    --bg-dark: #00121d;
+    --bg-surface: #101416;
+    --bg-surface-container: #1c2023;
+    --bg-surface-container-high: #272a2d;
+    --bg-card: rgba(28, 32, 35, 0.85);
+    --bg-input: rgba(28, 32, 35, 0.4);
+    
+    /* ==========================================
+       COLORES DE TEXTO
+       ========================================== */
+    --text-primary: #e0e3e6;
+    --text-secondary: #c2c7cc;
+    --text-muted: #8c9196;
+    --text-inverse: #003737;
+    --text-dark: #1f2a44;
+    
+    /* ==========================================
+       COLORES DE BORDE
+       ========================================== */
+    --border-primary: rgba(124, 213, 213, 0.3);
+    --border-secondary: rgba(124, 213, 213, 0.2);
+    --border-tertiary: rgba(66, 71, 76, 0.2);
+    --border-glow: rgba(124, 213, 213, 0.15);
+    
+    /* ==========================================
+       SOMBRAS
+       ========================================== */
+    --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.4);
+    --shadow-lg: 0 15px 40px rgba(0, 0, 0, 0.5);
+    --shadow-primary: 0 0 20px 2px rgba(124, 213, 213, 0.2);
+    --shadow-glow: 0 0 30px rgba(124, 213, 213, 0.15);
+    
+    /* ==========================================
+       TIPOGRAFÍA
+       ========================================== */
+    --font-family: 'Rajdhani', 'Inter', sans-serif;
+    --font-size-xs: 0.70rem;
+    --font-size-sm: 0.85rem;
+    --font-size-base: 1rem;
+    --font-size-lg: 1.1rem;
+    --font-size-xl: 1.25rem;
+    --font-size-1xl: 1.5rem;
+    --font-size-2xl: 2rem;
+    --font-size-3xl: 2.5rem;
+    --font-size-4xl: 3.2rem;
+    --font-size-5xl: 4rem;
+    
+    /* ==========================================
+       ESPACIADO
+       ========================================== */
+    --spacing-xs: 0.5rem;
+    --spacing-sm: 0.8rem;
+    --spacing-md: 1rem;
+    --spacing-lg: 1.5rem;
+    --spacing-xl: 2rem;
+    --spacing-2xl: 3rem;
+    --spacing-3xl: 4rem;
+    --spacing-4xl: 6rem;
+    
+    /* ==========================================
+       BORDES
+       ========================================== */
+    --border-radius-sm: 6px;
+    --border-radius-md: 10px;
+    --border-radius-lg: 14px;
+    --border-radius-xl: 20px;
+    --border-radius-full: 9999px;
+    
+    /* ==========================================
+       TRANSICIONES
+       ========================================== */
+    --transition-fast: 0.2s ease;
+    --transition-normal: 0.3s ease;
+    --transition-slow: 0.5s ease;
+    --transition-bounce: 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    
+    /* ==========================================
+       Z-INDEX
+       ========================================== */
+    --z-background: 0;
+    --z-content: 10;
+    --z-overlay: 50;
+    --z-modal: 100;
+    --z-toast: 200;
+}
+
+/* ============================================
+   TYR VANGUARD - TEMA OSCURO POR DEFECTO
+   ============================================ */
+.dark {
+    color-scheme: dark;
+}
+
+/* ============================================
+   SCROLLBAR PERSONALIZADA
+   ============================================ */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--bg-dark);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--color-secondary);
+    border-radius: var(--border-radius-full);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--color-secondary-dark);
+}

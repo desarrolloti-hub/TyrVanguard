@@ -1,0 +1,285 @@
+/* ============================================
+   TYR VANGUARD - TYPOGRAPHY
+   ============================================ */
+
+/* ==========================================
+   ENCABEZADOS
+   ========================================== */
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 700;
+    line-height: 1.2;
+    color: var(--text-primary);
+    letter-spacing: -0.02em;
+}
+
+h1 {
+    font-size: var(--font-size-4xl);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+}
+
+h2 {
+    font-size: var(--font-size-3xl);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: var(--spacing-md);
+}
+
+h3 {
+    font-size: var(--font-size-2xl);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+}
+
+h4 {
+    font-size: var(--font-size-xl);
+    font-weight: 600;
+}
+
+h5 {
+    font-size: var(--font-size-lg);
+    font-weight: 600;
+}
+
+h6 {
+    font-size: var(--font-size-base);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* ==========================================
+   PÁRRAFOS Y TEXTO
+   ========================================== */
+p {
+    font-size: var(--font-size-base);
+    line-height: 1.7;
+    color: var(--text-secondary);
+    margin-bottom: var(--spacing-md);
+}
+
+.text-primary {
+    color: var(--text-primary);
+}
+
+.text-secondary {
+    color: var(--text-secondary);
+}
+
+.text-muted {
+    color: var(--text-muted);
+}
+
+.text-inverse {
+    color: var(--text-inverse);
+}
+
+/* ==========================================
+   ENLACES
+   ========================================== */
+.link {
+    color: var(--color-secondary);
+    text-decoration: none;
+    transition: color var(--transition-fast);
+    position: relative;
+}
+
+.link:hover {
+    color: var(--color-secondary-light);
+}
+
+.link-underline {
+    color: var(--color-secondary);
+    text-decoration: none;
+    position: relative;
+    transition: color var(--transition-fast);
+}
+
+.link-underline::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--color-secondary);
+    transition: width var(--transition-normal);
+}
+
+.link-underline:hover {
+    color: var(--color-secondary-light);
+}
+
+.link-underline:hover::after {
+    width: 100%;
+}
+
+/* ==========================================
+   TEXTOS ESPECIALES
+   ========================================== */
+.text-uppercase {
+    text-transform: uppercase;
+}
+
+.text-capitalize {
+    text-transform: capitalize;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.text-left {
+    text-align: left;
+}
+
+.text-right {
+    text-align: right;
+}
+
+.text-justify {
+    text-align: justify;
+}
+
+/* ==========================================
+   LETTER SPACING
+   ========================================== */
+.tracking-tight {
+    letter-spacing: -0.02em;
+}
+
+.tracking-normal {
+    letter-spacing: 0;
+}
+
+.tracking-wide {
+    letter-spacing: 0.05em;
+}
+
+.tracking-wider {
+    letter-spacing: 0.1em;
+}
+
+.tracking-widest {
+    letter-spacing: 0.2em;
+}
+
+.tracking-vanguard {
+    letter-spacing: 0.3em;
+}
+
+/* ==========================================
+   FONT WEIGHTS
+   ========================================== */
+.font-light {
+    font-weight: 300;
+}
+
+.font-normal {
+    font-weight: 400;
+}
+
+.font-medium {
+    font-weight: 500;
+}
+
+.font-semibold {
+    font-weight: 600;
+}
+
+.font-bold {
+    font-weight: 700;
+}
+
+.font-extrabold {
+    font-weight: 800;
+}
+
+/* ==========================================
+   TEXTO DESTACADO (TYR VANGUARD STYLE)
+   ========================================== */
+.text-vanguard {
+    font-size: var(--font-size-2xl);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.3em;
+    color: var(--color-primary);
+}
+
+.text-vanguard-secondary {
+    font-size: var(--font-size-xl);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: var(--color-secondary);
+}
+
+/* ==========================================
+   HIGHLIGHT (para texto resaltado)
+   ========================================== */
+.highlight {
+    color: var(--color-secondary);
+    position: relative;
+}
+
+.highlight-primary {
+    color: var(--color-primary);
+}
+
+.highlight-secondary {
+    color: var(--color-secondary);
+}
+
+/* ==========================================
+   RESPONSIVE TYPOGRAPHY
+   ========================================== */
+@media (max-width: 768px) {
+    h1 {
+        font-size: var(--font-size-3xl);
+    }
+    
+    h2 {
+        font-size: var(--font-size-2xl);
+    }
+    
+    h3 {
+        font-size: var(--font-size-xl);
+    }
+    
+    .text-vanguard {
+        font-size: var(--font-size-xl);
+        letter-spacing: 0.2em;
+    }
+}
+
+@media (max-width: 480px) {
+    h1 {
+        font-size: var(--font-size-2xl);
+    }
+    
+    h2 {
+        font-size: var(--font-size-xl);
+    }
+    
+    h3 {
+        font-size: var(--font-size-lg);
+    }
+    
+    p {
+        font-size: var(--font-size-sm);
+    }
+    
+    .text-vanguard {
+        font-size: var(--font-size-lg);
+        letter-spacing: 0.15em;
+    }
+    
+    .text-vanguard-secondary {
+        font-size: var(--font-size-base);
+        letter-spacing: 0.15em;
+    }
+    
+    .tracking-vanguard {
+        letter-spacing: 0.15em;
+    }
+}
