@@ -5,7 +5,7 @@
 export async function createAccountController() {
     console.log('⚔️ Register controller inicializado');
 
-
+    // ❌ ELIMINADO: No había bloqueo de scroll aquí, pero lo dejamos limpio
 
     initInputEffects();
     initTogglePassword();

@@ -13,7 +13,7 @@ export const routes = {
     },
 
     // login
-        "/inicioSesion": {
+        "/iniciarSesion": {
         view: "/modules/visitor/login/login.html",
         controller: loginController,
     },

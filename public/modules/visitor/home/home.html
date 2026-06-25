@@ -1,11 +1,110 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <h1>hola mundo</h1>
-</body>
-</html>
+<section class="home-section">
+    <div class="home-container">
+        <!-- Hero / Header -->
+        <header class="home-hero">
+            <div class="hero-content">
+                <div class="hero-badge">
+                    <i class="fas fa-shield-halved"></i>
+                    TYR VANGUARD
+                </div>
+                <h1 class="hero-title">CADA DÍA UNA <span class="text-secondary">BATALLA</span></h1>
+                <h2 class="hero-subtitle">CADA DÍA UNA <span class="text-primary">VICTORIA</span></h2>
+                <p class="hero-description">
+                    Tyr Vanguard es tu aliado en la lucha contra la adicción. 
+                    Fortalece tu disciplina, registra tus victorias y construye 
+                    una vida libre con cada amanecer.
+                </p>
+                <button class="btn btn-primary btn-lg hero-btn" id="firstVictoryBtn">
+                    <i class="fas fa-sword btn-icon-left"></i>
+                    REGISTRAR MI PRIMERA VICTORIA
+                    <i class="fas fa-arrow-right btn-icon"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- Dashboard / Bitácora de Batalla -->
+        <section class="dashboard-section">
+            <div class="section-header">
+                <i class="fas fa-scroll section-icon"></i>
+                <h2 class="section-title">BITÁCORA DE BATALLA</h2>
+                <div class="section-divider"></div>
+            </div>
+
+            <!-- Panel del Guerrero -->
+            <div class="dashboard-grid">
+                <!-- Racha Actual -->
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-fire"></i>
+                    </div>
+                    <div class="stat-info">
+                        <span class="stat-label">RACHA ACTUAL</span>
+                        <span class="stat-value">7</span>
+                    </div>
+                </div>
+
+                <!-- Victorias Totales -->
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-trophy"></i>
+                    </div>
+                    <div class="stat-info">
+                        <span class="stat-label">VICTORIAS TOTALES</span>
+                        <span class="stat-value">0</span>
+                    </div>
+                </div>
+
+                <!-- Nivel Mental -->
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <div class="stat-info">
+                        <span class="stat-label">NIVEL MENTAL</span>
+                        <span class="stat-value">0/4</span>
+                    </div>
+                </div>
+
+                <!-- Objetivos Semanales -->
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-bullseye"></i>
+                    </div>
+                    <div class="stat-info">
+                        <span class="stat-label">OBJETIVOS SEMANALES</span>
+                        <span class="stat-value">0/4</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Progreso hacia la leyenda -->
+            <div class="progress-section">
+                <div class="progress-header">
+                    <span class="progress-title">
+                        <i class="fas fa-chess-queen"></i>
+                        PROGRESO HACIA LA LEYENDA
+                    </span>
+                    <span class="progress-percentage">0%</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 0%;"></div>
+                </div>
+            </div>
+
+            <!-- Pendiente / Siguiente misión -->
+            <div class="pending-section">
+                <div class="pending-content">
+                    <i class="fas fa-clock pending-icon"></i>
+                    <div class="pending-info">
+                        <span class="pending-label">PENDIENTE</span>
+                        <span class="pending-text">Registra tu primera victoria para comenzar tu leyenda</span>
+                    </div>
+                    <button class="btn btn-secondary btn-sm pending-btn">
+                        <i class="fas fa-plus"></i>
+                        AGREGAR
+                    </button>
+                </div>
+            </div>
+        </section>
+    </div>
+</section>

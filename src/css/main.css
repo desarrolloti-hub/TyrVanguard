@@ -15,6 +15,14 @@
 
 /* visitante */
 
+/* navbar */
+@import url('./components/visitor/navbar.css');
+
+/*footer */
+@import url('./components/visitor/footer.css');
+
+/* home */
+@import url('./pages/visitor/home/home.css');
 
 /* login */
 @import url('./pages/visitor/login/login.css');

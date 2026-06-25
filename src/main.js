@@ -1,7 +1,7 @@
 
 import { loadLayout } from './modules/shared/loadLayout/loadLayout.js';
-import { nabarController } from './modules/visitor/layout/navbarController.js';
-import { footerController } from './modules/visitor/layout/footerController.js';
+import { initNavbarController } from './modules/visitor/layout/navbarController.js';
+import { initFooterController } from './modules/visitor/layout/footerController.js';
 import { initRouter } from './router/router.js';
 
 function loadExternalScripts() {
@@ -56,8 +56,8 @@ async function initApp() {
         await loadLayout();
         
         // 2. Inicializar controllers de layout
-        await nabarController();
-        await footerController();
+        await initNavbarController();
+        await initFooterController();
         
         // 3. Inicializar router
         initRouter();

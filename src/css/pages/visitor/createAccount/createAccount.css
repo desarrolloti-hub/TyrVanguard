@@ -7,16 +7,15 @@
    REGISTER SECTION - Fondo completo
    ============================================ */
 .register-section {
-    min-height: 100vh;
-    width: 100vw;
+    flex: 1;
+    width: 100%;
+    min-height: calc(100vh - 68px - 350px); /* Ajusta dinámicamente */
     display: flex;
     align-items: center;
     justify-content: center;
     background-color: var(--bg-dark);
     padding: 20px;
     margin: 0;
-    overflow-y: auto; /* ← PERMITE SCROLL VERTICAL */
-    overflow-x: hidden;
     color: var(--text-primary);
     font-family: var(--font-family);
     position: relative;
@@ -53,7 +52,7 @@
 
 .bg-texture {
     position: absolute;
-    inset: 0;
+  
     width: 100%;
     height: 100%;
     object-fit: cover;
