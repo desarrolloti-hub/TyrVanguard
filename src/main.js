@@ -1,7 +1,4 @@
-
 import { loadLayout } from './modules/shared/loadLayout/loadLayout.js';
-import { initNavbarController } from './modules/visitor/layout/navbarController.js';
-import { initFooterController } from './modules/visitor/layout/footerController.js';
 import { initRouter } from './router/router.js';
 
 function loadExternalScripts() {
@@ -49,20 +46,18 @@ function loadExternalScripts() {
  */
 async function initApp() {
     try {
-        // Cargar scripts externos
+        // 1. Cargar scripts externos
         await loadExternalScripts();
         
-        // 1. Cargar layouts persistentes
-        await loadLayout();
+        // 2. Cargar layouts (esto ahora decide automáticamente según el rol)
+        const layoutResult = await loadLayout();
+        console.log('📐 Layout cargado:', layoutResult);
         
-        // 2. Inicializar controllers de layout
-        await initNavbarController();
-        await initFooterController();
-        
-        // 3. Inicializar router
+        // 3. Inicializar router (el router usará el layout para decidir la home)
         initRouter();
         
         console.log('✅ Aplicación inicializada correctamente');
+        
     } catch (error) {
         console.error('❌ Error inicializando aplicación:', error);
     }

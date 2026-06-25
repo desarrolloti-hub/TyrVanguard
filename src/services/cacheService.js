@@ -1,12 +1,14 @@
 /* ========================================
    CACHE SERVICE - IndexedDB cache management
+   Supports both Users and Admins
    ======================================== */
 
 const DB_NAME = 'App_Cache';
-const DB_VERSION = 1;
+const DB_VERSION = 2; // ✅ Updated version for new stores
 
 export const STORES = {
     USERS: 'users',
+    ADMINS: 'admins',
     // Add more stores as needed
 };
 
@@ -35,10 +37,16 @@ async function initDB() {
         request.onupgradeneeded = (event) => {
             const database = event.target.result;
 
-            // Create all required object stores
+            // Create Users store
             if (!database.objectStoreNames.contains(STORES.USERS)) {
                 database.createObjectStore(STORES.USERS, { keyPath: 'id' });
                 console.log('📦 Store created:', STORES.USERS);
+            }
+
+            // Create Admins store
+            if (!database.objectStoreNames.contains(STORES.ADMINS)) {
+                database.createObjectStore(STORES.ADMINS, { keyPath: 'id' });
+                console.log('📦 Store created:', STORES.ADMINS);
             }
         };
     });
@@ -109,7 +117,7 @@ export async function clearCache(storeName) {
         const database = await initDB();
 
         if (!database.objectStoreNames.contains(storeName)) {
-            console.warn(`⚠️ Store "${storeName}" does not exist`);
+            console.warn(`⚠️ Store "${storeName}" does not exist, cannot clear`);
             return false;
         }
 
@@ -152,10 +160,20 @@ export async function clearAllCache() {
     }
 }
 
+export async function clearUserCache() {
+    return await clearCache(STORES.USERS);
+}
+
+export async function clearAdminCache() {
+    return await clearCache(STORES.ADMINS);
+}
+
 export const CacheService = {
     setCache,
     getCache,
     clearCache,
     clearAllCache,
+    clearUserCache,
+    clearAdminCache,
     STORES
 };

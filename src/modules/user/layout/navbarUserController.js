@@ -5,10 +5,11 @@
 
 // Estado privado
 let state = {
-    isInitialized: false,
+    isMenuOpen: false,
     isScrolled: false,
     notificationCount: 3,
-    isDropdownOpen: false
+    isDropdownOpen: false,
+    isInitialized: false
 };
 
 // Elementos DOM cacheados
@@ -32,7 +33,6 @@ export function initNavbarUserController() {
         }
 
         bindEvents();
-        handleScroll();
         loadUserAvatar();
 
         state.isInitialized = true;
@@ -46,6 +46,7 @@ export function initNavbarUserController() {
         setAvatar,
         getState,
         reinitialize,
+        closeMenu,
         closeDropdown
     };
 }
@@ -58,7 +59,7 @@ function waitForNavbar(maxAttempts = 30, interval = 100) {
         let attempts = 0;
 
         const checkNavbar = () => {
-            const navbar = document.getElementById('topNav');
+            const navbar = document.getElementById('navbarUser');
 
             if (navbar) {
                 console.log('✅ Navbar User encontrado en el DOM');
@@ -82,12 +83,17 @@ function waitForNavbar(maxAttempts = 30, interval = 100) {
  */
 function cacheElements() {
     elements = {
-        navbar: document.getElementById('topNav'),
-        notifBtn: document.getElementById('notifBtn'),
-        notifBadge: document.getElementById('notifBadge'),
-        settingsBtn: document.getElementById('settingsBtn'),
-        avatarBtn: document.getElementById('avatarBtn'),
-        avatarImg: document.getElementById('avatarImg'),
+        navbar: document.getElementById('navbarUser'),
+        menuToggle: document.getElementById('menuToggleUser'),
+        navActions: document.getElementById('navActionsUser'),
+        notifBtn: document.getElementById('notifBtnUser'),
+        notifBadge: document.getElementById('notifBadgeUser'),
+        settingsBtn: document.getElementById('settingsBtnUser'),
+        avatarBtn: document.getElementById('avatarBtnUser'),
+        avatarImg: document.getElementById('avatarImgUser'),
+        avatarWrapper: document.getElementById('avatarWrapper'),
+        profileDropdown: document.getElementById('profileDropdown'),
+        logoutBtn: document.getElementById('logoutBtnUser'),
         body: document.body
     };
 }
@@ -96,7 +102,17 @@ function cacheElements() {
  * Vincula eventos del DOM
  */
 function bindEvents() {
-    // Scroll - efecto de cambio de color
+    // Menú móvil
+    if (elements.menuToggle && elements.navActions) {
+        const newToggle = elements.menuToggle.cloneNode(true);
+        if (elements.menuToggle.parentNode) {
+            elements.menuToggle.parentNode.replaceChild(newToggle, elements.menuToggle);
+            elements.menuToggle = newToggle;
+        }
+        elements.menuToggle.addEventListener('click', toggleMenu);
+    }
+
+    // Scroll
     window.addEventListener('scroll', handleScroll, { passive: true });
 
     // Notificaciones
@@ -105,7 +121,7 @@ function bindEvents() {
         if (elements.notifBtn.parentNode) {
             elements.notifBtn.parentNode.replaceChild(newNotifBtn, elements.notifBtn);
             elements.notifBtn = newNotifBtn;
-            elements.notifBadge = newNotifBtn.querySelector('#notifBadge');
+            elements.notifBadge = newNotifBtn.querySelector('#notifBadgeUser');
         }
         elements.notifBtn.addEventListener('click', handleNotifications);
     }
@@ -126,18 +142,27 @@ function bindEvents() {
         if (elements.avatarBtn.parentNode) {
             elements.avatarBtn.parentNode.replaceChild(newAvatarBtn, elements.avatarBtn);
             elements.avatarBtn = newAvatarBtn;
-            elements.avatarImg = newAvatarBtn.querySelector('#avatarImg');
+            elements.avatarImg = newAvatarBtn.querySelector('#avatarImgUser');
+            elements.avatarWrapper = newAvatarBtn.closest('.nav-avatar-wrapper');
         }
-        elements.avatarBtn.addEventListener('click', handleAvatarClick);
+        elements.avatarBtn.addEventListener('click', toggleDropdown);
     }
 
-    // Cambio de ruta (disparado por router)
-    document.addEventListener('route:changed', () => {
-        handleScroll();
-    });
+    // Cerrar sesión
+    if (elements.logoutBtn) {
+        const newLogoutBtn = elements.logoutBtn.cloneNode(true);
+        if (elements.logoutBtn.parentNode) {
+            elements.logoutBtn.parentNode.replaceChild(newLogoutBtn, elements.logoutBtn);
+            elements.logoutBtn = newLogoutBtn;
+        }
+        elements.logoutBtn.addEventListener('click', handleLogout);
+    }
 
-    // Click fuera del dropdown
+    // Click fuera
     document.addEventListener('click', handleClickOutside);
+
+    // Resize
+    window.addEventListener('resize', handleResize);
 
     // Layout recargado
     document.addEventListener('layout:loaded', () => {
@@ -158,10 +183,57 @@ export function reinitialize() {
     }
 
     bindEvents();
-    handleScroll();
     loadUserAvatar();
 
     console.log('✅ Navbar User Controller re-inicializado');
+}
+
+/**
+ * Alterna menú móvil
+ */
+function toggleMenu() {
+    if (!elements.navActions || !elements.menuToggle) return;
+
+    elements.navActions.classList.toggle('active');
+    elements.menuToggle.classList.toggle('active');
+
+    const icon = elements.menuToggle.querySelector('i');
+    if (elements.navActions.classList.contains('active')) {
+        if (icon) {
+            icon.classList.remove('fa-bars');
+            icon.classList.add('fa-times');
+        }
+        state.isMenuOpen = true;
+        elements.body.style.overflow = 'hidden';
+        // Cerrar dropdown si está abierto
+        closeDropdown();
+    } else {
+        if (icon) {
+            icon.classList.remove('fa-times');
+            icon.classList.add('fa-bars');
+        }
+        state.isMenuOpen = false;
+        elements.body.style.overflow = '';
+    }
+}
+
+/**
+ * Cierra menú móvil
+ */
+export function closeMenu() {
+    if (!elements.navActions || !elements.menuToggle) return;
+    if (!elements.navActions.classList.contains('active')) return;
+
+    elements.navActions.classList.remove('active');
+    elements.menuToggle.classList.remove('active');
+
+    const icon = elements.menuToggle.querySelector('i');
+    if (icon) {
+        icon.classList.remove('fa-times');
+        icon.classList.add('fa-bars');
+    }
+    state.isMenuOpen = false;
+    elements.body.style.overflow = '';
 }
 
 /**
@@ -169,7 +241,7 @@ export function reinitialize() {
  */
 function handleScroll() {
     if (!elements.navbar) {
-        const navbar = document.getElementById('topNav');
+        const navbar = document.getElementById('navbarUser');
         if (navbar) {
             elements.navbar = navbar;
         } else {
@@ -177,7 +249,7 @@ function handleScroll() {
         }
     }
 
-    const isNowScrolled = window.scrollY > 10;
+    const isNowScrolled = window.scrollY > 30;
 
     if (isNowScrolled && !state.isScrolled) {
         elements.navbar.classList.add('scrolled');
@@ -189,159 +261,70 @@ function handleScroll() {
 }
 
 /**
- * Maneja click en notificaciones
+ * Toggle dropdown de perfil
  */
-function handleNotifications(e) {
-    e.stopPropagation();
+function toggleDropdown(e) {
+    e?.stopPropagation();
 
-    // Mostrar notificación toast
-    showNotification(`📬 Tienes ${state.notificationCount} notificaciones sin leer`);
+    if (!elements.profileDropdown) return;
 
-    // Marcar como leídas
-    if (state.notificationCount > 0) {
-        state.notificationCount = 0;
-        updateBadge();
+    elements.profileDropdown.classList.toggle('open');
+    elements.avatarBtn?.classList.toggle('open');
+    state.isDropdownOpen = elements.profileDropdown.classList.contains('open');
+
+    // En móvil, cerrar menú si está abierto
+    if (state.isDropdownOpen && state.isMenuOpen) {
+        closeMenu();
     }
 }
 
 /**
- * Maneja click en configuración
- */
-function handleSettings(e) {
-    e.stopPropagation();
-
-    // Efecto de rotación en el icono
-    const icon = elements.settingsBtn?.querySelector('.material-symbols-outlined');
-    if (icon) {
-        icon.style.transition = 'transform 0.5s ease';
-        icon.style.transform = 'rotate(180deg)';
-        setTimeout(() => {
-            icon.style.transform = 'rotate(0deg)';
-        }, 500);
-    }
-
-    showNotification('⚙️ Abriendo configuración...');
-
-    // Navegar a configuración si existe ruta
-    if (typeof window.navigateTo === 'function') {
-        setTimeout(() => {
-            window.navigateTo('/configuracion');
-        }, 500);
-    }
-}
-
-/**
- * Maneja click en avatar
- */
-function handleAvatarClick(e) {
-    e.stopPropagation();
-
-    // Crear o toggle dropdown
-    toggleDropdown();
-}
-
-/**
- * Crea o togglea el dropdown de perfil
- */
-function toggleDropdown() {
-    // Verificar si ya existe dropdown
-    let dropdown = document.querySelector('.profile-dropdown');
-
-    if (dropdown) {
-        // Toggle
-        dropdown.classList.toggle('open');
-        state.isDropdownOpen = dropdown.classList.contains('open');
-        return;
-    }
-
-    // Crear dropdown
-    dropdown = document.createElement('div');
-    dropdown.className = 'profile-dropdown';
-    dropdown.innerHTML = `
-        <a href="/perfil" data-link>
-            <span class="material-symbols-outlined">person</span>
-            Mi Perfil
-        </a>
-        <a href="/dashboard" data-link>
-            <span class="material-symbols-outlined">dashboard</span>
-            Dashboard
-        </a>
-        <a href="/logros" data-link>
-            <span class="material-symbols-outlined">emoji_events</span>
-            Mis Logros
-        </a>
-        <div class="dropdown-divider"></div>
-        <a href="/configuracion" data-link>
-            <span class="material-symbols-outlined">settings</span>
-            Configuración
-        </a>
-        <a href="#" class="logout-item" id="logoutDropdownBtn">
-            <span class="material-symbols-outlined">logout</span>
-            Cerrar Sesión
-        </a>
-    `;
-
-    // Posicionar debajo del avatar
-    const avatarRect = elements.avatarBtn.getBoundingClientRect();
-    dropdown.style.position = 'fixed';
-    dropdown.style.top = (avatarRect.bottom + 8) + 'px';
-    dropdown.style.right = (window.innerWidth - avatarRect.right) + 'px';
-
-    document.body.appendChild(dropdown);
-
-    // Abrir con animación
-    requestAnimationFrame(() => {
-        dropdown.classList.add('open');
-        state.isDropdownOpen = true;
-    });
-
-    // Evento para cerrar sesión
-    const logoutBtn = dropdown.querySelector('#logoutDropdownBtn');
-    if (logoutBtn) {
-        logoutBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            handleLogout();
-        });
-    }
-
-    // Eventos para enlaces con data-link
-    dropdown.querySelectorAll('[data-link]').forEach(link => {
-        link.addEventListener('click', () => {
-            closeDropdown();
-        });
-    });
-}
-
-/**
- * Cierra el dropdown de perfil
+ * Cierra dropdown de perfil
  */
 export function closeDropdown() {
-    const dropdown = document.querySelector('.profile-dropdown');
-    if (dropdown) {
-        dropdown.classList.remove('open');
+    if (elements.profileDropdown) {
+        elements.profileDropdown.classList.remove('open');
+        elements.avatarBtn?.classList.remove('open');
         state.isDropdownOpen = false;
-        setTimeout(() => {
-            dropdown.remove();
-        }, 300);
     }
 }
 
 /**
- * Maneja click fuera del dropdown
+ * Click fuera
  */
 function handleClickOutside(e) {
-    if (!state.isDropdownOpen) return;
+    // Menú móvil
+    if (state.isMenuOpen) {
+        const isClickInsideMenu = elements.navActions?.contains(e.target);
+        const isClickOnToggle = elements.menuToggle?.contains(e.target);
 
-    const isClickInside = elements.avatarBtn?.contains(e.target);
-    const isClickOnDropdown = document.querySelector('.profile-dropdown')?.contains(e.target);
+        if (!isClickInsideMenu && !isClickOnToggle) {
+            closeMenu();
+        }
+    }
 
-    if (!isClickInside && !isClickOnDropdown) {
-        closeDropdown();
+    // Dropdown
+    if (state.isDropdownOpen) {
+        const isClickInside = elements.avatarWrapper?.contains(e.target);
+        const isClickOnDropdown = elements.profileDropdown?.contains(e.target);
+
+        if (!isClickInside && !isClickOnDropdown) {
+            closeDropdown();
+        }
     }
 }
 
 /**
- * Actualiza el badge de notificaciones
+ * Resize
+ */
+function handleResize() {
+    if (window.innerWidth > 850 && state.isMenuOpen) {
+        closeMenu();
+    }
+}
+
+/**
+ * Actualiza badge de notificaciones
  */
 function updateBadge() {
     if (!elements.notifBadge) return;
@@ -355,7 +338,7 @@ function updateBadge() {
 }
 
 /**
- * Actualiza el contador de notificaciones desde otros controllers
+ * Actualiza contador de notificaciones
  */
 export function updateNotifications(count) {
     state.notificationCount = count;
@@ -363,7 +346,7 @@ export function updateNotifications(count) {
 }
 
 /**
- * Carga el avatar del usuario
+ * Carga avatar del usuario
  */
 async function loadUserAvatar() {
     try {
@@ -372,7 +355,6 @@ async function loadUserAvatar() {
             if (user && user.avatar && elements.avatarImg) {
                 elements.avatarImg.src = user.avatar;
             } else if (user && user.name && elements.avatarImg) {
-                // Fallback con iniciales
                 const initials = user.name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
                 elements.avatarImg.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(initials || 'U')}&background=1a2f4a&color=7cd5d5&size=64`;
             }
@@ -383,7 +365,7 @@ async function loadUserAvatar() {
 }
 
 /**
- * Establece el avatar desde otros controllers
+ * Establece avatar desde otros controllers
  */
 export function setAvatar(url) {
     if (elements.avatarImg) {
@@ -392,14 +374,52 @@ export function setAvatar(url) {
 }
 
 /**
+ * Maneja click en notificaciones
+ */
+function handleNotifications(e) {
+    e.stopPropagation();
+
+    showToast(`📬 Tienes ${state.notificationCount} notificaciones sin leer`);
+
+    if (state.notificationCount > 0) {
+        state.notificationCount = 0;
+        updateBadge();
+    }
+}
+
+/**
+ * Maneja click en configuración
+ */
+function handleSettings(e) {
+    e.stopPropagation();
+
+    const icon = elements.settingsBtn?.querySelector('i');
+    if (icon) {
+        icon.style.transition = 'transform 0.5s ease';
+        icon.style.transform = 'rotate(180deg)';
+        setTimeout(() => {
+            icon.style.transform = 'rotate(0deg)';
+        }, 500);
+    }
+
+    showToast('⚙️ Abriendo configuración...');
+
+    if (typeof window.navigateTo === 'function') {
+        setTimeout(() => {
+            window.navigateTo('/configuracion');
+        }, 500);
+    }
+}
+
+/**
  * Maneja cierre de sesión
  */
-async function handleLogout() {
+async function handleLogout(e) {
+    e.preventDefault();
     try {
         if (window.AuthService) {
             await window.AuthService.logout();
         }
-        state.currentUser = null;
         closeDropdown();
         window.location.href = '/iniciarSesion';
     } catch (error) {
@@ -408,9 +428,9 @@ async function handleLogout() {
 }
 
 /**
- * Muestra notificación toast
+ * Muestra toast de notificación
  */
-function showNotification(message, type = 'info') {
+function showToast(message, type = 'info') {
     const oldToast = document.querySelector('.toast-notification');
     if (oldToast) oldToast.remove();
 
@@ -426,7 +446,7 @@ function showNotification(message, type = 'info') {
 
     toast.style.cssText = `
         position: fixed;
-        top: 60px;
+        top: 74px;
         right: 20px;
         background: var(--color-surface-container);
         color: ${colors[type] || colors.info};
@@ -442,9 +462,6 @@ function showNotification(message, type = 'info') {
         animation: slideInRight 0.4s ease;
         backdrop-filter: blur(10px);
         -webkit-backdrop-filter: blur(10px);
-        display: flex;
-        align-items: center;
-        gap: 10px;
     `;
 
     toast.textContent = message;
@@ -464,34 +481,21 @@ export function getState() {
 }
 
 // ============================================
-// INYECTAR ANIMACIONES DE TOAST
+// INYECTAR ANIMACIONES
 // ============================================
 
 const toastStyles = document.createElement('style');
 toastStyles.textContent = `
     @keyframes slideInRight {
-        from {
-            opacity: 0;
-            transform: translateX(30px);
-        }
-        to {
-            opacity: 1;
-            transform: translateX(0);
-        }
+        from { opacity: 0; transform: translateX(30px); }
+        to { opacity: 1; transform: translateX(0); }
     }
-
     @keyframes slideOutRight {
-        from {
-            opacity: 1;
-            transform: translateX(0);
-        }
-        to {
-            opacity: 0;
-            transform: translateX(30px);
-        }
+        from { opacity: 1; transform: translateX(0); }
+        to { opacity: 0; transform: translateX(30px); }
     }
 `;
 document.head.appendChild(toastStyles);
 
 // Exponer funciones globalmente
-window.showNotification = showNotification;
+window.showToast = showToast;

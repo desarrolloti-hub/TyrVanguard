@@ -1,6 +1,6 @@
 /* ========================================
    FOOTER USER CONTROLLER - TYR VANGUARD
-   Bottom Navigation para usuarios logueados
+   Bottom Navigation (Navegación Principal)
    ======================================== */
 
 // Estado privado
@@ -97,13 +97,6 @@ function bindEvents() {
         }
 
         newItem.addEventListener('click', handleNavClick);
-        newItem.addEventListener('click', (e) => {
-            // Prevenir navegación si es un enlace
-            const href = newItem.getAttribute('href');
-            if (href && href.startsWith('#')) {
-                e.preventDefault();
-            }
-        });
     });
 
     // Actualizar referencia
@@ -166,12 +159,10 @@ function handleNavClick(e) {
     // Si tiene href y es data-link, el router lo maneja
     const href = target.getAttribute('href');
     if (href && href !== '#' && !href.startsWith('http')) {
-        // Si el router está disponible, usarlo
         if (typeof window.navigateTo === 'function') {
             e.preventDefault();
             window.navigateTo(href);
         }
-        // Si no, el enlace normal navega
     }
 }
 

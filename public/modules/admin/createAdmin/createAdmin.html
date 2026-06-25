@@ -1,0 +1,204 @@
+<section class="register-section">
+    <!-- Espada de fondo -->
+    <div class="sword-bg">
+        <img class="sword-image" src="/assets/img/espada.svg" alt="" loading="lazy" />
+    </div>
+
+    <div class="register-container">
+        <!-- Register Content -->
+        <div class="register-content">
+            <!-- Brand Header -->
+            <header class="register-header">
+                <div class="logo-ring">
+                    <!-- 🆕 Ícono de Admin (escudo/seguridad) -->
+                    <i class="fas fa-shield-halved logo-icon-admin"></i>
+                    <div class="logo-pulse"></div>
+                </div>
+                <h1 class="brand-title">FORJA EL COMANDO</h1>
+                <div class="divider-line">
+                    <div class="divider-diamond"></div>
+                </div>
+                <p class="brand-subtitle">CREAR CUENTA DE ADMINISTRADOR</p>
+            </header>
+
+            <!-- Register Card usando componentes -->
+            <div class="register-card form-card">
+                <div class="form-scanline"></div>
+                <form class="register-form form" id="registerAdminForm">
+                    <!-- 🆕 BOTÓN DE GOOGLE (opcional para admin) -->
+                    <div class="form-group">
+                        <button type="button" class="btn btn-google btn-block" id="googleAdminBtn">
+                            <i class="fab fa-google btn-icon"></i>
+                            <span class="btn-text">CONTINUAR CON GOOGLE</span>
+                        </button>
+                    </div>
+
+                    <!-- Divisor -->
+                    <div class="divider-or">
+                        <span class="divider-or-text">O</span>
+                    </div>
+
+                    <!-- Fila: Nombre y Apellido -->
+                    <div class="form-row">
+                        <!-- Nombre -->
+                        <div class="form-group">
+                            <label class="form-label">
+                                <i class="fas fa-user label-icon"></i>
+                                NOMBRE
+                                <span class="label-required">*</span>
+                            </label>
+                            <div class="input-icon-wrapper">
+                                <input 
+                                    class="form-input" 
+                                    placeholder="TU NOMBRE" 
+                                    type="text" 
+                                    id="adminFirstName"
+                                    required
+                                />
+                                <i class="fas fa-user input-icon"></i>
+                            </div>
+                        </div>
+
+                        <!-- Apellido -->
+                        <div class="form-group">
+                            <label class="form-label">
+                                <i class="fas fa-user-tag label-icon"></i>
+                                APELLIDO
+                                <span class="label-required">*</span>
+                            </label>
+                            <div class="input-icon-wrapper">
+                                <input 
+                                    class="form-input" 
+                                    placeholder="TU APELLIDO" 
+                                    type="text" 
+                                    id="adminLastName"
+                                    required
+                                />
+                                <i class="fas fa-user-tag input-icon"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Correo Electrónico -->
+                    <div class="form-group">
+                        <label class="form-label">
+                            <i class="fas fa-envelope label-icon"></i>
+                            CORREO ELECTRÓNICO
+                            <span class="label-required">*</span>
+                        </label>
+                        <div class="input-icon-wrapper">
+                            <input 
+                                class="form-input" 
+                                placeholder="admin@vanguard.com" 
+                                type="email" 
+                                id="adminEmail"
+                                required
+                            />
+                            <i class="fas fa-envelope input-icon"></i>
+                        </div>
+                    </div>
+
+                    <!-- Contraseña -->
+                    <div class="form-group">
+                        <label class="form-label">
+                            <i class="fas fa-shield label-icon"></i>
+                            CONTRASEÑA
+                            <span class="label-required">*</span>
+                        </label>
+                        <div class="input-icon-wrapper">
+                            <input 
+                                class="form-input has-right-icon" 
+                                placeholder="••••••••" 
+                                type="password" 
+                                id="adminPasswordInput"
+                                required
+                                minlength="8"
+                            />
+                            <button class="input-toggle" type="button" id="toggleAdminPassword">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                        <span class="form-help">Mínimo 8 caracteres</span>
+                    </div>
+
+                    <!-- Confirmar Contraseña -->
+                    <div class="form-group">
+                        <label class="form-label">
+                            <i class="fas fa-check-circle label-icon"></i>
+                            CONFIRMAR CONTRASEÑA
+                            <span class="label-required">*</span>
+                        </label>
+                        <div class="input-icon-wrapper">
+                            <input 
+                                class="form-input has-right-icon" 
+                                placeholder="••••••••" 
+                                type="password" 
+                                id="adminConfirmPassword"
+                                required
+                            />
+                            <button class="input-toggle" type="button" id="toggleAdminConfirmPassword">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Código de Administrador (campo extra) -->
+                    <div class="form-group">
+                        <label class="form-label">
+                            <i class="fas fa-key label-icon"></i>
+                            CÓDIGO DE ADMINISTRADOR
+                            <span class="label-required">*</span>
+                        </label>
+                        <div class="input-icon-wrapper">
+                            <input 
+                                class="form-input" 
+                                placeholder="CÓDIGO DE ACCESO ADMIN" 
+                                type="password" 
+                                id="adminCode"
+                                required
+                            />
+                            <i class="fas fa-key input-icon"></i>
+                        </div>
+                        <span class="form-help">Ingresa el código secreto de administrador</span>
+                    </div>
+
+                    <!-- Términos y condiciones -->
+                    <div class="form-group">
+                        <label class="form-check">
+                            <input class="form-check-input" type="checkbox" id="adminTerms" required />
+                            <span class="form-check-label">
+                                Acepto los <a href="#">términos y condiciones</a> de la Vanguardia
+                            </span>
+                        </label>
+                    </div>
+
+                    <!-- Submit Action -->
+                    <div class="form-actions">
+                        <button class="btn btn-primary btn-block" type="submit" id="submitAdminBtn">
+                            <span class="btn-text">CREAR ADMINISTRADOR</span>
+                            <i class="fas fa-shield-halved btn-icon"></i>
+                        </button>
+                    </div>
+
+                    <!-- Link a Login -->
+                    <div class="register-links">
+                        <span class="register-text">¿Ya tienes cuenta?</span>
+                        <a class="link-secondary" href="/iniciarSesion">INICIA SESIÓN</a>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Footer Motto -->
+            <footer class="register-footer">
+                <div class="motto-divider">
+                    <i class="fas fa-grip-lines"></i>
+                    <div class="motto-line"></div>
+                    <i class="fas fa-grip-lines"></i>
+                </div>
+                <p class="motto-text">
+                    CADA DÍA UNA <span class="text-primary">BATALLA</span>. CADA DÍA UNA <span class="text-secondary">VICTORIA</span>.
+                </p>
+            </footer>
+        </div>
+    </div>
+</section>

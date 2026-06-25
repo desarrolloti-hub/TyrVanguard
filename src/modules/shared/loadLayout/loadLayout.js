@@ -1,39 +1,53 @@
 /* ========================================
-   LOAD LAYOUT
-   Carga layouts persistentes (navbar y footer)
+   LOAD LAYOUT - Versión corregida
    ======================================== */
+
+import { LayoutManager } from './layoutManager.js';
+
+let layoutInitialized = false;
 
 /**
  * Carga los layouts persistentes en el DOM
- * @returns {Promise<Object>} - Retorna las rutas de los layouts cargados
+ * @returns {Promise<Object>} - Retorna el layout cargado
  */
 export async function loadLayout() {
-    // Usa rutas relativas desde la raíz del proyecto
-    const [navbarHTML, footerHTML] = await Promise.all([
-        fetch('/modules/visitor/layout/navbar.html').then(r => {
-            if (!r.ok) throw new Error('Error cargando navbar');
-            return r.text();
-        }),
-        fetch('/modules/visitor/layout/footer.html').then(r => {
-            if (!r.ok) throw new Error('Error cargando footer');
-            return r.text();
-        })
-    ]);
-
-    // Insertar en el DOM
-    const navbarContainer = document.getElementById('navbar');
-    const footerContainer = document.getElementById('footer');
-    
-    if (navbarContainer) {
-        navbarContainer.innerHTML = navbarHTML;
+    // Evitar cargar múltiples veces
+    if (layoutInitialized) {
+        console.log('ℹ️ Layout ya inicializado');
+        return LayoutManager.getCurrentLayout();
     }
     
-    if (footerContainer) {
-        footerContainer.innerHTML = footerHTML;
+    try {
+        // Usar el LayoutManager para cargar el layout correspondiente
+        const result = await LayoutManager.updateLayout();
+        
+        // Inicializar el listener de cambios de autenticación (solo una vez)
+        if (!layoutInitialized) {
+            LayoutManager.initLayoutListener();
+            layoutInitialized = true;
+        }
+        
+        return result;
+        
+    } catch (error) {
+        console.error('❌ Error cargando layout:', error);
+        
+        // Fallback: cargar layout guest
+        const result = await LayoutManager.loadGuestLayout();
+        return result;
     }
-
-    return {
-        navbarLoaded: true,
-        footerLoaded: true
-    };
 }
+
+/**
+ * Fuerza la recarga del layout (útil después de login/logout)
+ */
+export async function reloadLayout() {
+    console.log('🔄 Recargando layout...');
+    layoutInitialized = false;
+    const result = await loadLayout();
+    console.log('✅ Layout recargado:', result);
+    return result;
+}
+
+// Exponer para uso global
+window.reloadLayout = reloadLayout;

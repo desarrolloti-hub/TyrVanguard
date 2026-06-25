@@ -1,10 +1,15 @@
 /* ========================================
-   ROUTER - Visitantes
+   ROUTER - con protección de rutas
    ======================================== */
 
 import { routes } from './routes.js';
+import { AuthService } from '../services/authService.js';
+import { LayoutManager } from '../modules/shared/loadLayout/layoutManager.js';
 
-let isNavigating = false; // Prevenir navegaciones múltiples
+let isNavigating = false;
+
+// ✅ getCurrentLayout es síncrono, no necesita await
+let currentLayout = LayoutManager.getCurrentLayout();
 
 /**
  * Inicializa el router
@@ -15,7 +20,7 @@ export function initRouter() {
         const link = e.target.closest('[data-link]');
         if (link && !isNavigating) {
             e.preventDefault();
-            e.stopPropagation(); // Evitar propagación
+            e.stopPropagation();
             const href = link.getAttribute('href');
             if (href && !href.startsWith('http') && !href.startsWith('#')) {
                 await navigateTo(href);
@@ -28,6 +33,43 @@ export function initRouter() {
         if (!isNavigating) {
             await handleRoute();
         }
+    });
+
+    // Escuchar cambios de autenticación
+    if (AuthService) {
+        AuthService.onAuthStateChange(async (userData) => {
+            console.log('🔄 Auth change detected in router');
+            
+            // Actualizar layout
+            const result = await LayoutManager.updateLayout();
+            currentLayout = result;
+            
+            const path = window.location.pathname;
+            const route = routes[path];
+            
+            // Si la ruta actual es protegida y el usuario no está autenticado
+            if (route?.protected && !AuthService.isAuthenticated()) {
+                await navigateTo('/iniciarSesion');
+                return;
+            }
+            
+            // Si el usuario está autenticado y está en una ruta de invitado
+            if (AuthService.isAuthenticated() && (path === '/' || path === '/home')) {
+                const user = AuthService.getCurrentUser();
+                const home = user?.role === 'admin' ? '/dashboard' : '/homeUser';
+                await navigateTo(home);
+                return;
+            }
+            
+            // Recargar ruta actual para actualizar la vista
+            await handleRoute();
+        });
+    }
+
+    // Escuchar cambios de layout
+    document.addEventListener('layout:loaded', (e) => {
+        console.log('📐 Layout actualizado:', e.detail);
+        currentLayout = LayoutManager.getCurrentLayout();
     });
 
     // Exponer navigateTo globalmente
@@ -55,7 +97,6 @@ async function navigateTo(path) {
  */
 async function handleRoute() {
     const path = window.location.pathname;
-
     console.log('📍 Navegando a:', path);
 
     // Disparar evento antes de cambiar ruta
@@ -70,6 +111,26 @@ async function handleRoute() {
         route = routes['/404'] || routes['/'];
     }
 
+    // Verificar si la ruta es protegida
+    if (route.protected) {
+        const isAuth = AuthService.isAuthenticated();
+        if (!isAuth) {
+            console.warn('🔒 Ruta protegida - redirigiendo a login');
+            window.location.href = '/iniciarSesion';
+            return;
+        }
+        
+        // Verificar roles
+        if (route.roles) {
+            const userRole = AuthService.getUserRoleSync();
+            if (!route.roles.includes(userRole)) {
+                console.warn(`🔒 Rol ${userRole} no autorizado para ${path}`);
+                window.location.href = '/';
+                return;
+            }
+        }
+    }
+
     try {
         // Cargar vista
         const response = await fetch(route.view);
@@ -80,7 +141,7 @@ async function handleRoute() {
 
         const html = await response.text();
 
-        // Insertar en el DOM - SOLO UNA VEZ
+        // Insertar en el DOM
         const appContainer = document.getElementById('app');
         if (appContainer) {
             appContainer.innerHTML = html;
@@ -100,7 +161,13 @@ async function handleRoute() {
         console.error('❌ Error cargando ruta:', error);
         const appContainer = document.getElementById('app');
         if (appContainer) {
-            appContainer.innerHTML = `<h1>Error cargando página</h1><p>${error.message}</p>`;
+            appContainer.innerHTML = `
+                <div style="text-align:center;padding:60px 20px;">
+                    <h1>⚔️ Error</h1>
+                    <p>${error.message}</p>
+                    <a href="/" data-link style="color:var(--color-primary);">Volver al inicio</a>
+                </div>
+            `;
         }
     }
 
