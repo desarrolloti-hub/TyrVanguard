@@ -1,0 +1,441 @@
+/* ============================================ */
+/* TOP NAV - USUARIO LOGUEADO                    */
+/* TYR VANGUARD - Versión Delgada               */
+/* ============================================ */
+
+.top-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    background: rgba(16, 20, 22, 0.88);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-bottom: 1px solid rgba(124, 213, 213, 0.08);
+    transition: all var(--transition-normal);
+    height: 50px;
+    box-shadow: 0 1px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Estado con scroll */
+.top-nav.scrolled {
+    background: rgba(6, 15, 26, 0.97);
+    border-bottom-color: rgba(124, 213, 213, 0.2);
+    box-shadow: 0 4px 25px rgba(0, 0, 0, 0.5);
+    height: 50px;
+}
+
+/* Línea decorativa inferior con brillo */
+.top-nav::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    right: 0;
+    height: 1.5px;
+    background: linear-gradient(90deg, transparent, var(--color-secondary), transparent);
+    opacity: 0;
+    transition: opacity var(--transition-normal);
+}
+
+.top-nav.scrolled::after {
+    opacity: 1;
+    animation: shimmerLine 2.5s ease-in-out infinite;
+}
+
+@keyframes shimmerLine {
+    0%, 100% { opacity: 0.4; }
+    50% { opacity: 1; }
+}
+
+/* ============================================ */
+/* CONTENEDOR                                   */
+/* ============================================ */
+
+.nav-container {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 var(--spacing-md);
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+/* ============================================ */
+/* LOGO                                         */
+/* ============================================ */
+
+.nav-left {
+    display: flex;
+    align-items: center;
+}
+
+.nav-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all var(--transition-fast);
+}
+
+.nav-logo:hover {
+    transform: scale(1.02);
+}
+
+.nav-icon {
+    font-size: 22px;
+    color: var(--text-primary);
+    transition: color var(--transition-fast);
+}
+
+.nav-logo:hover .nav-icon {
+    color: var(--color-secondary);
+}
+
+.nav-title {
+    font-family: 'Rajdhani', 'Inter', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    color: var(--text-primary);
+    text-transform: uppercase;
+    line-height: 1;
+    transition: color var(--transition-fast);
+}
+
+.nav-logo:hover .nav-title {
+    color: var(--color-secondary);
+}
+
+/* ============================================ */
+/* LADO DERECHO - ACCIONES                      */
+/* ============================================ */
+
+.nav-right {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+}
+
+/* ============================================ */
+/* BOTONES DE ACCIÓN                            */
+/* ============================================ */
+
+.nav-btn-icon {
+    position: relative;
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    padding: 6px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.nav-btn-icon:hover {
+    background: rgba(124, 213, 213, 0.08);
+    color: var(--text-primary);
+    transform: scale(1.05);
+}
+
+.nav-btn-icon:active {
+    transform: scale(0.90);
+}
+
+.nav-btn-icon .material-symbols-outlined {
+    font-size: 20px;
+}
+
+/* ============================================ */
+/* AVATAR DE USUARIO                            */
+/* ============================================ */
+
+.nav-avatar {
+    padding: 2px;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 2px solid transparent;
+    transition: all var(--transition-fast);
+}
+
+.nav-avatar:hover {
+    border-color: var(--color-secondary);
+    transform: scale(1.05);
+    box-shadow: 0 0 20px rgba(124, 213, 213, 0.15);
+}
+
+.nav-avatar .avatar-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+/* ============================================ */
+/* BADGE DE NOTIFICACIONES                      */
+/* ============================================ */
+
+.notif-badge {
+    position: absolute;
+    top: 1px;
+    right: 1px;
+    background: var(--color-error);
+    color: var(--text-inverse);
+    font-size: 9px;
+    font-weight: 700;
+    width: 17px;
+    height: 17px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Rajdhani', 'Inter', sans-serif;
+    border: 2px solid rgba(16, 20, 22, 0.9);
+    transition: all var(--transition-fast);
+    animation: badgePulse 2s ease-in-out infinite;
+}
+
+/* Badge vacío */
+.notif-badge.empty {
+    display: none;
+}
+
+/* ============================================ */
+/* ANIMACIONES                                  */
+/* ============================================ */
+
+@keyframes badgePulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.12);
+    }
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideOutRight {
+    from {
+        opacity: 1;
+        transform: translateX(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateX(30px);
+    }
+}
+
+/* ============================================ */
+/* DROPDOWN DE PERFIL                           */
+/* ============================================ */
+
+.profile-dropdown {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    background: var(--color-surface-container);
+    border: 1px solid rgba(124, 213, 213, 0.1);
+    border-radius: var(--border-radius-lg);
+    padding: 8px 0;
+    min-width: 180px;
+    box-shadow: var(--shadow-lg);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    opacity: 0;
+    transform: translateY(-8px) scale(0.95);
+    pointer-events: none;
+    transition: all var(--transition-fast);
+}
+
+.profile-dropdown.open {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    pointer-events: all;
+}
+
+.profile-dropdown a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 16px;
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: var(--font-size-sm);
+    font-family: 'Inter', sans-serif;
+    transition: all var(--transition-fast);
+}
+
+.profile-dropdown a:hover {
+    background: rgba(124, 213, 213, 0.06);
+    color: var(--text-primary);
+}
+
+.profile-dropdown a .material-symbols-outlined {
+    font-size: 18px;
+}
+
+.profile-dropdown .dropdown-divider {
+    height: 1px;
+    background: rgba(124, 213, 213, 0.06);
+    margin: 6px 12px;
+}
+
+.profile-dropdown .logout-item {
+    color: var(--color-error);
+}
+
+.profile-dropdown .logout-item:hover {
+    background: rgba(255, 107, 107, 0.06);
+}
+
+/* ============================================ */
+/* RESPONSIVE                                   */
+/* ============================================ */
+
+@media (max-width: 768px) {
+    .top-nav {
+        height: 46px;
+    }
+
+    .top-nav.scrolled {
+        height: 46px;
+    }
+
+    .nav-container {
+        padding: 0 var(--spacing-sm);
+        height: 46px;
+    }
+
+    .nav-title {
+        font-size: 13px;
+        letter-spacing: 0.1em;
+    }
+
+    .nav-icon {
+        font-size: 20px;
+    }
+
+    .nav-logo {
+        gap: 8px;
+    }
+
+    .nav-btn-icon {
+        width: 32px;
+        height: 32px;
+        padding: 4px;
+    }
+
+    .nav-btn-icon .material-symbols-outlined {
+        font-size: 18px;
+    }
+
+    .nav-avatar {
+        width: 30px;
+        height: 30px;
+    }
+
+    .notif-badge {
+        width: 15px;
+        height: 15px;
+        font-size: 8px;
+        border-width: 1.5px;
+        top: 0;
+        right: 0;
+    }
+}
+
+@media (max-width: 480px) {
+    .top-nav {
+        height: 42px;
+    }
+
+    .top-nav.scrolled {
+        height: 42px;
+    }
+
+    .nav-container {
+        padding: 0 10px;
+        height: 42px;
+    }
+
+    .nav-title {
+        font-size: 11px;
+        letter-spacing: 0.08em;
+    }
+
+    .nav-icon {
+        font-size: 17px;
+    }
+
+    .nav-logo {
+        gap: 6px;
+    }
+
+    .nav-btn-icon {
+        width: 28px;
+        height: 28px;
+        padding: 3px;
+    }
+
+    .nav-btn-icon .material-symbols-outlined {
+        font-size: 16px;
+    }
+
+    .nav-avatar {
+        width: 26px;
+        height: 26px;
+        padding: 1px;
+        border-width: 1.5px;
+    }
+
+    .notif-badge {
+        width: 13px;
+        height: 13px;
+        font-size: 7px;
+        border-width: 1px;
+        top: 0;
+        right: 0;
+    }
+}
+
+/* ============================================ */
+/* SCROLLBAR PERSONALIZADA                      */
+/* ============================================ */
+
+::-webkit-scrollbar {
+    width: 4px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--color-background);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--color-secondary-container);
+    border-radius: 2px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--color-secondary);
+}

@@ -1,0 +1,235 @@
+<section class="home-section dashboard-user">
+    <!-- Espada de fondo (Reutilizando el componente) -->
+    <div class="sword-bg subtle">
+        <img class="sword-image" src="/assets/img/espada.svg" alt="" loading="lazy" />
+    </div>
+
+    <div class="home-container">
+        <!-- ==========================================
+             HEADER DEL GUERRERO
+             ========================================== -->
+        <header class="user-header">
+            <div class="user-greeting">
+                <div class="greeting-badge">
+                    <i class="fas fa-shield-halved"></i>
+                    <span>GUERRERO ACTIVO</span>
+                </div>
+                <h1 class="greeting-title">
+                    ¡Bienvenido de vuelta, <span id="userNameDisplay">Thor</span>!
+                </h1>
+                <p class="greeting-subtitle">
+                    "La verdadera batalla se gana en la mente. Hoy es un nuevo amanecer."
+                </p>
+            </div>
+            <div class="user-streak-card">
+                <div class="streak-icon">
+                    <i class="fas fa-fire"></i>
+                </div>
+                <div class="streak-info">
+                    <span class="streak-label">RACHA ACTUAL</span>
+                    <span class="streak-value" id="streakDisplay">12</span>
+                    <span class="streak-unit">DÍAS</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- ==========================================
+             PANEL DE ESTADÍSTICAS AVANZADAS
+             ========================================== -->
+        <section class="dashboard-section">
+            <div class="section-header">
+                <i class="fas fa-chart-line section-icon"></i>
+                <h2 class="section-title">ESTADÍSTICAS DE BATALLA</h2>
+                <div class="section-divider"></div>
+            </div>
+
+            <div class="dashboard-grid stats-grid">
+                <!-- Tarjeta 1: Victorias -->
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-trophy"></i>
+                    </div>
+                    <div class="stat-info">
+                        <span class="stat-label">VICTORIAS TOTALES</span>
+                        <span class="stat-value" id="totalWins">0</span>
+                    </div>
+                </div>
+                <!-- Tarjeta 2: Días Libres -->
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-calendar-check"></i>
+                    </div>
+                    <div class="stat-info">
+                        <span class="stat-label">DÍAS EN LIBERTAD</span>
+                        <span class="stat-value" id="freeDays">0</span>
+                    </div>
+                </div>
+                <!-- Tarjeta 3: Nivel Mental -->
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <div class="stat-info">
+                        <span class="stat-label">NIVEL MENTAL</span>
+                        <span class="stat-value" id="mentalLevel">0 / 4</span>
+                    </div>
+                </div>
+                <!-- Tarjeta 4: Ofensivas -->
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <div class="stat-info">
+                        <span class="stat-label">OFENSIVAS LANZADAS</span>
+                        <span class="stat-value" id="offensiveCount">0</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Barra de Progreso Épica -->
+            <div class="progress-section">
+                <div class="progress-header">
+                    <span class="progress-title">
+                        <i class="fas fa-chess-queen"></i>
+                        PROGRESO HACIA EL VALHALLA
+                    </span>
+                    <span class="progress-percentage" id="progressPercentage">0%</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill" style="width: 0%;"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==========================================
+             ACTIVIDADES Y METAS
+             ========================================== -->
+        <div class="dashboard-row">
+            <!-- Columna Izquierda: Actividades Personalizadas -->
+            <div class="dashboard-col">
+                <div class="dashboard-section">
+                    <div class="section-header">
+                        <i class="fas fa-dumbbell section-icon"></i>
+                        <h2 class="section-title">ACTIVIDADES</h2>
+                        <div class="section-divider"></div>
+                        <button class="btn btn-ghost btn-sm" id="addActivityBtn">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+
+                    <div class="activity-list" id="activityList">
+                        <!-- Item de ejemplo -->
+                        <div class="activity-item">
+                            <div class="activity-info">
+                                <i class="fas fa-running activity-icon"></i>
+                                <div>
+                                    <span class="activity-name">Ejercicio Físico</span>
+                                    <span class="activity-description">30 min de cardio</span>
+                                </div>
+                            </div>
+                            <div class="activity-actions">
+                                <button class="btn btn-sm btn-ghost complete-btn"><i class="fas fa-check"></i></button>
+                                <button class="btn btn-sm btn-ghost delete-btn"><i class="fas fa-trash"></i></button>
+                            </div>
+                        </div>
+                        <!-- Item de ejemplo -->
+                        <div class="activity-item">
+                            <div class="activity-info">
+                                <i class="fas fa-book activity-icon"></i>
+                                <div>
+                                    <span class="activity-name">Lectura</span>
+                                    <span class="activity-description">10 min de lectura motivacional</span>
+                                </div>
+                            </div>
+                            <div class="activity-actions">
+                                <button class="btn btn-sm btn-ghost complete-btn"><i class="fas fa-check"></i></button>
+                                <button class="btn btn-sm btn-ghost delete-btn"><i class="fas fa-trash"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Columna Derecha: Metas Personales -->
+            <div class="dashboard-col">
+                <div class="dashboard-section">
+                    <div class="section-header">
+                        <i class="fas fa-bullseye section-icon"></i>
+                        <h2 class="section-title">MIS METAS</h2>
+                        <div class="section-divider"></div>
+                        <button class="btn btn-ghost btn-sm" id="addGoalBtn">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+
+                    <div class="goal-list" id="goalList">
+                        <!-- Item de ejemplo -->
+                        <div class="goal-item">
+                            <div class="goal-info">
+                                <span class="goal-name">Llegar a 30 días</span>
+                                <div class="goal-progress">
+                                    <div class="goal-progress-bar" style="width: 40%;"></div>
+                                </div>
+                                <span class="goal-meta">40% completado</span>
+                            </div>
+                        </div>
+                        <!-- Item de ejemplo -->
+                        <div class="goal-item">
+                            <div class="goal-info">
+                                <span class="goal-name">Meditar diario</span>
+                                <div class="goal-progress">
+                                    <div class="goal-progress-bar" style="width: 70%;"></div>
+                                </div>
+                                <span class="goal-meta">70% completado</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==========================================
+             DIARIO PERSONAL
+             ========================================== -->
+        <section class="dashboard-section">
+            <div class="section-header">
+                <i class="fas fa-feather-alt section-icon"></i>
+                <h2 class="section-title">DIARIO DEL GUERRERO</h2>
+                <div class="section-divider"></div>
+                <button class="btn btn-primary btn-sm" id="newEntryBtn">+ NUEVA ENTRADA</button>
+            </div>
+
+            <div class="journal-list" id="journalList">
+                <!-- Entrada de ejemplo -->
+                <div class="journal-entry">
+                    <div class="entry-header">
+                        <span class="entry-date">25 de Junio, 2026</span>
+                        <span class="entry-tag">VICTORIA</span>
+                    </div>
+                    <p class="entry-content">
+                        "Hoy sentí el impulso, pero recordé mi misión. Salí a correr y la batalla fue ganada. Un día más en la vanguardia."
+                    </p>
+                    <div class="entry-actions">
+                        <button class="btn btn-sm btn-ghost"><i class="fas fa-edit"></i></button>
+                        <button class="btn btn-sm btn-ghost"><i class="fas fa-trash"></i></button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==========================================
+             PIE DE PÁGINA CON MANTRA
+             ========================================== -->
+        <footer class="user-footer">
+            <div class="motto-divider">
+                <i class="fas fa-grip-lines"></i>
+                <div class="motto-line"></div>
+                <i class="fas fa-grip-lines"></i>
+            </div>
+            <p class="motto-text">
+                CADA DÍA UNA <span class="text-primary">BATALLA</span>. CADA DÍA UNA <span class="text-secondary">VICTORIA</span>.
+            </p>
+            <p class="motto-subtext">"El honor no se da, se forja con cada decisión."</p>
+        </footer>
+    </div>
+</section>

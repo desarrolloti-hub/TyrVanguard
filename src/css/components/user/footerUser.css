@@ -1,0 +1,215 @@
+/* ============================================ */
+/* BOTTOM NAV - USUARIO LOGUEADO                */
+/* TYR VANGUARD                                 */
+/* ============================================ */
+
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 0 var(--spacing-md) var(--spacing-sm);
+    height: 72px;
+    background: rgba(16, 20, 22, 0.92);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-top: 1px solid rgba(124, 213, 213, 0.1);
+    transition: all var(--transition-normal);
+}
+
+/* ============================================ */
+/* ITEMS DE NAVEGACIÓN                          */
+/* ============================================ */
+
+.nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    text-decoration: none;
+    color: var(--text-muted);
+    padding: 6px 14px;
+    border-radius: var(--border-radius-md);
+    transition: all var(--transition-fast);
+    cursor: pointer;
+    position: relative;
+    min-width: 56px;
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* Icono Material Symbols */
+.nav-item .material-symbols-outlined {
+    font-size: 26px;
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    transition: all var(--transition-fast);
+    line-height: 1;
+    user-select: none;
+}
+
+/* Label del nav */
+.nav-item .nav-label {
+    font-family: 'Rajdhani', 'Inter', sans-serif;
+    font-size: var(--font-size-xs);
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    transition: all var(--transition-fast);
+    line-height: 1.2;
+}
+
+/* ============================================ */
+/* ESTADO ACTIVO                                */
+/* ============================================ */
+
+.nav-item.active {
+    color: var(--color-secondary);
+}
+
+.nav-item.active .material-symbols-outlined {
+    font-variation-settings: 'FILL' 1, 'wght' 500, 'GRAD' 0, 'opsz' 24;
+}
+
+.nav-item.active .nav-label {
+    color: var(--color-secondary);
+    font-weight: 700;
+}
+
+/* Barra indicadora superior */
+.nav-item.active::before {
+    content: '';
+    position: absolute;
+    top: -1px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 28px;
+    height: 2.5px;
+    background: var(--color-secondary);
+    border-radius: 0 0 4px 4px;
+    animation: navIndicatorIn 0.3s ease;
+}
+
+@keyframes navIndicatorIn {
+    from {
+        width: 0;
+        opacity: 0;
+    }
+    to {
+        width: 28px;
+        opacity: 1;
+    }
+}
+
+/* ============================================ */
+/* ESTADO HOVER                                 */
+/* ============================================ */
+
+.nav-item:not(.active):hover {
+    color: var(--text-secondary);
+    transform: translateY(-2px);
+}
+
+.nav-item:not(.active):hover .material-symbols-outlined {
+    color: var(--text-secondary);
+}
+
+/* ============================================ */
+/* ESTADO PRESSION (efecto clic)                */
+/* ============================================ */
+
+.nav-item:active {
+    transform: scale(0.90);
+    transition: transform 0.1s ease;
+}
+
+/* ============================================ */
+/* ANIMACIÓN PULSO (activo)                     */
+/* ============================================ */
+
+@keyframes navPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.04); }
+}
+
+.nav-item.active .material-symbols-outlined {
+    animation: navPulse 2.5s ease-in-out infinite;
+}
+
+/* ============================================ */
+/* RESPONSIVE                                   */
+/* ============================================ */
+
+@media (max-width: 640px) {
+    .bottom-nav {
+        height: 68px;
+        padding: 0 var(--spacing-sm) var(--spacing-xs);
+    }
+
+    .nav-item {
+        min-width: 44px;
+        padding: 4px 10px;
+    }
+
+    .nav-item .material-symbols-outlined {
+        font-size: 22px;
+    }
+
+    .nav-item .nav-label {
+        font-size: 10px;
+        letter-spacing: 0.12em;
+    }
+
+    .nav-item.active::before {
+        width: 20px;
+    }
+
+    @keyframes navIndicatorIn {
+        from { width: 0; opacity: 0; }
+        to { width: 20px; opacity: 1; }
+    }
+}
+
+@media (max-width: 400px) {
+    .bottom-nav {
+        height: 60px;
+        padding: 0 var(--spacing-xs) 4px;
+    }
+
+    .nav-item {
+        min-width: 36px;
+        padding: 2px 6px;
+        gap: 1px;
+    }
+
+    .nav-item .material-symbols-outlined {
+        font-size: 18px;
+    }
+
+    .nav-item .nav-label {
+        font-size: 8px;
+        letter-spacing: 0.1em;
+    }
+
+    .nav-item.active::before {
+        width: 16px;
+        height: 2px;
+    }
+
+    @keyframes navIndicatorIn {
+        from { width: 0; opacity: 0; }
+        to { width: 16px; opacity: 1; }
+    }
+}
+
+/* ============================================ */
+/* DARK MODE (por defecto)                      */
+/* ============================================ */
+
+.dark .bottom-nav {
+    background: rgba(6, 15, 26, 0.95);
+    border-top-color: rgba(124, 213, 213, 0.08);
+}
