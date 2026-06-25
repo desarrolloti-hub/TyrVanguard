@@ -36,51 +36,6 @@
 }
 
 /* ============================================
-   BACKGROUND EFFECTS
-   ============================================ */
-.login-bg {
-    position: fixed;
-    inset: 0;
-    z-index: 0;
-    pointer-events: none;
-    width: 100vw;
-    height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    top: 0;
-    left: 0;
-}
-
-.bg-texture {
-    width: 50%;
-    max-width: 450px;
-    height: auto;
-    opacity: 0.12;
-    mix-blend-mode: overlay;
-    filter: drop-shadow(0 0 60px rgba(124, 213, 213, 0.05));
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    /* 🆕 ANIMACIÓN SOLO DE SUBIDA Y BAJADA */
-    animation: floatSword 6s ease-in-out infinite;
-}
-
-/* 🆕 KEYFRAMES - Solo flotación vertical */
-@keyframes floatSword {
-    0% {
-        transform: translate(-50%, calc(-50% - 25px));
-    }
-    50% {
-        transform: translate(-50%, calc(-50% + 25px));
-    }
-    100% {
-        transform: translate(-50%, calc(-50% - 25px));
-    }
-}
-
-/* ============================================
    LOGIN CONTENT - Contenedor del contenido
    ============================================ */
 .login-content {
@@ -380,12 +335,6 @@
         width: 48px;
         margin-top: var(--spacing-xs);
     }
-
-    .bg-texture {
-        width: 70%;
-        max-width: 280px;
-        opacity: 0.1;
-    }
 }
 
 @media (max-width: 380px) {
@@ -434,10 +383,34 @@
         height: 5px;
         top: -2.5px;
     }
+}
 
-    .bg-texture {
-        width: 80%;
-        max-width: 220px;
-        opacity: 0.08;
+/* ============================================
+   ÍCONO DE USUARIO EN EL LOGO RING
+   ============================================ */
+
+.logo-icon-user {
+    font-size: 48px;
+    color: var(--color-secondary);
+    filter: drop-shadow(0 0 20px rgba(124, 213, 213, 0.3));
+    transition: all var(--transition-normal);
+    z-index: 2;
+    position: relative;
+    animation: userFloat 3s ease-in-out infinite;
+}
+
+/* Animación de flotación para el usuario */
+@keyframes userFloat {
+    0%, 100% {
+        transform: translateY(0px) scale(1);
     }
+    50% {
+        transform: translateY(-6px) scale(1.05);
+    }
+}
+
+.logo-ring:hover .logo-icon-user {
+    filter: drop-shadow(0 0 35px rgba(124, 213, 213, 0.6));
+    transform: scale(1.1);
+    animation-play-state: paused;
 }

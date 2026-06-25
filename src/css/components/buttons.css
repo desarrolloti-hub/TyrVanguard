@@ -293,3 +293,90 @@
         width: 100%;
     }
 }
+
+/* ============================================
+   BOTÓN DE GOOGLE
+   ============================================ */
+
+.btn-google {
+    background: var(--color-surface-container-highest); /* #1f3857 */
+    color: var(--text-primary);
+    border: 1px solid var(--border-secondary);
+    clip-path: polygon(4% 0, 100% 0, 96% 100%, 0 100%);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    transition: all var(--transition-normal);
+    font-weight: 600;
+    padding: 12px 28px;
+}
+
+.btn-google:hover:not(:disabled) {
+    background: var(--color-surface-container-high); /* #1a2f4a */
+    border-color: var(--border-primary);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    transform: translateY(-2px);
+}
+
+.btn-google .btn-icon {
+    color: #ffffff;
+    font-size: 1.2em;
+}
+
+.btn-google:active:not(:disabled) {
+    transform: scale(0.96) translateY(0);
+}
+
+/* ============================================
+   DIVISOR "O"
+   ============================================ */
+
+.divider-or {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-md);
+    width: 100%;
+    margin: var(--spacing-xs) 0;
+}
+
+.divider-or::before,
+.divider-or::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border-tertiary);
+}
+
+.divider-or-text {
+    font-size: var(--font-size-xs);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-muted);
+    opacity: 0.6;
+    padding: 0 var(--spacing-sm);
+    flex-shrink: 0;
+}
+
+/* ============================================
+   RESPONSIVE - Ajustes del botón Google
+   ============================================ */
+@media (max-width: 480px) {
+    .btn-google {
+        padding: 10px 20px;
+        font-size: var(--font-size-xs);
+    }
+
+    .btn-google .btn-icon {
+        font-size: 1em;
+    }
+
+    .divider-or {
+        gap: var(--spacing-sm);
+        margin: var(--spacing-xs) 0;
+    }
+
+    .divider-or-text {
+        font-size: var(--font-size-xs);
+        padding: 0 var(--spacing-xs);
+    }
+}

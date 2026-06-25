@@ -1,0 +1,139 @@
+/* ============================================
+   TYR VANGUARD - ANIMACIONES REUTILIZABLES
+   ============================================ */
+
+/* ============================================
+   ESPADA DE FONDO (Componente)
+   ============================================ */
+
+/* Contenedor de la espada */
+.sword-bg {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    top: 0;
+    left: 0;
+}
+
+/* La espada en sí - 🆕 GIGANTESCA */
+.sword-bg .sword-image {
+    width: 150%;  /* ← MUCHO más grande */
+    max-width: 1200px;  /* ← MUCHO más grande */
+    height: auto;
+    opacity: 0.12;
+    mix-blend-mode: overlay;
+    filter: drop-shadow(0 0 60px rgba(124, 213, 213, 0.05));
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    animation: floatSword 6s ease-in-out infinite;
+}
+
+/* Animación de flotación */
+@keyframes floatSword {
+    0% {
+        transform: translate(-50%, calc(-50% - 25px));
+    }
+    50% {
+        transform: translate(-50%, calc(-50% + 25px));
+    }
+    100% {
+        transform: translate(-50%, calc(-50% - 25px));
+    }
+}
+
+/* ============================================
+   VARIANTES DE LA ESPADA
+   ============================================ */
+
+/* Espada más pequeña (para móviles) */
+.sword-bg.small .sword-image {
+    width: 120%;  /* ← MUCHO más grande */
+    max-width: 800px;  /* ← MUCHO más grande */
+    opacity: 0.1;
+}
+
+/* Espada más grande (para pantallas grandes) */
+.sword-bg.large .sword-image {
+    width: 180%;  /* ← MUCHO más grande */
+    max-width: 1600px;  /* ← MUCHO más grande */
+    opacity: 0.15;
+}
+
+/* Espada más sutil (menos opacidad) */
+.sword-bg.subtle .sword-image {
+    opacity: 0.06;
+}
+
+/* Espada más visible (más opacidad) */
+.sword-bg.visible .sword-image {
+    opacity: 0.2;
+}
+
+/* Animación más lenta */
+.sword-bg.slow .sword-image {
+    animation-duration: 8s;
+}
+
+/* Animación más rápida */
+.sword-bg.fast .sword-image {
+    animation-duration: 4s;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 1024px) {
+    .sword-bg .sword-image {
+        width: 160%;
+        max-width: 800px;
+        opacity: 0.1;
+    }
+}
+
+@media (max-width: 768px) {
+    .sword-bg .sword-image {
+        width: 180%;  /* ← MUCHO más grande */
+        max-width: 700px;  /* ← MUCHO más grande */
+        opacity: 0.08;
+    }
+
+    .sword-bg.small .sword-image {
+        width: 150%;  /* ← MUCHO más grande */
+        max-width: 500px;  /* ← MUCHO más grande */
+        opacity: 0.06;
+    }
+
+    .sword-bg.large .sword-image {
+        width: 200%;  /* ← MUCHO más grande */
+        max-width: 900px;  /* ← MUCHO más grande */
+        opacity: 0.1;
+    }
+}
+
+@media (max-width: 480px) {
+    .sword-bg .sword-image {
+        width: 200%;  /* ← MUCHO más grande */
+        max-width: 600px;  /* ← MUCHO más grande */
+        opacity: 0.06;
+    }
+
+    .sword-bg.small .sword-image {
+        width: 180%;  /* ← MUCHO más grande */
+        max-width: 400px;  /* ← MUCHO más grande */
+        opacity: 0.05;
+    }
+
+    .sword-bg.large .sword-image {
+        width: 220%;  /* ← MUCHO más grande */
+        max-width: 800px;  /* ← MUCHO más grande */
+        opacity: 0.08;
+    }
+}

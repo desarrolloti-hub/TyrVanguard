@@ -1,16 +1,17 @@
 <section class="login-section">
-    <div class="login-container">
-        <!-- Ambient Background -->
-        <div class="login-bg">
-            <img class="bg-texture" src="/assets/img/espada.svg" alt="" loading="lazy" />
-        </div>
+    <!-- 🆕 ESPADA DE FONDO - Componente reutilizable -->
+    <div class="sword-bg">
+        <img class="sword-image" src="/assets/img/espada.svg" alt="" loading="lazy" />
+    </div>
 
+    <div class="login-container">
         <!-- Login Content -->
         <div class="login-content">
             <!-- Brand Header -->
             <header class="login-header">
                 <div class="logo-ring">
-                    <img src="/assets/img/espada.svg" alt="Espada Vanguard" class="logo-sword" />
+                    <!-- 🆕 CAMBIADO: Espada → Ícono de Usuario -->
+                    <i class="fas fa-user-circle logo-icon-user"></i>
                     <div class="logo-pulse"></div>
                 </div>
                 <h1 class="brand-title">ENTRA EN LA VANGUARDIA</h1>
@@ -23,25 +24,40 @@
             <div class="login-card form-card">
                 <div class="form-scanline"></div>
                 <form class="login-form form" id="loginForm">
-                    <!-- Warrior ID -->
+                    <!-- 🆕 BOTÓN DE GOOGLE -->
+                    <div class="form-group">
+                        <button type="button" class="btn btn-google btn-block" id="googleBtn">
+                            <i class="fab fa-google btn-icon"></i>
+                            <span class="btn-text">CONTINUAR CON GOOGLE</span>
+                        </button>
+                    </div>
+
+                    <!-- Divisor -->
+                    <div class="divider-or">
+                        <span class="divider-or-text">O</span>
+                    </div>
+
+                    <!-- Correo Electrónico -->
                     <div class="form-group">
                         <label class="form-label">
-                            <i class="fas fa-user label-icon"></i>
-                            WARRIOR ID
+                            <i class="fas fa-envelope label-icon"></i>
+                            CORREO ELECTRÓNICO
                             <span class="label-required">*</span>
                         </label>
                         <div class="input-icon-wrapper">
                             <input 
                                 class="form-input" 
-                                placeholder="NOMBRE DE GUERRERO" 
-                                type="text" 
-                                id="warriorId"
+                                placeholder="guerrero@vanguard.com" 
+                                type="email" 
+                                id="email"
+                                autocomplete="email"
+                                required
                             />
-                            <i class="fas fa-user input-icon"></i>
+                            <i class="fas fa-envelope input-icon"></i>
                         </div>
                     </div>
 
-                    <!-- Access Code -->
+                    <!-- Código de Acceso -->
                     <div class="form-group">
                         <label class="form-label">
                             <i class="fas fa-shield label-icon"></i>
@@ -54,6 +70,9 @@
                                 placeholder="••••••••" 
                                 type="password" 
                                 id="passwordInput"
+                                autocomplete="current-password"
+                                required
+                                minlength="6"
                             />
                             <button class="input-toggle" type="button" id="togglePassword">
                                 <i class="fas fa-eye"></i>
@@ -72,7 +91,7 @@
                     <!-- Secondary Links -->
                     <div class="secondary-links">
                         <a class="link-secondary" href="#">RECUPERAR HONOR</a>
-                        <a class="link-secondary" href="#">NUEVO RECLUTA</a>
+                        <a class="link-secondary" href="/crearCuenta">NUEVO RECLUTA</a>
                     </div>
                 </form>
             </div>

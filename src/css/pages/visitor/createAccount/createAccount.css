@@ -9,7 +9,7 @@
 .register-section {
     flex: 1;
     width: 100%;
-    min-height: calc(100vh - 68px - 350px); /* Ajusta dinámicamente */
+    min-height: calc(100vh - 68px - 350px);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -38,29 +38,6 @@
 }
 
 /* ============================================
-   BACKGROUND EFFECTS
-   ============================================ */
-.register-bg {
-    position: fixed;
-    inset: 0;
-    z-index: var(--z-background);
-    pointer-events: none;
-    width: 100vw;
-    height: 100vh;
-    overflow: hidden;
-}
-
-.bg-texture {
-    position: absolute;
-  
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    opacity: 0.15;
-    mix-blend-mode: overlay;
-}
-
-/* ============================================
    REGISTER CONTENT
    ============================================ */
 .register-content {
@@ -74,6 +51,7 @@
     max-width: 520px;
     padding: 0;
     margin: 0;
+    margin-top: 50px;
 }
 
 /* ============================================
@@ -483,4 +461,34 @@
 
 .register-section::-webkit-scrollbar-thumb:hover {
     background: var(--color-secondary-dark);
+}
+
+/* ============================================
+   ÍCONO DE USUARIO EN EL LOGO RING
+   ============================================ */
+
+.logo-icon-user {
+    font-size: 48px;
+    color: var(--color-secondary);
+    filter: drop-shadow(0 0 20px rgba(124, 213, 213, 0.3));
+    transition: all var(--transition-normal);
+    z-index: 2;
+    position: relative;
+    animation: userFloat 3s ease-in-out infinite;
+}
+
+/* Animación de flotación para el usuario */
+@keyframes userFloat {
+    0%, 100% {
+        transform: translateY(0px) scale(1);
+    }
+    50% {
+        transform: translateY(-6px) scale(1.05);
+    }
+}
+
+.logo-ring:hover .logo-icon-user {
+    filter: drop-shadow(0 0 35px rgba(124, 213, 213, 0.6));
+    transform: scale(1.1);
+    animation-play-state: paused;
 }

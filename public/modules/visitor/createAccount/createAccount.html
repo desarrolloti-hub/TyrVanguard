@@ -1,16 +1,17 @@
 <section class="register-section">
-    <div class="register-container">
-        <!-- Ambient Background -->
-        <div class="register-bg">
-            <img class="bg-texture" src="/assets/img/espada.svg" alt="" loading="lazy" />
-        </div>
+    <!-- Espada de fondo -->
+    <div class="sword-bg">
+        <img class="sword-image" src="/assets/img/espada.svg" alt="" loading="lazy" />
+    </div>
 
+    <div class="register-container">
         <!-- Register Content -->
         <div class="register-content">
             <!-- Brand Header -->
             <header class="register-header">
                 <div class="logo-ring">
-                    <img src="/assets/img/espada.svg" alt="Espada Vanguard" class="logo-sword" />
+                    <!-- 🆕 CAMBIADO: Espada → Ícono de Usuario -->
+                    <i class="fas fa-user-circle logo-icon-user"></i>
                     <div class="logo-pulse"></div>
                 </div>
                 <h1 class="brand-title">FORJA TU DESTINO</h1>
@@ -24,6 +25,19 @@
             <div class="register-card form-card">
                 <div class="form-scanline"></div>
                 <form class="register-form form" id="registerForm">
+                    <!-- 🆕 BOTÓN DE GOOGLE -->
+                    <div class="form-group">
+                        <button type="button" class="btn btn-google btn-block" id="googleBtn">
+                            <i class="fab fa-google btn-icon"></i>
+                            <span class="btn-text">CONTINUAR CON GOOGLE</span>
+                        </button>
+                    </div>
+
+                    <!-- Divisor -->
+                    <div class="divider-or">
+                        <span class="divider-or-text">O</span>
+                    </div>
+
                     <!-- Fila: Nombre y Apellido -->
                     <div class="form-row">
                         <!-- Nombre -->
@@ -149,7 +163,7 @@
                     <!-- Link a Login -->
                     <div class="register-links">
                         <span class="register-text">¿Ya tienes cuenta?</span>
-                        <a class="link-secondary" href="/inicioSesion">INICIA SESIÓN</a>
+                        <a class="link-secondary" href="/iniciarSesion">INICIA SESIÓN</a>
                     </div>
                 </form>
             </div>
