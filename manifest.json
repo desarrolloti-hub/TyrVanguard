@@ -1,7 +1,7 @@
 {
   "name": "TYR VANGUARD",
   "short_name": "TYRV",
-  "description": "Forja tu leyenda. Cada día una batalla, cada día una victoria. Tyr Vanguard es tu aliado en la lucha contra la adicción.",
+  "description": "Forja tu leyenda. Cada día una batalla, cada día una victoria.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
@@ -34,51 +34,8 @@
       "purpose": "maskable"
     }
   ],
-  "categories": ["fitness", "health", "lifestyle", "productivity"],
+  "categories": ["fitness", "health", "lifestyle"],
   "lang": "es",
   "dir": "ltr",
-  "prefer_related_applications": false,
-  "shortcuts": [
-    {
-      "name": "Bitácora de Batalla",
-      "short_name": "Batallas",
-      "description": "Registra tus batallas diarias",
-      "url": "/batallas",
-      "icons": [
-        {
-          "src": "/assets/img/logoTyr.png",
-          "sizes": "192x192",
-          "type": "image/png"
-        }
-      ]
-    },
-    {
-      "name": "Mis Metas",
-      "short_name": "Metas",
-      "description": "Define y alcanza tus objetivos",
-      "url": "/metas",
-      "icons": [
-        {
-          "src": "/assets/img/logoTyr.png",
-          "sizes": "192x192",
-          "type": "image/png"
-        }
-      ]
-    },
-    {
-      "name": "Diario del Guerrero",
-      "short_name": "Diario",
-      "description": "Registra tus reflexiones y aprendizajes",
-      "url": "/diario",
-      "icons": [
-        {
-          "src": "/assets/img/logoTyr.png",
-          "sizes": "192x192",
-          "type": "image/png"
-        }
-      ]
-    }
-  ],
-  "screenshots": [],
-  "related_applications": []
+  "prefer_related_applications": false
 }
