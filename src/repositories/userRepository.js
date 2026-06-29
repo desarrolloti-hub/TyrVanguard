@@ -142,25 +142,30 @@ export const UserRepository = {
     /**
      * Login with email/password
      */
-    async loginWithEmail(email, password) {
-        const userCredential = await signInWithEmailAndPassword(auth, email, password);
-        const firebaseUser = userCredential.user;
+  // En userRepository.js - loginWithEmail
+async loginWithEmail(email, password) {
+    const userCredential = await signInWithEmailAndPassword(auth, email, password);
+    const firebaseUser = userCredential.user;
+    
+    let userData = await this.getById(firebaseUser.uid);
+    
+    if (userData) {
+        // ✅ Asegurar que emailVerified venga de Firebase Auth
+        userData.emailVerified = firebaseUser.emailVerified;
         
-        let userData = await this.getById(firebaseUser.uid);
-        
-        if (userData) {
-            // Update last login
-            await this.update(firebaseUser.uid, { 
-                lastLogin: new Date().toISOString() 
-            });
-            userData = await this.getById(firebaseUser.uid);
-        }
+        // Update last login
+        await this.update(firebaseUser.uid, { 
+            lastLogin: new Date().toISOString(),
+            emailVerified: firebaseUser.emailVerified // Sincronizar
+        });
+        userData = await this.getById(firebaseUser.uid);
+    }
 
-        return { 
-            user: firebaseUser, 
-            userData: userData || null 
-        };
-    },
+    return { 
+        user: firebaseUser, 
+        userData: userData || null 
+    };
+},
 
     /**
      * Login with Google

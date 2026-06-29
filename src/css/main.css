@@ -54,3 +54,7 @@
 /* shared  osea el 404*/
 @import url('./shared/errors/404.css');
 
+
+/* firebase */
+@import url('./shared/firebase/verifyEmail/verifyEmail.css')
+

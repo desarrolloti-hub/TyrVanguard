@@ -11,7 +11,7 @@ export async function loginController() {
     const form = document.getElementById('loginForm');
     const submitBtn = document.getElementById('submitBtn');
     const googleBtn = document.getElementById('googleBtn');
-    const emailInput = document.getElementById('warriorId');
+    const emailInput = document.getElementById('email');  
     const passwordInput = document.getElementById('passwordInput');
 
     // Inicializar efectos visuales
@@ -88,19 +88,68 @@ export async function loginController() {
         setLoading(true);
 
         try {
-            // Llamar al servicio de autenticación
-            const result = await AuthService.login(email, password, false);
-            console.log('✅ Login exitoso:', result);
+            // ✅ INTENTAR LOGIN COMO USUARIO PRIMERO
+            let result = null;
+            let isAdmin = false;
+
+            try {
+                // Intentar login como usuario regular
+                result = await AuthService.loginUser(email, password, false);
+                console.log('✅ Login como usuario:', result);
+            } catch (userError) {
+                // Si falla como usuario, intentar como admin
+                console.log('⚠️ No es usuario, intentando como admin...');
+                try {
+                    result = await AuthService.loginAdmin(email, password, false);
+                    isAdmin = true;
+                    console.log('✅ Login como admin:', result);
+                } catch (adminError) {
+                    // Si ambos fallan, lanzar el error del usuario
+                    throw userError;
+                }
+            }
+
+            // ✅ VERIFICACIONES DE SEGURIDAD
+            if (!result || !result.userData) {
+                throw new Error('No se encontró información del usuario');
+            }
+
+            // ✅ Verificar que el usuario esté activo
+            if (result.userData.isActive === false) {
+                throw new Error('account_disabled');
+            }
+
+            // ✅ Verificar que el email esté verificado (para usuarios regulares)
+            if (!isAdmin && result.userData.emailVerified === false) {
+                throw new Error('email_not_verified');
+            }
+
+            // ✅ Verificar email para admins
+            if (isAdmin && result.userData.emailVerified === false) {
+                throw new Error('email_not_verified_admin');
+            }
 
             showSuccess('¡Bienvenido, guerrero!');
 
-            // Redirigir según rol
+            // ✅ REDIRIGIR A RUTAS LIMPIAS
             setTimeout(() => {
                 const user = AuthService.getCurrentUser();
-                if (user?.role === 'admin' || user?.role === 'super_admin') {
-                    window.location.href = '/admin/dashboard';
+                const isAdminUser = user?.role === 'admin' || user?.role === 'super_admin';
+                
+                // ✅ Usar navigateTo si existe
+                if (typeof window.navigateTo === 'function') {
+                    if (isAdminUser) {
+                        window.navigateTo('/homeAdmin');
+                    } else {
+                        window.navigateTo('/homeUser');
+                    }
                 } else {
-                    window.location.href = '/dashboard';
+                    // Fallback
+                    if (isAdminUser) {
+                        window.location.href = '/homeAdmin';
+                    } else {
+                        window.location.href = '/homeUser';
+                    }
                 }
             }, 1500);
 
@@ -109,8 +158,14 @@ export async function loginController() {
             
             let errorMsg = error.message || 'Error al iniciar sesión';
             
-            // Mensajes más amigables
-            if (error.code === 'auth/user-not-found') {
+            // ✅ MENSAJES ESPECÍFICOS PARA CADA CASO
+            if (error.message === 'email_not_verified') {
+                errorMsg = '⚠️ Tu correo electrónico no ha sido verificado. Revisa tu bandeja de entrada (y spam) y haz clic en el enlace de verificación.';
+            } else if (error.message === 'email_not_verified_admin') {
+                errorMsg = '⚠️ Tu correo de administrador no ha sido verificado. Revisa tu bandeja de entrada (y spam) y haz clic en el enlace de verificación.';
+            } else if (error.message === 'account_disabled') {
+                errorMsg = '🚫 Esta cuenta ha sido deshabilitada. Por favor, contacta al soporte para más información.';
+            } else if (error.code === 'auth/user-not-found') {
                 errorMsg = 'No existe una cuenta con este correo';
             } else if (error.code === 'auth/wrong-password') {
                 errorMsg = 'Contraseña incorrecta. Intenta nuevamente.';
@@ -119,7 +174,7 @@ export async function loginController() {
             } else if (error.code === 'auth/invalid-email') {
                 errorMsg = 'Correo electrónico inválido';
             } else if (error.code === 'auth/user-disabled') {
-                errorMsg = 'Esta cuenta ha sido desactivada. Contacta al soporte.';
+                errorMsg = '🚫 Esta cuenta ha sido desactivada. Contacta al soporte.';
             } else if (error.code === 'auth/network-request-failed') {
                 errorMsg = 'Error de conexión. Verifica tu internet.';
             }
@@ -134,17 +189,65 @@ export async function loginController() {
         setLoading(true);
 
         try {
-            const result = await AuthService.login(null, null, true);
-            console.log('✅ Google login exitoso:', result);
+            // ✅ INTENTAR LOGIN CON GOOGLE
+            let result = null;
+            let isAdmin = false;
+
+            try {
+                // Intentar login como usuario con Google
+                result = await AuthService.loginUser(null, null, true);
+                console.log('✅ Google login como usuario:', result);
+            } catch (userError) {
+                // Si falla como usuario, intentar como admin
+                console.log('⚠️ No es usuario Google, intentando como admin...');
+                try {
+                    result = await AuthService.loginAdmin(null, null, true);
+                    isAdmin = true;
+                    console.log('✅ Google login como admin:', result);
+                } catch (adminError) {
+                    throw userError;
+                }
+            }
+
+            if (!result || !result.userData) {
+                throw new Error('No se encontró información del usuario');
+            }
+
+            // ✅ Verificar que el usuario esté activo
+            if (result.userData.isActive === false) {
+                throw new Error('account_disabled');
+            }
+
+            // ✅ Verificar que el email esté verificado
+            if (!isAdmin && result.userData.emailVerified === false) {
+                throw new Error('email_not_verified');
+            }
+
+            if (isAdmin && result.userData.emailVerified === false) {
+                throw new Error('email_not_verified_admin');
+            }
 
             showSuccess('¡Bienvenido! Has iniciado sesión con Google.');
 
+            // ✅ REDIRIGIR A RUTAS LIMPIAS
             setTimeout(() => {
                 const user = AuthService.getCurrentUser();
-                if (user?.role === 'admin' || user?.role === 'super_admin') {
-                    window.location.href = '/admin/dashboard';
+                const isAdminUser = user?.role === 'admin' || user?.role === 'super_admin';
+                
+                // ✅ Usar navigateTo si existe
+                if (typeof window.navigateTo === 'function') {
+                    if (isAdminUser) {
+                        window.navigateTo('/homeAdmin');
+                    } else {
+                        window.navigateTo('/homeUser');
+                    }
                 } else {
-                    window.location.href = '/dashboard';
+                    // Fallback
+                    if (isAdminUser) {
+                        window.location.href = '/homeAdmin';
+                    } else {
+                        window.location.href = '/homeUser';
+                    }
                 }
             }, 1500);
 
@@ -153,7 +256,13 @@ export async function loginController() {
             
             let errorMsg = 'Error al iniciar sesión con Google';
             
-            if (error.code === 'auth/popup-closed-by-user') {
+            if (error.message === 'email_not_verified') {
+                errorMsg = '⚠️ Tu correo no está verificado. Revisa tu bandeja de entrada (y spam).';
+            } else if (error.message === 'email_not_verified_admin') {
+                errorMsg = '⚠️ Tu correo de administrador no está verificado. Revisa tu bandeja de entrada (y spam).';
+            } else if (error.message === 'account_disabled') {
+                errorMsg = '🚫 Esta cuenta ha sido deshabilitada. Contacta al soporte.';
+            } else if (error.code === 'auth/popup-closed-by-user') {
                 errorMsg = 'Ventana de Google cerrada. Intenta nuevamente.';
             } else if (error.code === 'auth/popup-blocked') {
                 errorMsg = 'El popup fue bloqueado. Permite ventanas emergentes.';
@@ -210,17 +319,18 @@ export async function loginController() {
             background: rgba(239, 68, 68, 0.1);
             border: 1px solid rgba(239, 68, 68, 0.3);
             border-radius: 8px;
-            padding: 12px 16px;
+            padding: 16px 20px;
             margin: 12px 0;
             font-size: 14px;
             display: flex;
-            align-items: center;
-            gap: 10px;
+            align-items: flex-start;
+            gap: 12px;
             animation: shakeAnim 0.4s ease;
+            line-height: 1.5;
         `;
 
         errorEl.innerHTML = `
-            <i class="fas fa-exclamation-circle" style="font-size: 18px;"></i>
+            <i class="fas fa-exclamation-circle" style="font-size: 20px; margin-top: 2px; flex-shrink: 0;"></i>
             <span>${message}</span>
         `;
 
@@ -233,7 +343,7 @@ export async function loginController() {
         const successEl = document.querySelector('.form-success-message');
         if (successEl) successEl.remove();
 
-        // Auto-ocultar después de 6 segundos
+        // Auto-ocultar después de 8 segundos
         clearTimeout(errorEl._timeout);
         errorEl._timeout = setTimeout(() => {
             if (errorEl.parentNode) {
@@ -241,7 +351,7 @@ export async function loginController() {
                 errorEl.style.transition = 'opacity 0.3s ease';
                 setTimeout(() => errorEl.remove(), 300);
             }
-        }, 6000);
+        }, 8000);
     }
 
     function showSuccess(message) {
@@ -454,6 +564,13 @@ style.textContent = `
         to {
             opacity: 1;
             transform: translateY(0);
+        }
+    }
+
+    @keyframes rippleAnim {
+        to {
+            transform: scale(4);
+            opacity: 0;
         }
     }
 

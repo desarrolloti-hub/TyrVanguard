@@ -38,97 +38,91 @@ export async function createAccountController() {
 
     // ============ HANDLERS ============
 
-    async function handleRegisterSubmit(e) {
-        e.preventDefault();
+ async function handleRegisterSubmit(e) {
+    e.preventDefault();
 
-        // Obtener valores del formulario
-        const firstName = document.getElementById('firstName').value.trim();
-        const lastName = document.getElementById('lastName').value.trim();
-        const email = document.getElementById('email').value.trim();
-        const password = passwordInput.value;
-        const confirmPasswordValue = confirmPassword.value;
-        const termsChecked = document.getElementById('terms').checked;
+    // Obtener valores del formulario
+    const firstName = document.getElementById('firstName').value.trim();
+    const lastName = document.getElementById('lastName').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const password = passwordInput.value;
+    const confirmPasswordValue = confirmPassword.value;
+    const termsChecked = document.getElementById('terms').checked;
 
-        // Validaciones básicas del frontend (UX, no seguridad)
-        if (!termsChecked) {
-            showError('Debes aceptar los términos y condiciones');
-            return;
-        }
-
-        if (password !== confirmPasswordValue) {
-            showError('Las contraseñas no coinciden');
-            return;
-        }
-
-        // Mostrar estado de carga
-        setLoading(true);
-
-        try {
-            // Construir objeto de usuario
-            const userData = {
-                firstName: firstName,
-                lastName: lastName,
-                email: email,
-                photoURL: '',
-                role: 'user',
-                plan: 'free'
-            };
-
-            // Llamar al servicio de autenticación
-            const result = await AuthService.register(userData, password);
-
-            console.log('✅ Usuario registrado exitosamente:', result);
-
-            // Mostrar mensaje de éxito
-            showSuccess('¡Cuenta creada exitosamente! Verifica tu correo.');
-
-            // Redirigir después de un momento
-            setTimeout(() => {
-                window.location.href = '/iniciarSesion';
-            }, 2000);
-
-        } catch (error) {
-            console.error('❌ Error en registro:', error);
-            showError(error.message || 'Error al crear la cuenta. Intenta nuevamente.');
-        } finally {
-            setLoading(false);
-        }
+    // Validaciones básicas del frontend (UX, no seguridad)
+    if (!termsChecked) {
+        showError('Debes aceptar los términos y condiciones');
+        return;
     }
 
-    async function handleGoogleRegister() {
-        // Mostrar estado de carga
-        setLoading(true);
+    if (password !== confirmPasswordValue) {
+        showError('Las contraseñas no coinciden');
+        return;
+    }
 
-        try {
-            // Login con Google (el servicio crea la cuenta si no existe)
-            const result = await AuthService.login(null, null, true);
+    // Mostrar estado de carga
+    setLoading(true);
 
-            console.log('✅ Registro con Google exitoso:', result);
+    try {
+        // Construir objeto de usuario
+        const userData = {
+            firstName: firstName,
+            lastName: lastName,
+            email: email,
+            photoURL: '',
+            role: 'user',
+            plan: 'free'
+        };
 
-            showSuccess('¡Bienvenido! Has iniciado sesión con Google.');
+        // ✅ CORRECTO: Usar registerUser en lugar de register
+        const result = await AuthService.registerUser(userData, password);
 
-            // Redirigir según el rol del usuario
-            setTimeout(() => {
-                const user = AuthService.getCurrentUser();
-                if (user?.role === 'admin' || user?.role === 'super_admin') {
-                    window.location.href = '/admin/dashboard';
-                } else {
-                    window.location.href = '/dashboard';
-                }
-            }, 1500);
+        console.log('✅ Usuario registrado exitosamente:', result);
 
-        } catch (error) {
-            console.error('❌ Error en registro con Google:', error);
-            
-            if (error.code === 'auth/popup-closed-by-user') {
-                showError('Ventana de Google cerrada. Intenta nuevamente.');
+        // Mostrar mensaje de éxito
+        showSuccess('¡Cuenta creada exitosamente! Verifica tu correo.');
+
+        // Redirigir después de un momento
+        setTimeout(() => {
+            window.location.href = '/iniciarSesion';
+        }, 2000);
+
+    } catch (error) {
+        console.error('❌ Error en registro:', error);
+        showError(error.message || 'Error al crear la cuenta. Intenta nuevamente.');
+    } finally {
+        setLoading(false);
+    }
+}
+
+  // En createAccountController.js
+
+async function handleGoogleRegister() {
+    setLoading(true);
+
+    try {
+        // ✅ CORRECTO: Usar loginUser con isGoogle=true
+        const result = await AuthService.loginUser(null, null, true);
+
+        console.log('✅ Registro con Google exitoso:', result);
+
+        showSuccess('¡Bienvenido! Has iniciado sesión con Google.');
+
+        setTimeout(() => {
+            const user = AuthService.getCurrentUser();
+            if (user?.role === 'admin' || user?.role === 'super_admin') {
+                window.location.href = '/homeAdmin';
             } else {
-                showError(error.message || 'Error al iniciar sesión con Google');
+                window.location.href = '/homeAdmin';
             }
-        } finally {
-            setLoading(false);
-        }
+        }, 1500);
+
+    } catch (error) {
+        // ... manejo de errores
+    } finally {
+        setLoading(false);
     }
+}
 
     // ============ FUNCIONES DE UI ============
 

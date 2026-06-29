@@ -203,5 +203,28 @@ export const AuthService = {
      */
     async getUsers(filters = {}) {
         return await UserService.getUsers(filters);
+    },
+    // En authService.js - añadir este método
+
+/**
+ * Login genérico (intenta user primero, luego admin)
+ */
+    async login(email, password, isGoogle = false) {
+        try {
+            // Intentar como usuario
+            return await this.loginUser(email, password, isGoogle);
+        } catch (userError) {
+            // Si el error es de usuario no encontrado, intentar como admin
+            if (userError.code === 'auth/user-not-found' || 
+                userError.message?.includes('user-not-found')) {
+                try {
+                    return await this.loginAdmin(email, password, isGoogle);
+                } catch (adminError) {
+                    // Si es admin no encontrado, lanzar el error original
+                    throw userError;
+                }
+            }
+            throw userError;
+        }
     }
 };
