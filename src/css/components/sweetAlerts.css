@@ -1,0 +1,347 @@
+/* ============================================
+   TYR VANGUARD - SWEETALERTS COMPONENT
+   Estilos personalizados para SweetAlert2
+   ============================================ */
+
+/* ============================================
+   POPUP PRINCIPAL
+   ============================================ */
+
+.tyr-popup {
+    font-family: var(--font-family) !important;
+    border-left: 3px solid var(--color-secondary) !important;
+    border-radius: 0 !important;
+    box-shadow: var(--shadow-md) !important;
+    color: var(--text-primary) !important;
+    position: relative !important;
+    overflow: hidden !important;
+    background: var(--color-surface-container) !important;
+    backdrop-filter: blur(10px) !important;
+    -webkit-backdrop-filter: blur(10px) !important;
+    padding: 2.5rem 2.5rem 2rem !important;
+    max-width: 480px !important;
+    width: 92% !important;
+}
+
+/* Eliminar glow interno y scanline que causan problemas */
+.tyr-popup::before,
+.tyr-popup::after {
+    display: none !important;
+}
+
+/* ============================================
+   TOAST - versión compacta
+   ============================================ */
+
+.swal2-toast .tyr-popup {
+    border-left: 3px solid var(--color-secondary) !important;
+    box-shadow: var(--shadow-sm) !important;
+    padding: 0.6rem 1rem !important;
+    max-width: 420px !important;
+    width: 92% !important;
+    background: var(--color-surface-container-high) !important;
+    margin: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    border-radius: 0 !important;
+    clip-path: none !important;
+    min-height: auto !important;
+    height: auto !important;
+    backdrop-filter: blur(12px) !important;
+    -webkit-backdrop-filter: blur(12px) !important;
+}
+
+/* Eliminar el clip-path problemático en toast */
+.swal2-toast .tyr-popup::before,
+.swal2-toast .tyr-popup::after {
+    display: none !important;
+}
+
+/* ============================================
+   TÍTULO
+   ============================================ */
+
+.tyr-title {
+    font-family: var(--font-family) !important;
+    font-size: var(--font-size-base) !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.06em !important;
+    text-transform: uppercase !important;
+    color: var(--text-primary) !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    text-shadow: 0 0 20px rgba(124, 213, 213, 0.1) !important;
+    position: relative !important;
+    z-index: 1 !important;
+    line-height: 1.4 !important;
+}
+
+/* ============================================
+   CONTENIDO HTML
+   ============================================ */
+
+.tyr-html {
+    font-family: var(--font-family) !important;
+    color: var(--text-secondary) !important;
+    font-size: var(--font-size-sm) !important;
+    line-height: 1.5 !important;
+    position: relative !important;
+    z-index: 1 !important;
+    text-shadow: 0 0 10px rgba(0, 0, 0, 0.2) !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.tyr-html strong {
+    color: var(--color-secondary) !important;
+}
+
+/* ============================================
+   ICONO
+   ============================================ */
+
+.tyr-icon {
+    position: relative !important;
+    z-index: 1 !important;
+    background: transparent !important;
+    padding: 0 !important;
+    border: none !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin: 0 !important;
+}
+
+.tyr-icon .swal2-icon-content {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 100% !important;
+    height: 100% !important;
+}
+
+.swal2-icon {
+    position: relative !important;
+    margin: 0 !important;
+}
+
+/* Ajuste para iconos en toast */
+.swal2-toast .swal2-icon {
+    width: 2.2rem !important;
+    height: 2.2rem !important;
+    min-width: 2.2rem !important;
+    margin: 0 0.6rem 0 0 !important;
+}
+
+.swal2-toast .swal2-icon .swal2-icon-content {
+    font-size: 1.2rem !important;
+}
+
+/* ============================================
+   BOTONES
+   ============================================ */
+
+.tyr-btn-confirm,
+.tyr-btn-cancel {
+    font-family: var(--font-family) !important;
+    font-weight: 700 !important;
+    font-size: var(--font-size-sm) !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.12em !important;
+    padding: 0.8rem 2rem !important;
+    border: none !important;
+    cursor: pointer !important;
+    transition: all var(--transition-normal) !important;
+    clip-path: polygon(4% 0, 100% 0, 96% 100%, 0 100%) !important;
+    min-width: 110px !important;
+    position: relative !important;
+    z-index: 1 !important;
+}
+
+/* Botón Confirmar */
+.tyr-btn-confirm {
+    background: linear-gradient(135deg, var(--color-secondary), #5ab8b8) !important;
+    color: var(--color-on-secondary) !important;
+    box-shadow: 0 0 30px 2px rgba(124, 213, 213, 0.25) !important;
+    font-weight: 800 !important;
+}
+
+.tyr-btn-confirm:hover {
+    background: linear-gradient(135deg, var(--color-secondary-fixed-dim), var(--color-secondary)) !important;
+    box-shadow: 0 0 50px 5px rgba(124, 213, 213, 0.4) !important;
+    transform: translateY(-2px) !important;
+}
+
+/* Botón Cancelar */
+.tyr-btn-cancel {
+    background: transparent !important;
+    color: var(--text-muted) !important;
+    border: 1px solid var(--border-secondary) !important;
+    clip-path: polygon(2% 0, 100% 0, 98% 100%, 0 100%) !important;
+}
+
+.tyr-btn-cancel:hover {
+    background: rgba(124, 213, 213, 0.08) !important;
+    border-color: var(--color-secondary) !important;
+    color: var(--text-primary) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 0 30px rgba(124, 213, 213, 0.05) !important;
+}
+
+.swal2-toast .tyr-btn-confirm,
+.swal2-toast .tyr-btn-cancel {
+    padding: 0.3rem 1rem !important;
+    font-size: var(--font-size-xs) !important;
+    min-width: 60px !important;
+}
+
+/* ============================================
+   ACCIONES
+   ============================================ */
+
+.tyr-actions {
+    gap: 0.8rem !important;
+    margin-top: 0.8rem !important;
+    position: relative !important;
+    z-index: 1 !important;
+}
+
+/* ============================================
+   CLOSE BUTTON
+   ============================================ */
+
+.tyr-close-btn {
+    color: var(--color-secondary) !important;
+    opacity: 0.4 !important;
+    transition: opacity var(--transition-fast) !important;
+    font-size: 1.1rem !important;
+    padding: 0.2rem !important;
+    margin: 0 !important;
+    background: transparent !important;
+    border: none !important;
+    position: relative !important;
+    z-index: 2 !important;
+}
+
+.tyr-close-btn:hover {
+    opacity: 1 !important;
+    color: var(--color-secondary) !important;
+}
+
+.swal2-toast .tyr-close-btn {
+    font-size: 0.9rem !important;
+    padding: 0.1rem !important;
+}
+
+/* ============================================
+   BARRA DE PROGRESO
+   ============================================ */
+
+.tyr-progress-bar {
+    background: linear-gradient(90deg, var(--color-secondary), var(--color-secondary-fixed-dim)) !important;
+    height: 2px !important;
+    border-radius: 0 !important;
+}
+
+/* ============================================
+   CONTAINER - ELIMINAR SOMBRA LATERAL
+   ============================================ */
+
+.swal2-container {
+    pointer-events: none !important;
+}
+
+.swal2-container.swal2-top-end {
+    padding: 12px !important;
+    pointer-events: none !important;
+}
+
+/* Permitir interacción solo con el toast */
+.swal2-container .swal2-popup {
+    pointer-events: auto !important;
+}
+
+/* Eliminar el backdrop que tapa la vista */
+.swal2-container.swal2-backdrop-show {
+    background: transparent !important;
+}
+
+/* ============================================
+   ERROR POPUP
+   ============================================ */
+
+.tyr-error-popup {
+    border-left: 3px solid var(--color-error) !important;
+}
+
+.tyr-error-popup .tyr-title {
+    color: var(--color-error) !important;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
+@media (max-width: 480px) {
+    .swal2-container.swal2-top-end {
+        padding: 6px !important;
+    }
+    
+    .swal2-toast .tyr-popup {
+        max-width: 95% !important;
+        padding: 0.4rem 0.6rem !important;
+        border-left-width: 2px !important;
+    }
+    
+    .swal2-toast .tyr-title {
+        font-size: 12px !important;
+        letter-spacing: 0.04em !important;
+    }
+    
+    .swal2-toast .tyr-html {
+        font-size: 11px !important;
+        line-height: 1.3 !important;
+    }
+
+    .swal2-toast .swal2-icon {
+        width: 1.8rem !important;
+        height: 1.8rem !important;
+        min-width: 1.8rem !important;
+        margin: 0 0.4rem 0 0 !important;
+    }
+
+    .swal2-toast .swal2-icon .swal2-icon-content {
+        font-size: 1rem !important;
+    }
+
+    .tyr-close-btn {
+        font-size: 0.8rem !important;
+    }
+}
+
+@media (max-width: 380px) {
+    .swal2-toast .tyr-popup {
+        padding: 0.3rem 0.4rem !important;
+    }
+    
+    .swal2-toast .tyr-title {
+        font-size: 10px !important;
+    }
+    
+    .swal2-toast .tyr-html {
+        font-size: 9px !important;
+    }
+
+    .swal2-toast .swal2-icon {
+        width: 1.4rem !important;
+        height: 1.4rem !important;
+        min-width: 1.4rem !important;
+        margin: 0 0.3rem 0 0 !important;
+    }
+
+    .swal2-toast .swal2-icon .swal2-icon-content {
+        font-size: 0.8rem !important;
+    }
+}

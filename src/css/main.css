@@ -12,6 +12,7 @@
 @import url('./components/buttons.css');
 @import url('./components/forms.css');
 @import url('./components/animations.css');
+@import url('./components/sweetAlerts.css');
 
 /* components user */
 @import url('./components/user/navbarUser.css');
