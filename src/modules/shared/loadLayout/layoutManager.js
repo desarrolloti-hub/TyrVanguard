@@ -175,11 +175,13 @@ async function initLayoutControllers(controllers) {
 /**
  * Actualiza el layout actual (navbar y footer)
  */
+/**
+ * Actualiza el layout actual (navbar y footer)
+ */
 export async function updateLayout() {
     // Evitar actualizaciones concurrentes
     if (isUpdating) {
         console.log('⏳ Layout ya está actualizando, esperando...');
-        // Esperar a que termine la actualización actual
         await new Promise(resolve => {
             const checkUpdate = () => {
                 if (!isUpdating) {
@@ -198,7 +200,7 @@ export async function updateLayout() {
     try {
         console.log('🔄 Actualizando layout...');
         
-        // 1. Obtener rol del usuario
+        // 1. Obtener rol del usuario (ahora debería ser 'guest' después del logout)
         const role = getUserRole();
         console.log(`👤 Rol detectado: ${role}`);
         
@@ -223,6 +225,8 @@ export async function updateLayout() {
         const footerContainer = document.getElementById('footer');
         
         if (navbarContainer) {
+            // Limpiar completamente antes de insertar
+            navbarContainer.innerHTML = '';
             navbarContainer.innerHTML = navbarHTML;
             console.log('✅ Navbar HTML insertado');
         } else {
@@ -230,14 +234,15 @@ export async function updateLayout() {
         }
         
         if (footerContainer) {
+            footerContainer.innerHTML = '';
             footerContainer.innerHTML = footerHTML;
             console.log('✅ Footer HTML insertado');
         } else {
             console.warn('⚠️ Contenedor footer no encontrado');
         }
         
-        // 5. Inicializar controladores (con un pequeño delay para que el DOM se actualice)
-        await new Promise(resolve => setTimeout(resolve, 50));
+        // 5. Inicializar controladores (con delay para que el DOM se actualice)
+        await new Promise(resolve => setTimeout(resolve, 100));
         await initLayoutControllers(controllers);
         
         // 6. Disparar evento de layout cargado
@@ -247,7 +252,6 @@ export async function updateLayout() {
         
         console.log(`✅ Layout cargado: ${layoutKey} (${role})`);
         
-        // 7. Retornar el layout cargado
         return {
             role,
             layoutKey,
@@ -257,9 +261,6 @@ export async function updateLayout() {
         
     } catch (error) {
         console.error('❌ Error actualizando layout:', error);
-        
-        // Fallback: cargar layout guest
-        console.log('🔄 Cargando layout guest como fallback...');
         return await loadGuestLayout();
     } finally {
         isUpdating = false;

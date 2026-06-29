@@ -414,16 +414,62 @@ function handleSettings(e) {
 /**
  * Maneja cierre de sesión
  */
+/**
+ * Maneja cierre de sesión
+ */
 async function handleLogout(e) {
     e.preventDefault();
+    
+    // Mostrar confirmación (opcional)
+    if (!confirm('¿Estás seguro de que deseas cerrar sesión?')) {
+        return;
+    }
+    
     try {
+        // 1. Cerrar dropdown primero (feedback visual)
+        closeDropdown();
+        
+        // 2. Mostrar estado de carga (opcional)
+        if (elements.logoutBtn) {
+            elements.logoutBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Cerrando...';
+            elements.logoutBtn.style.pointerEvents = 'none';
+        }
+        
+        // 3. Ejecutar logout del AuthService
         if (window.AuthService) {
             await window.AuthService.logout();
         }
-        closeDropdown();
-        window.location.href = '/iniciarSesion';
+        
+        // 4. Limpiar localStorage (por si acaso)
+        localStorage.removeItem('user-TYRVANGUARD');
+        localStorage.removeItem('user-TYRVANGUARD-session');
+        
+        // 5. ✅ FORZAR RECARGA DE LAYOUT - esto es lo más importante
+        if (window.reloadLayout) {
+            console.log('🔄 Recargando layout después de logout...');
+            await window.reloadLayout();
+        } else {
+            // Fallback: recargar la página completa si no está disponible
+            console.warn('⚠️ reloadLayout no disponible, recargando página...');
+            window.location.reload();
+            return;
+        }
+        
+        // 6. Navegar a login (usando navigateTo si está disponible)
+        if (typeof window.navigateTo === 'function') {
+            await window.navigateTo('/iniciarSesion');
+        } else {
+            window.location.href = '/iniciarSesion';
+        }
+        
     } catch (error) {
-        console.error('Error en logout:', error);
+        console.error('❌ Error en logout:', error);
+        
+        // Fallback: recargar página
+        showToast('Error al cerrar sesión, recargando...', 'error');
+        setTimeout(() => {
+            window.location.reload();
+        }, 1000);
     }
 }
 
