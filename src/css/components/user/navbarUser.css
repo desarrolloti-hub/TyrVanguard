@@ -20,7 +20,6 @@
     box-shadow: 0 1px 10px rgba(0, 0, 0, 0.2);
 }
 
-/* Estado con scroll */
 .navbar-user.scrolled {
     background: rgba(6, 15, 26, 0.97);
     border-bottom-color: rgba(124, 213, 213, 0.25);
@@ -145,7 +144,7 @@
     top: 2px;
     right: 2px;
     background: var(--color-error);
-    color: var(--text-inverse);
+    color: #ffffff;
     font-size: 9px;
     font-weight: 700;
     width: 17px;
@@ -274,6 +273,11 @@
     font-size: 16px;
     width: 20px;
     text-align: center;
+    color: var(--text-muted);
+}
+
+.profile-dropdown a:hover i {
+    color: var(--text-primary);
 }
 
 .profile-dropdown .dropdown-divider {
@@ -286,8 +290,17 @@
     color: var(--color-error);
 }
 
+.profile-dropdown .logout-item i {
+    color: var(--color-error);
+}
+
 .profile-dropdown .logout-item:hover {
     background: rgba(255, 107, 107, 0.06);
+    color: var(--color-error);
+}
+
+.profile-dropdown .logout-item:hover i {
+    color: var(--color-error);
 }
 
 /* ============================================ */
@@ -338,6 +351,11 @@
 
     .menu-toggle {
         display: block;
+        color: var(--text-secondary);
+    }
+
+    .menu-toggle:hover {
+        color: var(--text-primary);
     }
 
     .nav-actions {
@@ -368,21 +386,41 @@
         width: 100%;
     }
 
-    /* Botones de acción en móvil */
+    /* ========================================== */
+    /* BOTONES DE ACCIÓN EN MÓVIL - TEXTO CLARO  */
+    /* ========================================== */
+
     .nav-btn-icon {
         padding: 12px 16px;
-        font-size: 18px;
+        font-size: 16px;
         border-radius: var(--border-radius-md);
         justify-content: flex-start;
         width: 100%;
         gap: 12px;
+        color: var(--text-secondary);
+        background: transparent;
+    }
+
+    .nav-btn-icon i {
+        color: var(--text-secondary);
+        font-size: 20px;
+        width: 24px;
+        text-align: center;
     }
 
     .nav-btn-icon:hover {
         background: rgba(124, 213, 213, 0.06);
+        color: var(--text-primary);
     }
 
-    /* Avatar en móvil */
+    .nav-btn-icon:hover i {
+        color: var(--text-primary);
+    }
+
+    /* ========================================== */
+    /* AVATAR EN MÓVIL - TEXTO CLARO             */
+    /* ========================================== */
+
     .nav-avatar-wrapper {
         width: 100%;
     }
@@ -392,10 +430,13 @@
         width: 100%;
         border-radius: var(--border-radius-md);
         gap: 12px;
+        color: var(--text-secondary);
+        background: transparent;
     }
 
     .nav-avatar-btn:hover {
         background: rgba(124, 213, 213, 0.06);
+        color: var(--text-primary);
     }
 
     .avatar-img {
@@ -405,9 +446,17 @@
 
     .avatar-chevron {
         margin-left: auto;
+        color: var(--text-muted);
     }
 
-    /* Dropdown en móvil (dentro del menú) */
+    .nav-avatar-btn:hover .avatar-chevron {
+        color: var(--text-secondary);
+    }
+
+    /* ========================================== */
+    /* DROPDOWN EN MÓVIL                         */
+    /* ========================================== */
+
     .profile-dropdown {
         position: static;
         background: transparent;
@@ -430,11 +479,48 @@
     .profile-dropdown a {
         padding: 8px 12px;
         font-size: var(--font-size-sm);
+        color: var(--text-muted);
+        background: transparent;
+    }
+
+    .profile-dropdown a i {
+        color: var(--text-muted);
+    }
+
+    .profile-dropdown a:hover {
+        background: rgba(124, 213, 213, 0.06);
+        color: var(--text-primary);
+    }
+
+    .profile-dropdown a:hover i {
+        color: var(--text-primary);
     }
 
     .profile-dropdown .dropdown-divider {
         margin: 4px 0;
+        background: rgba(124, 213, 213, 0.06);
     }
+
+    .profile-dropdown .logout-item {
+        color: var(--color-error);
+    }
+
+    .profile-dropdown .logout-item i {
+        color: var(--color-error);
+    }
+
+    .profile-dropdown .logout-item:hover {
+        background: rgba(255, 107, 107, 0.06);
+        color: var(--color-error);
+    }
+
+    .profile-dropdown .logout-item:hover i {
+        color: var(--color-error);
+    }
+
+    /* ========================================== */
+    /* BADGE EN MÓVIL                            */
+    /* ========================================== */
 
     .notif-badge {
         top: 6px;
@@ -470,7 +556,12 @@
 
     .nav-btn-icon {
         padding: 10px 14px;
-        font-size: 16px;
+        font-size: 15px;
+    }
+
+    .nav-btn-icon i {
+        font-size: 18px;
+        width: 20px;
     }
 
     .nav-avatar-btn {
@@ -498,4 +589,14 @@
 .nav-actions::-webkit-scrollbar-thumb {
     background: rgba(124, 213, 213, 0.3);
     border-radius: 10px;
+}
+
+.nav-actions::-webkit-scrollbar-thumb:hover {
+    background: rgba(124, 213, 213, 0.5);
+}
+
+/* Firefox scrollbar */
+.nav-actions {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(124, 213, 213, 0.3) transparent;
 }

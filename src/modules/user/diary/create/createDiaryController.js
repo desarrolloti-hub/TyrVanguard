@@ -6,7 +6,7 @@
 import { DiaryService, DIARY_TAGS } from '../../../../services/diaryService.js';
 
 export function createDiaryController() {
-    console.log('✍️ Inicializando formulario de creación de diario...');
+    console.log('Inicializando formulario de creacion de diario...');
 
     // --- DOM References ---
     const form = document.getElementById('diaryCreateForm');
@@ -65,17 +65,14 @@ export function createDiaryController() {
     // --- Guardar entrada usando el servicio ---
     async function saveEntry(title, content, tag) {
         try {
-            // Obtener usuario actual
             const session = JSON.parse(localStorage.getItem('user-TYRVANGUARD') || '{}');
             if (!session || !session.id) {
-                throw new Error('Debes iniciar sesión para crear una entrada');
+                throw new Error('Debes iniciar sesion para crear una entrada');
             }
 
-            // Mapear etiqueta de español a inglés
             const tagSpanish = tag;
             const tagEnglish = TAG_MAP[tagSpanish] || DIARY_TAGS.REFLEXION;
 
-            // Preparar datos
             const entryData = {
                 title: title.trim(),
                 content: content.trim(),
@@ -83,22 +80,18 @@ export function createDiaryController() {
                 date: new Date().toISOString()
             };
 
-            console.log('📦 Datos a enviar al servicio:', entryData);
+            console.log('Datos a enviar al servicio:', entryData);
 
-            // Crear entrada usando el servicio
             const newEntry = await DiaryService.createEntry(session.id, entryData);
             
-            console.log('✍️ Nueva entrada creada:', newEntry);
+            console.log('Nueva entrada creada:', newEntry);
 
-            // Disparar evento para actualizar la lista
             document.dispatchEvent(new CustomEvent('diary:created', {
                 detail: newEntry
             }));
 
-            // Mostrar notificación
-            showToast('✅ ¡Entrada guardada con éxito!', 'success');
+            showToast('Entrada guardada con exito', 'success');
 
-            // Redirigir a la lista
             setTimeout(() => {
                 if (typeof window.navigateTo === 'function') {
                     window.navigateTo('/diario');
@@ -110,7 +103,7 @@ export function createDiaryController() {
         } catch (error) {
             console.error('Error al crear entrada:', error);
             Swal.fire({
-                title: '❌ Error',
+                title: 'Error',
                 text: error.message || 'No se pudo crear la entrada',
                 icon: 'error',
                 customClass: {
@@ -145,8 +138,6 @@ export function createDiaryController() {
     }
 
     // --- Event Listeners ---
-
-    // Submit del formulario
     if (form) {
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -161,15 +152,14 @@ export function createDiaryController() {
         });
     }
 
-    // Cancelar
     function handleCancel() {
         Swal.fire({
-            title: '⚠️ ¿Cancelar?',
-            text: 'Tienes cambios sin guardar. ¿Seguro que quieres salir?',
+            title: 'Cancelar',
+            text: 'Tienes cambios sin guardar. Seguro que quieres salir?',
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonText: 'SÍ, SALIR',
-            cancelButtonText: 'SEGUIR EDITANDO',
+            confirmButtonText: 'Si, salir',
+            cancelButtonText: 'Seguir editando',
             customClass: {
                 popup: 'tyr-popup',
                 title: 'tyr-title',
@@ -198,7 +188,6 @@ export function createDiaryController() {
         cancelHeaderBtn.addEventListener('click', handleCancel);
     }
 
-    // Limpiar errores al escribir
     if (titleInput) {
         titleInput.addEventListener('input', () => {
             if (titleInput.value.trim()) hideError(titleError);
@@ -211,5 +200,5 @@ export function createDiaryController() {
         });
     }
 
-    console.log('✅ Formulario de creación de diario inicializado correctamente');
+    console.log('Formulario de creacion de diario inicializado correctamente');
 }

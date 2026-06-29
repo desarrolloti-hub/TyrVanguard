@@ -21,13 +21,13 @@ export function homeUserController() {
             if (session && session.id) {
                 userId = session.id;
                 userData = session;
-                console.log('👤 Usuario obtenido:', userData.fullName || userData.firstName);
+                console.log('Usuario obtenido:', userData.fullName || userData.firstName);
                 return true;
             }
-            console.warn('⚠️ No hay usuario autenticado');
+            console.warn('No hay usuario autenticado');
             return false;
         } catch (error) {
-            console.error('❌ Error al obtener usuario:', error);
+            console.error('Error al obtener usuario:', error);
             return false;
         }
     }
@@ -48,15 +48,11 @@ export function homeUserController() {
         if (!userId) return;
 
         try {
-            console.log('📊 Cargando estadísticas...');
+            console.log('Cargando estadísticas...');
             
-            // Obtener estadísticas de batallas
             const battleStats = await BattleService.getBattleStats(userId);
-            
-            // Obtener estadísticas de metas
             const goalStats = await GoalService.getGoalStats(userId);
             
-            // Calcular días en libertad (días desde que se registró)
             let freeDays = 0;
             if (userData.createdAt) {
                 const createdDate = new Date(userData.createdAt);
@@ -64,55 +60,47 @@ export function homeUserController() {
                 freeDays = Math.floor((now - createdDate) / (1000 * 60 * 60 * 24));
             }
 
-            // Calcular racha (simulada basada en batallas completadas)
-            // Idealmente esto vendría de un campo en el usuario, pero lo calculamos
             const streak = Math.min(battleStats.completed || 0, 30);
-
-            // Nivel mental (basado en metas completadas)
             const mentalLevel = Math.min(Math.floor((goalStats.completed || 0) / 2) + 1, 4);
-
-            // Ofensivas lanzadas (basado en batallas activas + completadas)
             const offensiveCount = (battleStats.inProgress || 0) + (battleStats.completed || 0);
-
-            // Progreso hacia el Valhalla (basado en % de metas completadas)
             const progress = goalStats.total > 0 
                 ? Math.round((goalStats.completed / goalStats.total) * 100)
                 : 0;
 
-            // Actualizar DOM
-            const streakDisplay = document.getElementById('streakDisplay');
-            const totalWins = document.getElementById('totalWins');
-            const freeDaysDisplay = document.getElementById('freeDays');
-            const mentalLevelDisplay = document.getElementById('mentalLevel');
-            const offensiveCountDisplay = document.getElementById('offensiveCount');
-            const progressFill = document.getElementById('progressFill');
-            const progressPercentage = document.getElementById('progressPercentage');
+            const elements = {
+                streakDisplay: document.getElementById('streakDisplay'),
+                totalWins: document.getElementById('totalWins'),
+                freeDaysDisplay: document.getElementById('freeDays'),
+                mentalLevelDisplay: document.getElementById('mentalLevel'),
+                offensiveCountDisplay: document.getElementById('offensiveCount'),
+                progressFill: document.getElementById('progressFill'),
+                progressPercentage: document.getElementById('progressPercentage')
+            };
 
-            if (streakDisplay) streakDisplay.textContent = streak;
-            if (totalWins) totalWins.textContent = battleStats.completed || 0;
-            if (freeDaysDisplay) freeDaysDisplay.textContent = freeDays;
-            if (mentalLevelDisplay) mentalLevelDisplay.textContent = `${mentalLevel} / 4`;
-            if (offensiveCountDisplay) offensiveCountDisplay.textContent = offensiveCount;
-            if (progressFill) progressFill.style.width = `${progress}%`;
-            if (progressPercentage) progressPercentage.textContent = `${progress}%`;
+            if (elements.streakDisplay) elements.streakDisplay.textContent = streak;
+            if (elements.totalWins) elements.totalWins.textContent = battleStats.completed || 0;
+            if (elements.freeDaysDisplay) elements.freeDaysDisplay.textContent = freeDays;
+            if (elements.mentalLevelDisplay) elements.mentalLevelDisplay.textContent = `${mentalLevel} / 4`;
+            if (elements.offensiveCountDisplay) elements.offensiveCountDisplay.textContent = offensiveCount;
+            if (elements.progressFill) elements.progressFill.style.width = `${progress}%`;
+            if (elements.progressPercentage) elements.progressPercentage.textContent = `${progress}%`;
 
-            console.log('✅ Estadísticas actualizadas:', { streak, totalWins: battleStats.completed, freeDays, mentalLevel, offensiveCount, progress });
+            console.log('Estadísticas actualizadas:', { streak, totalWins: battleStats.completed, freeDays, mentalLevel, offensiveCount, progress });
 
         } catch (error) {
-            console.error('❌ Error cargando estadísticas:', error);
+            console.error('Error cargando estadísticas:', error);
         }
     }
 
-    // --- 5. Cargar actividades (batallas recientes) ---
+    // --- 5. Cargar actividades ---
     async function loadActivities() {
         if (!userId) return;
 
         try {
-            console.log('⚔️ Cargando actividades...');
+            console.log('Cargando actividades...');
             
             const battles = await BattleService.getUserBattles(userId);
             
-            // Ordenar por fecha (más recientes primero) y tomar las 5 más recientes
             const recentBattles = battles
                 .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
                 .slice(0, 5);
@@ -140,7 +128,7 @@ export function homeUserController() {
             };
 
             const typeLabels = {
-                'physical': 'Físico',
+                'physical': 'Fisico',
                 'mental': 'Mental',
                 'spiritual': 'Espiritual',
                 'social': 'Social',
@@ -150,13 +138,15 @@ export function homeUserController() {
             activityList.innerHTML = recentBattles.map(battle => `
                 <div class="activity-item" data-id="${battle.id}">
                     <div class="activity-info">
-                        <i class="fas ${typeIcons[battle.type] || 'fa-sword'} activity-icon"></i>
+                        <div class="activity-icon">
+                            <i class="fas ${typeIcons[battle.type] || 'fa-sword'}"></i>
+                        </div>
                         <div>
                             <span class="activity-name">${escapeHtml(battle.name)}</span>
                             <span class="activity-description">
                                 ${escapeHtml(typeLabels[battle.type] || battle.type)} • 
                                 ${battle.durationText || '--'}
-                                ${battle.completed ? ' ✅' : ''}
+                                ${battle.completed ? '<span class="completed-badge">Completada</span>' : ''}
                             </span>
                         </div>
                     </div>
@@ -174,20 +164,19 @@ export function homeUserController() {
             `).join('');
 
         } catch (error) {
-            console.error('❌ Error cargando actividades:', error);
+            console.error('Error cargando actividades:', error);
         }
     }
 
-    // --- 6. Cargar metas (con mayor progreso) ---
+    // --- 6. Cargar metas ---
     async function loadGoals() {
         if (!userId) return;
 
         try {
-            console.log('🎯 Cargando metas...');
+            console.log('Cargando metas...');
             
             const goals = await GoalService.getUserGoals(userId);
             
-            // Filtrar solo metas no completadas y ordenar por progreso (mayor primero)
             const activeGoals = goals
                 .filter(g => !g.completed)
                 .sort((a, b) => b.progressPercentage - a.progressPercentage)
@@ -197,7 +186,6 @@ export function homeUserController() {
             if (!goalList) return;
 
             if (activeGoals.length === 0) {
-                // Si no hay metas activas, mostrar las completadas recientes
                 const completedGoals = goals
                     .filter(g => g.completed)
                     .sort((a, b) => new Date(b.completedAt) - new Date(a.completedAt))
@@ -206,14 +194,14 @@ export function homeUserController() {
                 if (completedGoals.length > 0) {
                     goalList.innerHTML = `
                         <div class="goal-empty">
-                            <i class="fas fa-check-circle" style="color: #34d399;"></i>
-                            <p>¡Todas tus metas están completadas!</p>
+                            <i class="fas fa-check-circle"></i>
+                            <p>Todas tus metas estan completadas</p>
                             <span class="empty-sub">${completedGoals.length} metas completadas recientemente</span>
                         </div>
                         ${completedGoals.map(g => `
                             <div class="goal-item completed" data-id="${g.id}">
                                 <div class="goal-info">
-                                    <span class="goal-name">✅ ${escapeHtml(g.title)}</span>
+                                    <span class="goal-name">${escapeHtml(g.title)}</span>
                                     <span class="goal-meta">Completada • ${g.formattedDate}</span>
                                 </div>
                             </div>
@@ -244,16 +232,16 @@ export function homeUserController() {
             `).join('');
 
         } catch (error) {
-            console.error('❌ Error cargando metas:', error);
+            console.error('Error cargando metas:', error);
         }
     }
 
-    // --- 7. Cargar entradas del diario (últimas 5) ---
+    // --- 7. Cargar entradas del diario ---
     async function loadJournal() {
         if (!userId) return;
 
         try {
-            console.log('📖 Cargando entradas del diario...');
+            console.log('Cargando entradas del diario...');
             
             const entries = await DiaryService.getRecentEntries(userId, 5);
 
@@ -272,11 +260,11 @@ export function homeUserController() {
             }
 
             const tagMap = {
-                'victory': '🏆 VICTORIA',
-                'learning': '📖 APRENDIZAJE',
-                'battle': '⚔️ BATALLA',
-                'reflection': '🧠 REFLEXIÓN',
-                'achievement': '⭐ LOGRO'
+                'victory': 'Victoria',
+                'learning': 'Aprendizaje',
+                'battle': 'Batalla',
+                'reflection': 'Reflexion',
+                'achievement': 'Logro'
             };
 
             const tagClassMap = {
@@ -311,7 +299,7 @@ export function homeUserController() {
             `).join('');
 
         } catch (error) {
-            console.error('❌ Error cargando entradas del diario:', error);
+            console.error('Error cargando entradas del diario:', error);
         }
     }
 
@@ -323,7 +311,7 @@ export function homeUserController() {
         return div.innerHTML;
     }
 
-    // --- 9. Navegación a crear ---
+    // --- 9. Navegación ---
     function navigateTo(path) {
         if (typeof window.navigateTo === 'function') {
             window.navigateTo(path);
@@ -332,183 +320,7 @@ export function homeUserController() {
         }
     }
 
-    // --- 10. Event Listeners ---
-
-    // Agregar Actividad -> Redirige a Crear Batalla
-    const addActivityBtn = document.getElementById('addActivityBtn');
-    if (addActivityBtn) {
-        addActivityBtn.addEventListener('click', () => {
-            navigateTo('/crearBatallas');
-        });
-    }
-
-    // Agregar Meta -> Redirige a Crear Meta
-    const addGoalBtn = document.getElementById('addGoalBtn');
-    if (addGoalBtn) {
-        addGoalBtn.addEventListener('click', () => {
-            navigateTo('/crearMetas');
-        });
-    }
-
-    // Nueva Entrada de Diario -> Redirige a Crear Diario
-    const newEntryBtn = document.getElementById('newEntryBtn');
-    if (newEntryBtn) {
-        newEntryBtn.addEventListener('click', () => {
-            navigateTo('/crearDiario');
-        });
-    }
-
-    // --- 11. Acciones en lista de actividades (Delegación) ---
-    const activityList = document.getElementById('activityList');
-    if (activityList) {
-        activityList.addEventListener('click', async (e) => {
-            const completeBtn = e.target.closest('.complete-btn');
-            const deleteBtn = e.target.closest('.delete-btn');
-
-            if (completeBtn) {
-                const item = completeBtn.closest('.activity-item');
-                if (item) {
-                    const battleId = item.dataset.id;
-                    try {
-                        await BattleService.completeBattle(battleId);
-                        showToast('✅ ¡Batalla completada! Bien hecho guerrero.', 'success');
-                        // Recargar actividades y estadísticas
-                        await loadActivities();
-                        await loadStats();
-                    } catch (error) {
-                        showToast(error.message || 'Error al completar la batalla', 'error');
-                    }
-                }
-            }
-
-            if (deleteBtn) {
-                const item = deleteBtn.closest('.activity-item');
-                if (item) {
-                    const result = await Swal.fire({
-                        title: '⚔️ ¿Eliminar actividad?',
-                        text: '¿Seguro que quieres eliminar esta batalla?',
-                        icon: 'warning',
-                        showCancelButton: true,
-                        confirmButtonText: 'SÍ, ELIMINAR',
-                        cancelButtonText: 'CANCELAR',
-                        customClass: {
-                            popup: 'tyr-popup',
-                            title: 'tyr-title',
-                            htmlContainer: 'tyr-html',
-                            confirmButton: 'tyr-btn-confirm',
-                            cancelButton: 'tyr-btn-cancel',
-                            actions: 'tyr-actions'
-                        }
-                    });
-
-                    if (result.isConfirmed) {
-                        try {
-                            await BattleService.deleteBattle(item.dataset.id);
-                            showToast('🗑️ Batalla eliminada', 'success');
-                            await loadActivities();
-                            await loadStats();
-                        } catch (error) {
-                            showToast(error.message || 'Error al eliminar', 'error');
-                        }
-                    }
-                }
-            }
-        });
-    }
-
-    // --- 12. Acciones en el diario (Delegación) ---
-    const journalList = document.getElementById('journalList');
-    if (journalList) {
-        journalList.addEventListener('click', async (e) => {
-            const viewBtn = e.target.closest('.view-entry');
-            const editBtn = e.target.closest('.edit-entry');
-            const deleteBtn = e.target.closest('.delete-entry');
-
-            const entry = e.target.closest('.journal-entry');
-            if (!entry) return;
-            const entryId = entry.dataset.id;
-
-            if (viewBtn) {
-                try {
-                    const diaryEntry = await DiaryService.getEntryById(entryId);
-                    if (diaryEntry) {
-                        const tagMap = {
-                            'victory': '🏆 Victoria',
-                            'learning': '📖 Aprendizaje',
-                            'battle': '⚔️ Batalla',
-                            'reflection': '🧠 Reflexión',
-                            'achievement': '⭐ Logro'
-                        };
-                        Swal.fire({
-                            title: `📖 ${diaryEntry.title}`,
-                            html: `
-                                <div style="text-align: left; color: var(--text-secondary);">
-                                    <p style="margin-bottom: 8px;">
-                                        <strong style="color: var(--text-primary);">📅 Fecha:</strong> ${diaryEntry.formattedDateTime}
-                                    </p>
-                                    <p style="margin-bottom: 12px;">
-                                        <strong style="color: var(--text-primary);">🏷️ Etiqueta:</strong> 
-                                        <span class="tag ${diaryEntry.tagClass}">${tagMap[diaryEntry.tag] || diaryEntry.tag}</span>
-                                    </p>
-                                    <div style="border-top: 1px solid var(--border-tertiary); padding-top: 12px;">
-                                        <p style="font-style: italic; line-height: 1.6; color: var(--text-primary);">
-                                            "${escapeHtml(diaryEntry.content)}"
-                                        </p>
-                                    </div>
-                                </div>
-                            `,
-                            confirmButtonText: 'CERRAR',
-                            customClass: {
-                                popup: 'tyr-popup',
-                                title: 'tyr-title',
-                                htmlContainer: 'tyr-html',
-                                confirmButton: 'tyr-btn-confirm',
-                                closeButton: 'tyr-close-btn'
-                            }
-                        });
-                    }
-                } catch (error) {
-                    showToast('Error al cargar la entrada', 'error');
-                }
-            }
-
-            if (editBtn) {
-                // Redirigir a editar (por ahora solo notificación)
-                showToast('✏️ Edición en desarrollo', 'info');
-            }
-
-            if (deleteBtn) {
-                const result = await Swal.fire({
-                    title: '🗑️ ¿Eliminar entrada?',
-                    text: '¿Seguro que quieres eliminar esta entrada del diario?',
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonText: 'SÍ, ELIMINAR',
-                    cancelButtonText: 'CANCELAR',
-                    customClass: {
-                        popup: 'tyr-popup',
-                        title: 'tyr-title',
-                        htmlContainer: 'tyr-html',
-                        confirmButton: 'tyr-btn-confirm',
-                        cancelButton: 'tyr-btn-cancel',
-                        actions: 'tyr-actions'
-                    }
-                });
-
-                if (result.isConfirmed) {
-                    try {
-                        await DiaryService.deleteEntry(entryId);
-                        showToast('🗑️ Entrada eliminada', 'success');
-                        await loadJournal();
-                    } catch (error) {
-                        showToast(error.message || 'Error al eliminar', 'error');
-                    }
-                }
-            }
-        });
-    }
-
-    // --- 13. Toast ---
+    // --- 10. Toast ---
     function showToast(message, icon = 'success') {
         const Toast = Swal.mixin({
             toast: true,
@@ -529,34 +341,210 @@ export function homeUserController() {
         });
     }
 
+    // --- 11. Configurar Event Listeners ---
+    function setupEventListeners() {
+        // Agregar Actividad -> Crear Batalla
+        const addActivityBtn = document.getElementById('addActivityBtn');
+        if (addActivityBtn) {
+            addActivityBtn.addEventListener('click', () => navigateTo('/crearBatallas'));
+        }
+
+        // Agregar Meta -> Crear Meta
+        const addGoalBtn = document.getElementById('addGoalBtn');
+        if (addGoalBtn) {
+            addGoalBtn.addEventListener('click', () => navigateTo('/crearMetas'));
+        }
+
+        // Nueva Entrada de Diario -> Crear Diario
+        const newEntryBtn = document.getElementById('newEntryBtn');
+        if (newEntryBtn) {
+            newEntryBtn.addEventListener('click', () => navigateTo('/crearDiario'));
+        }
+
+        // Acciones en lista de actividades
+        const activityList = document.getElementById('activityList');
+        if (activityList) {
+            activityList.addEventListener('click', handleActivityActions);
+        }
+
+        // Acciones en el diario
+        const journalList = document.getElementById('journalList');
+        if (journalList) {
+            journalList.addEventListener('click', handleJournalActions);
+        }
+    }
+
+    // --- 12. Manejador de acciones de actividades ---
+    async function handleActivityActions(e) {
+        const completeBtn = e.target.closest('.complete-btn');
+        const deleteBtn = e.target.closest('.delete-btn');
+
+        if (completeBtn) {
+            const item = completeBtn.closest('.activity-item');
+            if (item) {
+                const battleId = item.dataset.id;
+                try {
+                    await BattleService.completeBattle(battleId);
+                    showToast('Batalla completada. Bien hecho guerrero.', 'success');
+                    await loadActivities();
+                    await loadStats();
+                } catch (error) {
+                    showToast(error.message || 'Error al completar la batalla', 'error');
+                }
+            }
+        }
+
+        if (deleteBtn) {
+            const item = deleteBtn.closest('.activity-item');
+            if (item) {
+                const result = await Swal.fire({
+                    title: 'Eliminar actividad',
+                    text: 'Seguro que quieres eliminar esta batalla?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Si, eliminar',
+                    cancelButtonText: 'Cancelar',
+                    customClass: {
+                        popup: 'tyr-popup',
+                        title: 'tyr-title',
+                        htmlContainer: 'tyr-html',
+                        confirmButton: 'tyr-btn-confirm',
+                        cancelButton: 'tyr-btn-cancel',
+                        actions: 'tyr-actions'
+                    }
+                });
+
+                if (result.isConfirmed) {
+                    try {
+                        await BattleService.deleteBattle(item.dataset.id);
+                        showToast('Batalla eliminada', 'success');
+                        await loadActivities();
+                        await loadStats();
+                    } catch (error) {
+                        showToast(error.message || 'Error al eliminar', 'error');
+                    }
+                }
+            }
+        }
+    }
+
+    // --- 13. Manejador de acciones del diario ---
+    async function handleJournalActions(e) {
+        const viewBtn = e.target.closest('.view-entry');
+        const editBtn = e.target.closest('.edit-entry');
+        const deleteBtn = e.target.closest('.delete-entry');
+
+        const entry = e.target.closest('.journal-entry');
+        if (!entry) return;
+        const entryId = entry.dataset.id;
+
+        if (viewBtn) {
+            try {
+                const diaryEntry = await DiaryService.getEntryById(entryId);
+                if (diaryEntry) {
+                    const tagMap = {
+                        'victory': 'Victoria',
+                        'learning': 'Aprendizaje',
+                        'battle': 'Batalla',
+                        'reflection': 'Reflexion',
+                        'achievement': 'Logro'
+                    };
+                    Swal.fire({
+                        title: diaryEntry.title,
+                        html: `
+                            <div style="text-align: left; color: var(--text-secondary);">
+                                <p style="margin-bottom: 8px;">
+                                    <strong style="color: var(--text-primary);">Fecha:</strong> ${diaryEntry.formattedDateTime}
+                                </p>
+                                <p style="margin-bottom: 12px;">
+                                    <strong style="color: var(--text-primary);">Etiqueta:</strong> 
+                                    <span class="tag ${diaryEntry.tagClass}">${tagMap[diaryEntry.tag] || diaryEntry.tag}</span>
+                                </p>
+                                <div style="border-top: 1px solid var(--border-tertiary); padding-top: 12px;">
+                                    <p style="font-style: italic; line-height: 1.6; color: var(--text-primary);">
+                                        "${escapeHtml(diaryEntry.content)}"
+                                    </p>
+                                </div>
+                            </div>
+                        `,
+                        confirmButtonText: 'Cerrar',
+                        customClass: {
+                            popup: 'tyr-popup',
+                            title: 'tyr-title',
+                            htmlContainer: 'tyr-html',
+                            confirmButton: 'tyr-btn-confirm',
+                            closeButton: 'tyr-close-btn'
+                        }
+                    });
+                }
+            } catch (error) {
+                showToast('Error al cargar la entrada', 'error');
+            }
+        }
+
+        if (editBtn) {
+            showToast('Edicion en desarrollo', 'info');
+        }
+
+        if (deleteBtn) {
+            const result = await Swal.fire({
+                title: 'Eliminar entrada',
+                text: 'Seguro que quieres eliminar esta entrada del diario?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Si, eliminar',
+                cancelButtonText: 'Cancelar',
+                customClass: {
+                    popup: 'tyr-popup',
+                    title: 'tyr-title',
+                    htmlContainer: 'tyr-html',
+                    confirmButton: 'tyr-btn-confirm',
+                    cancelButton: 'tyr-btn-cancel',
+                    actions: 'tyr-actions'
+                }
+            });
+
+            if (result.isConfirmed) {
+                try {
+                    await DiaryService.deleteEntry(entryId);
+                    showToast('Entrada eliminada', 'success');
+                    await loadJournal();
+                } catch (error) {
+                    showToast(error.message || 'Error al eliminar', 'error');
+                }
+            }
+        }
+    }
+
     // --- 14. Escuchar eventos de creación ---
-    document.addEventListener('battle:created', () => {
-        console.log('🔄 Batalla creada, recargando home...');
-        loadActivities();
-        loadStats();
-    });
+    function setupEventListeners() {
+        document.addEventListener('battle:created', () => {
+            console.log('Batalla creada, recargando home...');
+            loadActivities();
+            loadStats();
+        });
 
-    document.addEventListener('goal:created', () => {
-        console.log('🔄 Meta creada, recargando home...');
-        loadGoals();
-        loadStats();
-    });
+        document.addEventListener('goal:created', () => {
+            console.log('Meta creada, recargando home...');
+            loadGoals();
+            loadStats();
+        });
 
-    document.addEventListener('diary:created', () => {
-        console.log('🔄 Entrada de diario creada, recargando home...');
-        loadJournal();
-    });
+        document.addEventListener('diary:created', () => {
+            console.log('Entrada de diario creada, recargando home...');
+            loadJournal();
+        });
+    }
 
     // --- 15. Inicializar ---
     async function init() {
         if (!getUserFromLocal()) {
-            console.warn('⚠️ Usuario no autenticado, redirigiendo...');
+            console.warn('Usuario no autenticado, redirigiendo...');
             return;
         }
 
         renderUserData();
         
-        // Cargar todos los datos en paralelo
         await Promise.all([
             loadStats(),
             loadActivities(),
@@ -564,7 +552,7 @@ export function homeUserController() {
             loadJournal()
         ]);
 
-        console.log('✅ Home User Dinámico inicializado correctamente');
+        console.log('Home User Dinamico inicializado correctamente');
     }
 
     init();

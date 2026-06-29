@@ -5,9 +5,7 @@
     </div>
 
     <div class="diary-container">
-        <!-- ==========================================
-             HEADER DEL DIARIO
-             ========================================== -->
+        <!-- HEADER -->
         <header class="diary-header">
             <div class="diary-header-left">
                 <div class="diary-badge">
@@ -15,7 +13,7 @@
                     <span>DIARIO DEL GUERRERO</span>
                 </div>
                 <h1 class="diary-title">
-                    Bitácora de <span>Batalla</span>
+                    Bitacora de <span>Batalla</span>
                 </h1>
                 <p class="diary-subtitle">
                     "Registra tus victorias, aprendizajes y el camino hacia el Valhalla."
@@ -28,9 +26,7 @@
             </div>
         </header>
 
-        <!-- ==========================================
-             FILTROS Y BÚSQUEDA
-             ========================================== -->
+        <!-- FILTROS -->
         <div class="diary-filters">
             <div class="filter-group">
                 <div class="search-wrapper">
@@ -44,11 +40,11 @@
                 </div>
                 <select class="form-select" id="filterTag">
                     <option value="all">Todas las etiquetas</option>
-                    <option value="victoria">🏆 Victoria</option>
-                    <option value="aprendizaje">📖 Aprendizaje</option>
-                    <option value="batalla">⚔️ Batalla</option>
-                    <option value="reflexion">🧠 Reflexión</option>
-                    <option value="logro">⭐ Logro</option>
+                    <option value="victory">Victoria</option>
+                    <option value="learning">Aprendizaje</option>
+                    <option value="battle">Batalla</option>
+                    <option value="reflection">Reflexion</option>
+                    <option value="achievement">Logro</option>
                 </select>
             </div>
             <div class="filter-stats">
@@ -59,15 +55,13 @@
             </div>
         </div>
 
-        <!-- ==========================================
-             TABLA DEL DIARIO
-             ========================================== -->
+        <!-- TABLA -->
         <div class="diary-table-wrapper">
             <table class="diary-table" id="diaryTable">
                 <thead>
                     <tr>
                         <th class="col-date">FECHA</th>
-                        <th class="col-title">TÍTULO</th>
+                        <th class="col-title">TITULO</th>
                         <th class="col-entry">ENTRADA</th>
                         <th class="col-tag">ETIQUETA</th>
                         <th class="col-actions">ACCIONES</th>
@@ -79,27 +73,23 @@
             </table>
         </div>
 
-        <!-- ==========================================
-             PAGINACIÓN
-             ========================================== -->
+        <!-- PAGINACIÓN -->
         <div class="diary-pagination">
             <button class="btn btn-ghost btn-sm" id="prevPage" disabled>
                 <i class="fas fa-chevron-left"></i> Anterior
             </button>
-            <span class="pagination-info" id="paginationInfo">Página 1 de 1</span>
+            <span class="pagination-info" id="paginationInfo">Pagina 1 de 1</span>
             <button class="btn btn-ghost btn-sm" id="nextPage" disabled>
                 Siguiente <i class="fas fa-chevron-right"></i>
             </button>
         </div>
 
-        <!-- ==========================================
-             ESTADO VACÍO
-             ========================================== -->
+        <!-- ESTADO VACÍO -->
         <div class="diary-empty" id="diaryEmpty" style="display: none;">
             <div class="empty-icon">
                 <i class="fas fa-feather-alt"></i>
             </div>
-            <h3 class="empty-title">Aún no hay entradas</h3>
+            <h3 class="empty-title">Aun no hay entradas</h3>
             <p class="empty-text">
                 Comienza a registrar tus batallas, victorias y aprendizajes.
                 <br> Cada entrada es un paso hacia el Valhalla.

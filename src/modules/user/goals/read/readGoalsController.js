@@ -6,7 +6,7 @@
 import { GoalService, GOAL_CATEGORIES, GOAL_STATUS } from '../../../../services/goalService.js';
 
 export function readGoalsController() {
-    console.log('🎯 Inicializando Mis Metas...');
+    console.log('Inicializando Mis Metas...');
 
     // --- 1. Estado ---
     let goals = [];
@@ -41,45 +41,41 @@ export function readGoalsController() {
 
     // --- 4. Mapeo de estados (Inglés -> Español) ---
     const statusConfig = {
-        'pending': { label: 'Pendiente', icon: 'fa-clock', class: 'pending' },
-        'in_progress': { label: 'En Curso', icon: 'fa-spinner', class: 'in-progress' },
-        'completed': { label: 'Completada', icon: 'fa-check-circle', class: 'completed' },
-        'abandoned': { label: 'Abandonada', icon: 'fa-times-circle', class: 'abandoned' }
+        'pending': { label: 'Pendiente', icon: 'fa-clock', class: 'status-pending' },
+        'in_progress': { label: 'En Curso', icon: 'fa-spinner', class: 'status-progress' },
+        'completed': { label: 'Completada', icon: 'fa-check-circle', class: 'status-completed' },
+        'abandoned': { label: 'Abandonada', icon: 'fa-times-circle', class: 'status-abandoned' }
     };
 
     // --- 5. Cargar datos desde Firestore ---
     async function loadGoals() {
         try {
-            // Obtener usuario actual
             const session = JSON.parse(localStorage.getItem('user-TYRVANGUARD') || '{}');
             if (!session || !session.id) {
-                console.warn('⚠️ Usuario no autenticado');
+                console.warn('Usuario no autenticado');
                 return;
             }
             
             userId = session.id;
-            console.log('👤 Cargando metas para usuario:', userId);
+            console.log('Cargando metas para usuario:', userId);
             
-            // Obtener metas del servicio
             const goalList = await GoalService.getUserGoals(userId);
             goals = goalList;
             
-            console.log(`✅ ${goals.length} metas cargadas`);
+            console.log(goals.length + ' metas cargadas');
             render();
         } catch (error) {
-            console.error('❌ Error cargando metas:', error);
+            console.error('Error cargando metas:', error);
             showToast('Error al cargar las metas', 'error');
         }
     }
 
     // --- 6. Render ---
     function render() {
-        // Aplicar filtros
         filteredGoals = goals.filter(goal => {
             const matchesSearch = goal.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
                                   (goal.description || '').toLowerCase().includes(searchTerm.toLowerCase());
             
-            // Determinar estado para filtro
             let goalStatus = 'pending';
             if (goal.completed) goalStatus = 'completed';
             else if (goal.status === 'in_progress') goalStatus = 'in_progress';
@@ -96,7 +92,6 @@ export function readGoalsController() {
             return matchesSearch && matchesStatus && matchesCategory;
         });
 
-        // Actualizar contadores
         if (goalCount) {
             goalCount.textContent = filteredGoals.length;
         }
@@ -105,14 +100,12 @@ export function readGoalsController() {
             completedCount.textContent = completed;
         }
 
-        // Paginación
         const totalPages = Math.ceil(filteredGoals.length / itemsPerPage) || 1;
         if (currentPage > totalPages) currentPage = totalPages;
         const start = (currentPage - 1) * itemsPerPage;
         const end = start + itemsPerPage;
         const pageGoals = filteredGoals.slice(start, end);
 
-        // Mostrar/ocultar estado vacío
         if (filteredGoals.length === 0) {
             if (emptyState) emptyState.style.display = 'flex';
             if (goalsGrid) goalsGrid.innerHTML = '';
@@ -121,9 +114,8 @@ export function readGoalsController() {
             renderGoalCards(pageGoals);
         }
 
-        // Actualizar paginación
         if (paginationInfo) {
-            paginationInfo.textContent = `Página ${currentPage} de ${totalPages}`;
+            paginationInfo.textContent = 'Pagina ' + currentPage + ' de ' + totalPages;
         }
         if (prevPageBtn) {
             prevPageBtn.disabled = currentPage <= 1;
@@ -147,7 +139,6 @@ export function readGoalsController() {
             
             const category = categoryConfig[goal.category] || categoryConfig['personal'];
             
-            // Determinar estado para mostrar
             let statusInfo;
             if (goal.completed) {
                 statusInfo = statusConfig['completed'];
@@ -176,7 +167,6 @@ export function readGoalsController() {
                     
                     <p class="goal-card-description">${escapeHtml(goal.description || 'Sin descripción')}</p>
 
-                    <!-- Objetivos -->
                     <div class="goal-objectives">
                         ${(goal.objectives || []).map((obj, index) => `
                             <div class="objective-item" data-objective-index="${index}">
@@ -188,7 +178,6 @@ export function readGoalsController() {
                         `).join('')}
                     </div>
 
-                    <!-- Barra de progreso -->
                     <div class="goal-progress-container">
                         <div class="goal-progress-header">
                             <span class="goal-progress-label">Progreso</span>
@@ -199,7 +188,6 @@ export function readGoalsController() {
                         </div>
                     </div>
 
-                    <!-- Acciones -->
                     <div class="goal-card-actions">
                         <button class="btn btn-sm btn-ghost edit-goal" data-id="${goal.id}" title="Editar">
                             <i class="fas fa-edit"></i>
@@ -220,22 +208,19 @@ export function readGoalsController() {
         return div.innerHTML;
     }
 
-    // --- 7. CRUD Operations con Servicio ---
-
+    // --- 7. CRUD Operations ---
     async function toggleObjective(goalId, objectiveIndex) {
         try {
             const goal = goals.find(g => g.id === goalId);
             if (!goal) return;
 
             if (goal.completed) {
-                showToast('⚠️ Esta meta ya está completada', 'warning');
+                showToast('Esta meta ya esta completada', 'warning');
                 return;
             }
 
-            // Completar objetivo usando el servicio
             const updatedGoal = await GoalService.completeObjective(goalId, objectiveIndex);
             
-            // Actualizar en la lista local
             const index = goals.findIndex(g => g.id === goalId);
             if (index !== -1) {
                 goals[index] = updatedGoal;
@@ -245,7 +230,7 @@ export function readGoalsController() {
             
             const objective = updatedGoal.objectives[objectiveIndex];
             showToast(
-                objective.completed ? '✅ Objetivo completado' : '⏳ Objetivo pendiente',
+                objective.completed ? 'Objetivo completado' : 'Objetivo pendiente',
                 'success'
             );
         } catch (error) {
@@ -256,12 +241,12 @@ export function readGoalsController() {
 
     async function deleteGoal(goalId) {
         const result = await Swal.fire({
-            title: '🎯 ¿Eliminar Meta?',
-            text: '¿Estás seguro de que quieres eliminar esta meta? Esta acción no se puede deshacer.',
+            title: 'Eliminar Meta',
+            text: 'Estas seguro de que quieres eliminar esta meta? Esta accion no se puede deshacer.',
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonText: 'SÍ, ELIMINAR',
-            cancelButtonText: 'CANCELAR',
+            confirmButtonText: 'Si, eliminar',
+            cancelButtonText: 'Cancelar',
             customClass: {
                 popup: 'tyr-popup',
                 title: 'tyr-title',
@@ -278,7 +263,7 @@ export function readGoalsController() {
                 await GoalService.deleteGoal(goalId);
                 goals = goals.filter(g => g.id !== goalId);
                 render();
-                showToast('🗑️ Meta eliminada correctamente', 'success');
+                showToast('Meta eliminada correctamente', 'success');
             } catch (error) {
                 console.error('Error al eliminar meta:', error);
                 showToast(error.message || 'Error al eliminar la meta', 'error');
@@ -317,8 +302,6 @@ export function readGoalsController() {
     }
 
     // --- 10. Event Listeners ---
-
-    // Nueva meta
     const newGoalBtn = document.getElementById('newGoalBtn');
     const emptyNewGoalBtn = document.getElementById('emptyNewGoalBtn');
     
@@ -329,7 +312,6 @@ export function readGoalsController() {
         emptyNewGoalBtn.addEventListener('click', navigateToCreateGoal);
     }
 
-    // Búsqueda
     if (searchInput) {
         searchInput.addEventListener('input', (e) => {
             searchTerm = e.target.value;
@@ -338,7 +320,6 @@ export function readGoalsController() {
         });
     }
 
-    // Filtros
     if (filterStatus) {
         filterStatus.addEventListener('change', (e) => {
             currentStatus = e.target.value;
@@ -355,7 +336,6 @@ export function readGoalsController() {
         });
     }
 
-    // Paginación
     if (prevPageBtn) {
         prevPageBtn.addEventListener('click', () => {
             if (currentPage > 1) {
@@ -375,10 +355,8 @@ export function readGoalsController() {
         });
     }
 
-    // Acciones de la tarjeta (delegación de eventos)
     if (goalsGrid) {
         goalsGrid.addEventListener('click', (e) => {
-            // Toggle objetivo
             const checkBtn = e.target.closest('.objective-check');
             if (checkBtn && !checkBtn.disabled) {
                 const objectiveIndex = parseInt(checkBtn.dataset.objectiveIndex);
@@ -390,15 +368,13 @@ export function readGoalsController() {
                 return;
             }
 
-            // Editar
             const editBtn = e.target.closest('.edit-goal');
             if (editBtn) {
                 const goalId = editBtn.dataset.id;
-                showToast('✏️ Edición en desarrollo', 'info');
+                showToast('Edicion en desarrollo', 'info');
                 return;
             }
 
-            // Eliminar
             const deleteBtn = e.target.closest('.delete-goal');
             if (deleteBtn) {
                 const goalId = deleteBtn.dataset.id;
@@ -412,13 +388,12 @@ export function readGoalsController() {
     document.addEventListener('goal:created', (e) => {
         const newGoal = e.detail;
         if (newGoal) {
-            // Recargar metas desde Firestore
             loadGoals();
-            showToast('🎯 Nueva meta creada!', 'success');
+            showToast('Nueva meta creada', 'success');
         }
     });
 
     // --- 12. Inicializar ---
     loadGoals();
-    console.log('✅ Mis Metas inicializado correctamente');
+    console.log('Mis Metas inicializado correctamente');
 }

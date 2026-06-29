@@ -6,7 +6,7 @@
 import { GoalService, GOAL_CATEGORIES } from '../../../../services/goalService.js';
 
 export function createGoalController() {
-    console.log('🎯 Inicializando Creación de Meta...');
+    console.log('Inicializando Creacion de Meta...');
 
     // --- 1. DOM References ---
     const form = document.getElementById('goalCreateForm');
@@ -32,7 +32,6 @@ export function createGoalController() {
     let objectiveCounter = 0;
 
     // --- 2. Funciones de objetivos ---
-
     function createObjectiveInput(value = '') {
         objectiveCounter++;
         const div = document.createElement('div');
@@ -44,7 +43,7 @@ export function createGoalController() {
                 <input 
                     type="text" 
                     class="form-input objective-input" 
-                    placeholder="Ej: Completar 7 días de racha"
+                    placeholder="Ej: Completar 7 dias de racha"
                     value="${escapeHtml(value)}"
                 />
             </div>
@@ -149,8 +148,8 @@ export function createGoalController() {
 
         if (!validateForm()) {
             Swal.fire({
-                title: '🎯 Campos inválidos',
-                text: 'Revisa los campos resaltados y corrígelos.',
+                title: 'Campos invalidos',
+                text: 'Revisa los campos resaltados y corrijelos.',
                 icon: 'error',
                 customClass: {
                     popup: 'tyr-popup tyr-error-popup',
@@ -163,21 +162,18 @@ export function createGoalController() {
         }
 
         try {
-            // Obtener usuario actual
             const session = JSON.parse(localStorage.getItem('user-TYRVANGUARD') || '{}');
             if (!session || !session.id) {
-                throw new Error('Debes iniciar sesión para crear una meta');
+                throw new Error('Debes iniciar sesion para crear una meta');
             }
 
-            // Mapear categoría de español a inglés
             const categorySpanish = categoryInput.value;
             const categoryEnglish = CATEGORY_MAP[categorySpanish];
             
             if (!categoryEnglish) {
-                throw new Error(`Categoría no válida: ${categorySpanish}`);
+                throw new Error('Categoria no valida: ' + categorySpanish);
             }
 
-            // Obtener valores
             const goalData = {
                 title: titleInput.value.trim(),
                 category: categoryEnglish,
@@ -185,21 +181,18 @@ export function createGoalController() {
                 objectives: getObjectives()
             };
 
-            console.log('📦 Datos a enviar al servicio:', goalData);
+            console.log('Datos a enviar al servicio:', goalData);
 
-            // Crear meta usando el servicio
             const newGoal = await GoalService.createGoal(session.id, goalData);
             
-            console.log('🎯 Nueva meta creada:', newGoal);
+            console.log('Nueva meta creada:', newGoal);
 
-            // Disparar evento para actualizar la lista
             document.dispatchEvent(new CustomEvent('goal:created', {
                 detail: newGoal
             }));
 
-            // Mostrar éxito
             Swal.fire({
-                title: '🎯 Meta Creada',
+                title: 'Meta Creada',
                 html: `
                     <div style="text-align: left;">
                         <p><strong>${escapeHtml(newGoal.title)}</strong></p>
@@ -213,8 +206,8 @@ export function createGoalController() {
                     </div>
                 `,
                 icon: 'success',
-                confirmButtonText: '🎯 IR A MIS METAS',
-                cancelButtonText: 'CREAR OTRA',
+                confirmButtonText: 'Ir a Mis Metas',
+                cancelButtonText: 'Crear Otra',
                 showCancelButton: true,
                 customClass: {
                     popup: 'tyr-popup',
@@ -249,7 +242,7 @@ export function createGoalController() {
         } catch (error) {
             console.error('Error al crear meta:', error);
             Swal.fire({
-                title: '❌ Error',
+                title: 'Error',
                 text: error.message || 'No se pudo crear la meta',
                 icon: 'error',
                 customClass: {
@@ -281,7 +274,6 @@ export function createGoalController() {
     }
 
     // --- 6. Event Listeners ---
-
     if (form) {
         form.addEventListener('submit', saveGoal);
     }
@@ -314,5 +306,5 @@ export function createGoalController() {
     addObjectiveInput('');
     updateRemoveButtons();
 
-    console.log('✅ Creación de Meta inicializada correctamente');
+    console.log('Creacion de Meta inicializada correctamente');
 }

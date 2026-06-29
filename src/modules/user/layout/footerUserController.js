@@ -5,7 +5,7 @@
 
 // Estado privado
 let state = {
-    activeNav: 'battle',
+    activeNav: 'home',
     isInitialized: false
 };
 
@@ -20,12 +20,12 @@ export function initFooterUserController() {
         cacheElements();
 
         if (!elements.footer) {
-            console.warn('⚠️ Footer User no encontrado en el DOM');
+            console.warn('Footer User no encontrado en el DOM');
             return null;
         }
 
         if (state.isInitialized) {
-            console.log('ℹ️ Footer User Controller ya inicializado');
+            console.log('Footer User Controller ya inicializado');
             return;
         }
 
@@ -33,9 +33,9 @@ export function initFooterUserController() {
         setActiveFromPath();
 
         state.isInitialized = true;
-        console.log('✅ Footer User Controller inicializado');
+        console.log('Footer User Controller inicializado');
     }).catch(error => {
-        console.error('❌ Error esperando footer user:', error);
+        console.error('Error esperando footer user:', error);
     });
 
     return {
@@ -57,7 +57,7 @@ function waitForFooter(maxAttempts = 30, interval = 100) {
             const footer = document.getElementById('bottomNav');
 
             if (footer) {
-                console.log('✅ Footer User encontrado en el DOM');
+                console.log('Footer User encontrado en el DOM');
                 resolve();
             } else {
                 attempts++;
@@ -89,7 +89,6 @@ function cacheElements() {
 function bindEvents() {
     if (!elements.navItems || elements.navItems.length === 0) return;
 
-    // Remover eventos previos y agregar nuevos
     elements.navItems.forEach(item => {
         const newItem = item.cloneNode(true);
         if (item.parentNode) {
@@ -99,17 +98,14 @@ function bindEvents() {
         newItem.addEventListener('click', handleNavClick);
     });
 
-    // Actualizar referencia
     elements.navItems = document.querySelectorAll('.nav-item');
 
-    // Escuchar cambios de ruta (router SPA)
     document.addEventListener('route:changed', () => {
         setActiveFromPath();
     });
 
-    // Layout recargado
     document.addEventListener('layout:loaded', () => {
-        console.log('🔄 Layout recargado, actualizando footer user');
+        console.log('Layout recargado, actualizando footer user');
         reinitialize();
     });
 }
@@ -121,14 +117,14 @@ export function reinitialize() {
     cacheElements();
 
     if (!elements.footer) {
-        console.warn('⚠️ Footer User no encontrado en reinitialize');
+        console.warn('Footer User no encontrado en reinitialize');
         return;
     }
 
     bindEvents();
     setActiveFromPath();
 
-    console.log('✅ Footer User Controller re-inicializado');
+    console.log('Footer User Controller re-inicializado');
 }
 
 /**
@@ -140,23 +136,19 @@ function handleNavClick(e) {
 
     if (!nav) return;
 
-    // Remover active de todos
     elements.navItems.forEach(item => {
         item.classList.remove('active');
     });
 
-    // Agregar active al clickeado
     target.classList.add('active');
     state.activeNav = nav;
 
-    // Disparar evento personalizado
     document.dispatchEvent(new CustomEvent('nav:changed', {
         detail: { nav }
     }));
 
-    console.log(`🔱 Navegando a: ${nav}`);
+    console.log('Navegando a:', nav);
 
-    // Si tiene href y es data-link, el router lo maneja
     const href = target.getAttribute('href');
     if (href && href !== '#' && !href.startsWith('http')) {
         if (typeof window.navigateTo === 'function') {
@@ -185,7 +177,7 @@ export function setActive(navName) {
     });
 
     if (!found) {
-        console.warn(`⚠️ Nav item "${navName}" no encontrado`);
+        console.warn('Nav item "' + navName + '" no encontrado');
     }
 
     return found;
@@ -204,21 +196,22 @@ export function getActive() {
 function setActiveFromPath() {
     const path = window.location.pathname;
 
-    // Mapeo de rutas a navs
     const routeMap = {
-        '/battle': 'battle',
-        '/recovery': 'recovery',
-        '/vanguard': 'vanguard',
-        '/log': 'log',
-        '/': 'battle' // default
+        '/dashboard': 'home',
+        '/': 'home',
+        '/batallas': 'battles',
+        '/crearBatallas': 'battles',
+        '/metas': 'goals',
+        '/crearMetas': 'goals',
+        '/diario': 'diary',
+        '/crearDiario': 'diary'
     };
 
     let navName = routeMap[path];
 
-    // Si no hay match exacto, buscar parcial
     if (!navName) {
         for (const [route, nav] of Object.entries(routeMap)) {
-            if (path.startsWith(route) && route !== '/') {
+            if (path.startsWith(route) && route !== '/' && route !== '/dashboard') {
                 navName = nav;
                 break;
             }
@@ -237,16 +230,12 @@ export function getState() {
     return { ...state };
 }
 
-// ============================================
-// EXPOSICIÓN GLOBAL
-// ============================================
-
-// Exponer funciones globalmente para uso desde otros scripts
+// Exponer funciones globalmente
 window.footerUser = {
     setActive,
     getActive,
     navigateTo: (navName) => {
-        const item = document.querySelector(`.nav-item[data-nav="${navName}"]`);
+        const item = document.querySelector('.nav-item[data-nav="' + navName + '"]');
         if (item) {
             item.click();
         }
