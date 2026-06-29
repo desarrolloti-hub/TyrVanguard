@@ -6,7 +6,6 @@
 import { UserService } from '../../../services/userService.js';
 import { User } from '../../../classes/userModel.js';
 
-
 export async function profileController() {
     console.log('🛡️ Inicializando Perfil del Guerrero...');
 
@@ -56,7 +55,7 @@ export async function profileController() {
     const lastNameError = document.getElementById('lastNameError');
 
     // --- 3. Variables para trackear cambios ---
-    let newAvatarBase64 = null; // Guardará la imagen en base64 si se cambia
+    let newAvatarBase64 = null;
 
     // --- 4. Cargar datos del usuario ---
     function loadUserData() {
@@ -85,13 +84,10 @@ export async function profileController() {
         // Avatar - mostrar imagen guardada o generar con iniciales
         if (avatarImg) {
             if (currentUser.photoURL && currentUser.photoURL.startsWith('data:image/')) {
-                // Si es base64, mostrarlo directamente
                 avatarImg.src = currentUser.photoURL;
             } else if (currentUser.photoURL) {
-                // Si es una URL normal
                 avatarImg.src = currentUser.photoURL;
             } else {
-                // Generar avatar con iniciales
                 const name = currentUser.fullName || 'Usuario';
                 avatarImg.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=7cd5d5&color=003737&size=128&font-size=0.5&bold=true`;
             }
@@ -195,25 +191,21 @@ export async function profileController() {
                 }
             });
 
-            // Preparar datos para actualizar
             const updateData = {
                 firstName: firstNameInput.value.trim(),
                 lastName: lastNameInput.value.trim()
             };
 
-            // Si hay una nueva imagen en base64, agregarla a los datos
             if (newAvatarBase64) {
                 updateData.photoURL = newAvatarBase64;
                 console.log('🖼️ Guardando avatar en base64 (tamaño:', Math.round(newAvatarBase64.length / 1024), 'KB)');
             }
 
-            // Usar UserService.updateProfile con el userId real
             const updatedUser = await UserService.updateProfile(userId, updateData);
             
             if (updatedUser) {
                 currentUser = new User(updatedUser);
                 
-                // Actualizar localStorage
                 const session = UserService.getSession();
                 if (session) {
                     session.firstName = currentUser.firstName;
@@ -224,7 +216,6 @@ export async function profileController() {
                     localStorage.setItem('user-TYRVANGUARD', JSON.stringify(session));
                 }
                 
-                // Resetear el flag de nueva imagen
                 newAvatarBase64 = null;
                 
                 Swal.fire({
@@ -418,7 +409,6 @@ export async function profileController() {
         }
 
         try {
-            // Mostrar loading en el botón
             Swal.fire({
                 title: '🔄 Procesando imagen...',
                 text: 'Convirtiendo a base64',
@@ -433,13 +423,9 @@ export async function profileController() {
                 }
             });
 
-            // Convertir a base64
             const base64Image = await imageToBase64(file);
-            
-            // Guardar en la variable para guardar al hacer submit
             newAvatarBase64 = base64Image;
             
-            // Mostrar preview
             if (avatarImg) {
                 avatarImg.src = base64Image;
             }
@@ -477,7 +463,6 @@ export async function profileController() {
     }
 
     // --- 10. Event Listeners ---
-
     if (form) {
         form.addEventListener('submit', (e) => {
             e.preventDefault();
@@ -485,14 +470,15 @@ export async function profileController() {
         });
     }
 
+    // ✅ MODIFICADO: Cancelar con window.history.back()
     if (cancelBtn) {
         cancelBtn.addEventListener('click', () => {
-            window.location.href = '/home.html';
+            window.history.back();
         });
     }
     if (cancelProfileBtn) {
         cancelProfileBtn.addEventListener('click', () => {
-            window.location.href = '/home.html';
+            window.history.back();
         });
     }
 
