@@ -47,6 +47,11 @@
 /* diary */
 @import url('./pages/user/diary/create/createDiary.css');
 
+/* read diario */
+@import url('./pages/user/diary/read/readDiary.css');
+
+
+
 /* perfil */
 @import url('./pages/user/profile/profile.css');
 

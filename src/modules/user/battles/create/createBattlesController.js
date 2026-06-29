@@ -3,6 +3,8 @@
    Controlador para crear nuevas batallas
    ======================================== */
 
+import { BattleService, BATTLE_TYPES } from '../../../../services/battleService.js';
+
 export function battleCreateController() {
     console.log('⚔️ Inicializando Creación de Batalla...');
 
@@ -18,6 +20,21 @@ export function battleCreateController() {
     const durationError = document.getElementById('durationError');
     const cancelBtn = document.getElementById('cancelBattleBtn');
     const cancelFormBtn = document.getElementById('cancelFormBtn');
+
+    // --- MAPEO DE TIPOS (Español -> Inglés) ---
+    const TYPE_MAP = {
+        'fisico': BATTLE_TYPES.FISICO,      // 'physical'
+        'mental': BATTLE_TYPES.MENTAL,      // 'mental'
+        'espiritual': BATTLE_TYPES.ESPIRITUAL, // 'spiritual'
+        'social': BATTLE_TYPES.SOCIAL,      // 'social'
+        'creativo': BATTLE_TYPES.CREATIVO   // 'creative'
+    };
+
+    // --- MAPEO DE UNIDADES (Español -> Inglés) ---
+    const UNIT_MAP = {
+        'minutos': 'minutes',
+        'horas': 'hours'
+    };
 
     // --- 2. Validación ---
     function validateForm() {
@@ -56,8 +73,8 @@ export function battleCreateController() {
         return isValid;
     }
 
-    // --- 3. Guardar batalla ---
-    function saveBattle(event) {
+    // --- 3. Guardar batalla usando el servicio ---
+    async function saveBattle(event) {
         event.preventDefault();
 
         if (!validateForm()) {
@@ -75,99 +92,113 @@ export function battleCreateController() {
             return;
         }
 
-        // Obtener valores
-        const name = nameInput.value.trim();
-        const type = typeInput.value;
-        const duration = parseInt(durationInput.value);
-        const unit = durationUnitInput.value;
-        const description = descriptionInput.value.trim();
-        const goals = goalsInput.value.trim();
-
-        // Formatear duración
-        const durationText = `${duration} ${unit}`;
-
-        // Crear objeto de batalla
-        const newBattle = {
-            id: Date.now(),
-            name: name,
-            type: type,
-            duration: duration,
-            durationUnit: unit,
-            durationText: durationText,
-            description: description || 'Sin descripción',
-            goals: goals ? goals.split('\n').filter(g => g.trim()) : [],
-            date: new Date().toLocaleDateString('es-ES', {
-                day: 'numeric',
-                month: 'long',
-                year: 'numeric'
-            }),
-            completed: false
-        };
-
-        console.log('⚔️ Nueva batalla creada:', newBattle);
-
-        // Mostrar éxito
-        Swal.fire({
-            title: '⚔️ Batalla Registrada',
-            html: `
-                <div style="text-align: left;">
-                    <p><strong>${name}</strong></p>
-                    <p style="color: var(--text-muted); font-size: var(--font-size-sm);">
-                        <i class="fas fa-clock"></i> ${durationText} &bull; 
-                        <span class="type-tag type-${type}" style="display: inline-flex; padding: 2px 10px;">
-                            ${typeInput.options[typeInput.selectedIndex].text}
-                        </span>
-                    </p>
-                    ${description ? `<p style="color: var(--text-secondary); font-size: var(--font-size-sm);">${description}</p>` : ''}
-                    ${goals ? `<p style="color: var(--text-muted); font-size: var(--font-size-xs);">🎯 ${goals.split('\n').filter(g => g.trim()).length} metas definidas</p>` : ''}
-                </div>
-            `,
-            icon: 'success',
-            confirmButtonText: '⚔️ IR A MIS BATALLAS',
-            cancelButtonText: 'CREAR OTRA',
-            showCancelButton: true,
-            customClass: {
-                popup: 'tyr-popup',
-                title: 'tyr-title',
-                htmlContainer: 'tyr-html',
-                confirmButton: 'tyr-btn-confirm',
-                cancelButton: 'tyr-btn-cancel',
-                actions: 'tyr-actions',
-                closeButton: 'tyr-close-btn'
+        try {
+            // Obtener usuario actual
+            const session = JSON.parse(localStorage.getItem('user-TYRVANGUARD') || '{}');
+            if (!session || !session.id) {
+                throw new Error('Debes iniciar sesión para crear una batalla');
             }
-        }).then((result) => {
-            if (result.isConfirmed) {
-                // Ir a lista de batallas
-                if (typeof window.navigateTo === 'function') {
-                    window.navigateTo('/batallas');
-                } else {
-                    window.location.href = '/batallas';
+
+            // ✅ MAPEAR EL TIPO DE ESPAÑOL A INGLÉS
+            const typeSpanish = typeInput.value;
+            const typeEnglish = TYPE_MAP[typeSpanish];
+            
+            if (!typeEnglish) {
+                throw new Error(`Tipo de batalla no válido: ${typeSpanish}`);
+            }
+
+            // ✅ MAPEAR LA UNIDAD DE ESPAÑOL A INGLÉS
+            const unitSpanish = durationUnitInput.value;
+            const unitEnglish = UNIT_MAP[unitSpanish] || 'minutes';
+
+            // Obtener valores
+            const battleData = {
+                name: nameInput.value.trim(),
+                type: typeEnglish, // ✅ Ahora es 'physical', 'mental', etc.
+                duration: parseInt(durationInput.value),
+                durationUnit: unitEnglish, // ✅ Ahora es 'minutes' o 'hours'
+                description: descriptionInput.value.trim(),
+                goals: goalsInput.value ? goalsInput.value.split('\n').filter(g => g.trim()) : []
+            };
+
+            console.log('📦 Datos a enviar al servicio:', battleData);
+
+            // Crear batalla usando el servicio
+            const newBattle = await BattleService.createBattle(session.id, battleData);
+            
+            console.log('⚔️ Nueva batalla creada:', newBattle);
+
+            // Mostrar éxito
+            Swal.fire({
+                title: '⚔️ Batalla Registrada',
+                html: `
+                    <div style="text-align: left;">
+                        <p><strong>${newBattle.name}</strong></p>
+                        <p style="color: var(--text-muted); font-size: var(--font-size-sm);">
+                            <i class="fas fa-clock"></i> ${newBattle.durationText} &bull; 
+                            <span class="type-tag type-${newBattle.type}" style="display: inline-flex; padding: 2px 10px;">
+                                ${newBattle.typeLabel}
+                            </span>
+                        </p>
+                        ${newBattle.description ? `<p style="color: var(--text-secondary); font-size: var(--font-size-sm);">${newBattle.description}</p>` : ''}
+                        ${newBattle.goalCount > 0 ? `<p style="color: var(--text-muted); font-size: var(--font-size-xs);">🎯 ${newBattle.goalCount} metas definidas</p>` : ''}
+                    </div>
+                `,
+                icon: 'success',
+                confirmButtonText: '⚔️ IR A MIS BATALLAS',
+                cancelButtonText: 'CREAR OTRA',
+                showCancelButton: true,
+                customClass: {
+                    popup: 'tyr-popup',
+                    title: 'tyr-title',
+                    htmlContainer: 'tyr-html',
+                    confirmButton: 'tyr-btn-confirm',
+                    cancelButton: 'tyr-btn-cancel',
+                    actions: 'tyr-actions',
+                    closeButton: 'tyr-close-btn'
                 }
-            } else {
-                // Resetear formulario
-                form.reset();
-                durationInput.value = 30;
-                // Remover clases de error
-                document.querySelectorAll('.form-input.error, .form-select.error').forEach(el => {
-                    el.classList.remove('error');
-                });
-                document.querySelectorAll('.form-error').forEach(el => {
-                    el.style.display = 'none';
-                });
-                // Focus en nombre
-                nameInput.focus();
-            }
-        });
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    if (typeof window.navigateTo === 'function') {
+                        window.navigateTo('/batallas');
+                    } else {
+                        window.location.href = '/batallas';
+                    }
+                } else {
+                    form.reset();
+                    durationInput.value = 30;
+                    document.querySelectorAll('.form-input.error, .form-select.error').forEach(el => {
+                        el.classList.remove('error');
+                    });
+                    document.querySelectorAll('.form-error').forEach(el => {
+                        el.style.display = 'none';
+                    });
+                    nameInput.focus();
+                }
+            });
+
+        } catch (error) {
+            console.error('Error al crear batalla:', error);
+            Swal.fire({
+                title: '❌ Error',
+                text: error.message || 'No se pudo crear la batalla',
+                icon: 'error',
+                customClass: {
+                    popup: 'tyr-popup tyr-error-popup',
+                    title: 'tyr-title',
+                    htmlContainer: 'tyr-html',
+                    confirmButton: 'tyr-btn-confirm'
+                }
+            });
+        }
     }
 
     // --- 4. Event Listeners ---
 
-    // Submit form
     if (form) {
         form.addEventListener('submit', saveBattle);
     }
 
-    // Cancelar (volver)
     if (cancelBtn) {
         cancelBtn.addEventListener('click', () => {
             if (typeof window.navigateTo === 'function') {
@@ -181,7 +212,6 @@ export function battleCreateController() {
     if (cancelFormBtn) {
         cancelFormBtn.addEventListener('click', () => {
             if (form) {
-                // Verificar si hay cambios
                 const hasChanges = nameInput.value.trim() || 
                                   descriptionInput.value.trim() || 
                                   goalsInput.value.trim();
@@ -223,6 +253,5 @@ export function battleCreateController() {
         });
     }
 
-    // --- 5. Inicializar ---
     console.log('✅ Creación de Batalla inicializada correctamente');
 }

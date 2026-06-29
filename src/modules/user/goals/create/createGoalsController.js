@@ -3,6 +3,8 @@
    Controlador para crear nuevas metas
    ======================================== */
 
+import { GoalService, GOAL_CATEGORIES } from '../../../../services/goalService.js';
+
 export function createGoalController() {
     console.log('🎯 Inicializando Creación de Meta...');
 
@@ -17,6 +19,15 @@ export function createGoalController() {
     const objectivesError = document.getElementById('objectivesError');
     const cancelBtn = document.getElementById('cancelGoalBtn');
     const cancelFormBtn = document.getElementById('cancelFormBtn');
+
+    // --- MAPEO DE CATEGORÍAS (Español -> Inglés) ---
+    const CATEGORY_MAP = {
+        'personal': GOAL_CATEGORIES.PERSONAL,
+        'profesional': GOAL_CATEGORIES.PROFESIONAL,
+        'salud': GOAL_CATEGORIES.SALUD,
+        'espiritual': GOAL_CATEGORIES.ESPIRITUAL,
+        'social': GOAL_CATEGORIES.SOCIAL
+    };
 
     let objectiveCounter = 0;
 
@@ -42,7 +53,6 @@ export function createGoalController() {
             </button>
         `;
 
-        // Evento para eliminar
         const removeBtn = div.querySelector('.remove-objective');
         removeBtn.addEventListener('click', () => {
             if (objectivesList.children.length > 1) {
@@ -53,7 +63,6 @@ export function createGoalController() {
             }
         });
 
-        // Evento para Enter (crear nuevo)
         const input = div.querySelector('.objective-input');
         input.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') {
@@ -68,7 +77,6 @@ export function createGoalController() {
     function addObjectiveInput(value = '') {
         const newObjective = createObjectiveInput(value);
         objectivesList.appendChild(newObjective);
-        // Enfocar el nuevo input
         const input = newObjective.querySelector('.objective-input');
         setTimeout(() => input.focus(), 50);
         updateRemoveButtons();
@@ -76,12 +84,8 @@ export function createGoalController() {
 
     function updateRemoveButtons() {
         const removeBtns = objectivesList.querySelectorAll('.remove-objective');
-        removeBtns.forEach((btn, index) => {
-            if (objectivesList.children.length <= 1) {
-                btn.style.display = 'none';
-            } else {
-                btn.style.display = 'flex';
-            }
+        removeBtns.forEach((btn) => {
+            btn.style.display = objectivesList.children.length <= 1 ? 'none' : 'flex';
         });
     }
 
@@ -111,7 +115,6 @@ export function createGoalController() {
     function validateForm() {
         let isValid = true;
 
-        // Validar título
         const title = titleInput.value.trim();
         if (!title || title.length < 2) {
             titleInput.classList.add('error');
@@ -122,7 +125,6 @@ export function createGoalController() {
             titleError.style.display = 'none';
         }
 
-        // Validar categoría
         if (!categoryInput.value) {
             categoryInput.classList.add('error');
             isValid = false;
@@ -130,7 +132,6 @@ export function createGoalController() {
             categoryInput.classList.remove('error');
         }
 
-        // Validar objetivos
         const objectives = getObjectives();
         if (objectives.length === 0) {
             objectivesError.style.display = 'flex';
@@ -142,8 +143,8 @@ export function createGoalController() {
         return isValid;
     }
 
-    // --- 4. Guardar meta ---
-    function saveGoal(event) {
+    // --- 4. Guardar meta usando el servicio ---
+    async function saveGoal(event) {
         event.preventDefault();
 
         if (!validateForm()) {
@@ -161,85 +162,107 @@ export function createGoalController() {
             return;
         }
 
-        // Obtener valores
-        const title = titleInput.value.trim();
-        const category = categoryInput.value;
-        const description = descriptionInput.value.trim();
-        const objectives = getObjectives();
-
-        // Crear objeto de meta
-        const newGoal = {
-            id: Date.now(),
-            title: title,
-            category: category,
-            description: description || 'Sin descripción',
-            objectives: objectives,
-            createdAt: new Date().toISOString()
-        };
-
-        console.log('🎯 Nueva meta creada:', newGoal);
-
-        // Disparar evento para actualizar la lista
-        document.dispatchEvent(new CustomEvent('goal:created', {
-            detail: newGoal
-        }));
-
-        // Mostrar éxito
-        Swal.fire({
-            title: '🎯 Meta Creada',
-            html: `
-                <div style="text-align: left;">
-                    <p><strong>${escapeHtml(title)}</strong></p>
-                    <p style="color: var(--text-muted); font-size: var(--font-size-sm);">
-                        <i class="fas fa-tag"></i> ${categoryInput.options[categoryInput.selectedIndex].text}
-                    </p>
-                    ${description ? `<p style="color: var(--text-secondary); font-size: var(--font-size-sm);">${escapeHtml(description)}</p>` : ''}
-                    <p style="color: var(--text-muted); font-size: var(--font-size-xs); margin-top: 4px;">
-                        <i class="fas fa-list-check"></i> ${objectives.length} objetivos definidos
-                    </p>
-                </div>
-            `,
-            icon: 'success',
-            confirmButtonText: '🎯 IR A MIS METAS',
-            cancelButtonText: 'CREAR OTRA',
-            showCancelButton: true,
-            customClass: {
-                popup: 'tyr-popup',
-                title: 'tyr-title',
-                htmlContainer: 'tyr-html',
-                confirmButton: 'tyr-btn-confirm',
-                cancelButton: 'tyr-btn-cancel',
-                actions: 'tyr-actions',
-                closeButton: 'tyr-close-btn'
+        try {
+            // Obtener usuario actual
+            const session = JSON.parse(localStorage.getItem('user-TYRVANGUARD') || '{}');
+            if (!session || !session.id) {
+                throw new Error('Debes iniciar sesión para crear una meta');
             }
-        }).then((result) => {
-            if (result.isConfirmed) {
-                // Ir a lista de metas
-                if (typeof window.navigateTo === 'function') {
-                    window.navigateTo('/metas');
-                } else {
-                    window.location.href = '/metas';
+
+            // Mapear categoría de español a inglés
+            const categorySpanish = categoryInput.value;
+            const categoryEnglish = CATEGORY_MAP[categorySpanish];
+            
+            if (!categoryEnglish) {
+                throw new Error(`Categoría no válida: ${categorySpanish}`);
+            }
+
+            // Obtener valores
+            const goalData = {
+                title: titleInput.value.trim(),
+                category: categoryEnglish,
+                description: descriptionInput.value.trim(),
+                objectives: getObjectives()
+            };
+
+            console.log('📦 Datos a enviar al servicio:', goalData);
+
+            // Crear meta usando el servicio
+            const newGoal = await GoalService.createGoal(session.id, goalData);
+            
+            console.log('🎯 Nueva meta creada:', newGoal);
+
+            // Disparar evento para actualizar la lista
+            document.dispatchEvent(new CustomEvent('goal:created', {
+                detail: newGoal
+            }));
+
+            // Mostrar éxito
+            Swal.fire({
+                title: '🎯 Meta Creada',
+                html: `
+                    <div style="text-align: left;">
+                        <p><strong>${escapeHtml(newGoal.title)}</strong></p>
+                        <p style="color: var(--text-muted); font-size: var(--font-size-sm);">
+                            <i class="fas ${newGoal.categoryIcon}"></i> ${newGoal.categoryLabel}
+                        </p>
+                        ${newGoal.description ? `<p style="color: var(--text-secondary); font-size: var(--font-size-sm);">${escapeHtml(newGoal.description)}</p>` : ''}
+                        <p style="color: var(--text-muted); font-size: var(--font-size-xs); margin-top: 4px;">
+                            <i class="fas fa-list-check"></i> ${newGoal.objectiveCount} objetivos definidos
+                        </p>
+                    </div>
+                `,
+                icon: 'success',
+                confirmButtonText: '🎯 IR A MIS METAS',
+                cancelButtonText: 'CREAR OTRA',
+                showCancelButton: true,
+                customClass: {
+                    popup: 'tyr-popup',
+                    title: 'tyr-title',
+                    htmlContainer: 'tyr-html',
+                    confirmButton: 'tyr-btn-confirm',
+                    cancelButton: 'tyr-btn-cancel',
+                    actions: 'tyr-actions',
+                    closeButton: 'tyr-close-btn'
                 }
-            } else {
-                // Resetear formulario
-                form.reset();
-                // Limpiar objetivos y dejar solo uno vacío
-                objectivesList.innerHTML = '';
-                addObjectiveInput('');
-                // Remover clases de error
-                document.querySelectorAll('.form-input.error, .form-select.error').forEach(el => {
-                    el.classList.remove('error');
-                });
-                document.querySelectorAll('.form-error').forEach(el => {
-                    el.style.display = 'none';
-                });
-                // Focus en título
-                titleInput.focus();
-            }
-        });
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    if (typeof window.navigateTo === 'function') {
+                        window.navigateTo('/metas');
+                    } else {
+                        window.location.href = '/metas';
+                    }
+                } else {
+                    form.reset();
+                    objectivesList.innerHTML = '';
+                    addObjectiveInput('');
+                    document.querySelectorAll('.form-input.error, .form-select.error').forEach(el => {
+                        el.classList.remove('error');
+                    });
+                    document.querySelectorAll('.form-error').forEach(el => {
+                        el.style.display = 'none';
+                    });
+                    titleInput.focus();
+                }
+            });
+
+        } catch (error) {
+            console.error('Error al crear meta:', error);
+            Swal.fire({
+                title: '❌ Error',
+                text: error.message || 'No se pudo crear la meta',
+                icon: 'error',
+                customClass: {
+                    popup: 'tyr-popup tyr-error-popup',
+                    title: 'tyr-title',
+                    htmlContainer: 'tyr-html',
+                    confirmButton: 'tyr-btn-confirm'
+                }
+            });
+        }
     }
 
-    // --- 5. Toast notifications ---
+    // --- 5. Toast ---
     function showToast(message, icon = 'info') {
         const Toast = Swal.mixin({
             toast: true,
@@ -254,25 +277,19 @@ export function createGoalController() {
                 closeButton: 'tyr-close-btn'
             }
         });
-        Toast.fire({
-            icon: icon,
-            title: message
-        });
+        Toast.fire({ icon, title: message });
     }
 
     // --- 6. Event Listeners ---
 
-    // Submit form
     if (form) {
         form.addEventListener('submit', saveGoal);
     }
 
-    // Agregar objetivo
     if (addObjectiveBtn) {
         addObjectiveBtn.addEventListener('click', () => addObjectiveInput(''));
     }
 
-    // Cancelar (volver)
     if (cancelBtn) {
         cancelBtn.addEventListener('click', () => {
             if (typeof window.navigateTo === 'function') {
@@ -294,7 +311,6 @@ export function createGoalController() {
     }
 
     // --- 7. Inicializar ---
-    // Crear un objetivo por defecto
     addObjectiveInput('');
     updateRemoveButtons();
 

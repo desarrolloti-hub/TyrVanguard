@@ -1,14 +1,17 @@
 /* ========================================
    CACHE SERVICE - IndexedDB cache management
-   Supports both Users and Admins
+   Supports multiple stores (Users, Admins, Battles, Goals, Diary)
    ======================================== */
 
 const DB_NAME = 'App_Cache';
-const DB_VERSION = 2; // ✅ Updated version for new stores
+const DB_VERSION = 5; // ✅ Actualizado para incluir el store de DIARIO
 
 export const STORES = {
     USERS: 'users',
     ADMINS: 'admins',
+    BATTLES: 'battles',
+    GOALS: 'goals',
+    DIARY: 'diary', // ✅ Nuevo store para el diario
     // Add more stores as needed
 };
 
@@ -47,6 +50,24 @@ async function initDB() {
             if (!database.objectStoreNames.contains(STORES.ADMINS)) {
                 database.createObjectStore(STORES.ADMINS, { keyPath: 'id' });
                 console.log('📦 Store created:', STORES.ADMINS);
+            }
+
+            // Create Battles store
+            if (!database.objectStoreNames.contains(STORES.BATTLES)) {
+                database.createObjectStore(STORES.BATTLES, { keyPath: 'id' });
+                console.log('📦 Store created:', STORES.BATTLES);
+            }
+
+            // Create Goals store
+            if (!database.objectStoreNames.contains(STORES.GOALS)) {
+                database.createObjectStore(STORES.GOALS, { keyPath: 'id' });
+                console.log('📦 Store created:', STORES.GOALS);
+            }
+
+            // ✅ Create Diary store
+            if (!database.objectStoreNames.contains(STORES.DIARY)) {
+                database.createObjectStore(STORES.DIARY, { keyPath: 'id' });
+                console.log('📦 Store created:', STORES.DIARY);
             }
         };
     });
@@ -168,6 +189,18 @@ export async function clearAdminCache() {
     return await clearCache(STORES.ADMINS);
 }
 
+export async function clearBattleCache() {
+    return await clearCache(STORES.BATTLES);
+}
+
+export async function clearGoalCache() {
+    return await clearCache(STORES.GOALS);
+}
+
+export async function clearDiaryCache() {
+    return await clearCache(STORES.DIARY);
+}
+
 export const CacheService = {
     setCache,
     getCache,
@@ -175,5 +208,8 @@ export const CacheService = {
     clearAllCache,
     clearUserCache,
     clearAdminCache,
+    clearBattleCache,
+    clearGoalCache,
+    clearDiaryCache, // ✅ Nueva función para limpiar cache del diario
     STORES
 };

@@ -9,7 +9,8 @@
       {
         "ignore": [
           "user-select",
-          "-moz-appearance"
+          "-moz-appearance",
+          "-webkit-backdrop-filter"
         ]
       }
     ],

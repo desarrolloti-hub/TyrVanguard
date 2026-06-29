@@ -3,45 +3,20 @@
    Controlador para listar y gestionar metas
    ======================================== */
 
+import { GoalService, GOAL_CATEGORIES, GOAL_STATUS } from '../../../../services/goalService.js';
+
 export function readGoalsController() {
     console.log('🎯 Inicializando Mis Metas...');
 
     // --- 1. Estado ---
-    let goals = [
-        {
-            id: 1,
-            title: 'Llegar a 30 días de racha',
-            category: 'personal',
-            description: 'Mantener la disciplina diaria para alcanzar los 30 días de racha.',
-            objectives: [
-                { id: 1, text: 'Completar 7 días de racha', completed: false },
-                { id: 2, text: 'Completar 14 días de racha', completed: false },
-                { id: 3, text: 'Completar 21 días de racha', completed: false },
-                { id: 4, text: 'Completar 30 días de racha', completed: false }
-            ],
-            createdAt: '2026-06-01'
-        },
-        {
-            id: 2,
-            title: 'Meditar diario',
-            category: 'espiritual',
-            description: 'Establecer el hábito de meditar 15 minutos cada mañana.',
-            objectives: [
-                { id: 1, text: 'Meditar 7 días seguidos', completed: true },
-                { id: 2, text: 'Meditar 14 días seguidos', completed: true },
-                { id: 3, text: 'Meditar 21 días seguidos', completed: true },
-                { id: 4, text: 'Meditar 30 días seguidos', completed: true }
-            ],
-            createdAt: '2026-06-10'
-        }
-    ];
-
+    let goals = [];
     let currentPage = 1;
     const itemsPerPage = 6;
-    let filteredGoals = [...goals];
+    let filteredGoals = [];
     let currentStatus = 'all';
     let currentCategory = 'all';
     let searchTerm = '';
+    let userId = null;
 
     // --- 2. DOM References ---
     const goalsGrid = document.getElementById('goalsGrid');
@@ -55,26 +30,66 @@ export function readGoalsController() {
     const filterStatus = document.getElementById('filterStatus');
     const filterCategory = document.getElementById('filterCategory');
 
-    // --- 3. Categorías ---
+    // --- 3. Categorías (Inglés -> Español) ---
     const categoryConfig = {
-        personal: { icon: 'fa-user', label: 'Personal', class: 'category-personal' },
-        profesional: { icon: 'fa-briefcase', label: 'Profesional', class: 'category-profesional' },
-        salud: { icon: 'fa-heart', label: 'Salud', class: 'category-salud' },
-        espiritual: { icon: 'fa-spa', label: 'Espiritual', class: 'category-espiritual' },
-        social: { icon: 'fa-users', label: 'Social', class: 'category-social' }
+        'personal': { icon: 'fa-user', label: 'Personal', class: 'category-personal' },
+        'professional': { icon: 'fa-briefcase', label: 'Profesional', class: 'category-profesional' },
+        'health': { icon: 'fa-heart', label: 'Salud', class: 'category-salud' },
+        'spiritual': { icon: 'fa-spa', label: 'Espiritual', class: 'category-espiritual' },
+        'social': { icon: 'fa-users', label: 'Social', class: 'category-social' }
     };
 
-    // --- 4. Render ---
+    // --- 4. Mapeo de estados (Inglés -> Español) ---
+    const statusConfig = {
+        'pending': { label: 'Pendiente', icon: 'fa-clock', class: 'pending' },
+        'in_progress': { label: 'En Curso', icon: 'fa-spinner', class: 'in-progress' },
+        'completed': { label: 'Completada', icon: 'fa-check-circle', class: 'completed' },
+        'abandoned': { label: 'Abandonada', icon: 'fa-times-circle', class: 'abandoned' }
+    };
+
+    // --- 5. Cargar datos desde Firestore ---
+    async function loadGoals() {
+        try {
+            // Obtener usuario actual
+            const session = JSON.parse(localStorage.getItem('user-TYRVANGUARD') || '{}');
+            if (!session || !session.id) {
+                console.warn('⚠️ Usuario no autenticado');
+                return;
+            }
+            
+            userId = session.id;
+            console.log('👤 Cargando metas para usuario:', userId);
+            
+            // Obtener metas del servicio
+            const goalList = await GoalService.getUserGoals(userId);
+            goals = goalList;
+            
+            console.log(`✅ ${goals.length} metas cargadas`);
+            render();
+        } catch (error) {
+            console.error('❌ Error cargando metas:', error);
+            showToast('Error al cargar las metas', 'error');
+        }
+    }
+
+    // --- 6. Render ---
     function render() {
         // Aplicar filtros
         filteredGoals = goals.filter(goal => {
             const matchesSearch = goal.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                                  goal.description.toLowerCase().includes(searchTerm.toLowerCase());
+                                  (goal.description || '').toLowerCase().includes(searchTerm.toLowerCase());
             
-            const isCompleted = goal.objectives.every(obj => obj.completed);
+            // Determinar estado para filtro
+            let goalStatus = 'pending';
+            if (goal.completed) goalStatus = 'completed';
+            else if (goal.status === 'in_progress') goalStatus = 'in_progress';
+            else if (goal.status === 'abandoned') goalStatus = 'abandoned';
+            
             const matchesStatus = currentStatus === 'all' || 
-                                  (currentStatus === 'completed' && isCompleted) ||
-                                  (currentStatus === 'pending' && !isCompleted);
+                                  (currentStatus === 'completed' && goal.completed) ||
+                                  (currentStatus === 'pending' && !goal.completed && goal.status !== 'in_progress') ||
+                                  (currentStatus === 'in_progress' && goal.status === 'in_progress') ||
+                                  (currentStatus === 'abandoned' && goal.status === 'abandoned');
             
             const matchesCategory = currentCategory === 'all' || goal.category === currentCategory;
             
@@ -86,7 +101,7 @@ export function readGoalsController() {
             goalCount.textContent = filteredGoals.length;
         }
         if (completedCount) {
-            const completed = filteredGoals.filter(g => g.objectives.every(obj => obj.completed)).length;
+            const completed = filteredGoals.filter(g => g.completed).length;
             completedCount.textContent = completed;
         }
 
@@ -127,12 +142,22 @@ export function readGoalsController() {
         }
 
         goalsGrid.innerHTML = goalsToRender.map(goal => {
-            const isCompleted = goal.objectives.every(obj => obj.completed);
-            const progress = goal.objectives.length > 0 
-                ? Math.round((goal.objectives.filter(obj => obj.completed).length / goal.objectives.length) * 100)
-                : 0;
+            const isCompleted = goal.completed;
+            const progress = goal.progressPercentage || 0;
             
-            const category = categoryConfig[goal.category] || categoryConfig.personal;
+            const category = categoryConfig[goal.category] || categoryConfig['personal'];
+            
+            // Determinar estado para mostrar
+            let statusInfo;
+            if (goal.completed) {
+                statusInfo = statusConfig['completed'];
+            } else if (goal.status === 'in_progress') {
+                statusInfo = statusConfig['in_progress'];
+            } else if (goal.status === 'abandoned') {
+                statusInfo = statusConfig['abandoned'];
+            } else {
+                statusInfo = statusConfig['pending'];
+            }
 
             return `
                 <div class="goal-card ${isCompleted ? 'completed' : ''}" data-id="${goal.id}">
@@ -143,19 +168,19 @@ export function readGoalsController() {
                                 <i class="fas ${category.icon}"></i> ${category.label}
                             </span>
                         </div>
-                        <span class="goal-card-status ${isCompleted ? 'completed' : 'pending'}">
-                            <i class="fas ${isCompleted ? 'fa-check-circle' : 'fa-clock'}"></i>
-                            ${isCompleted ? 'Completada' : 'En progreso'}
+                        <span class="goal-card-status ${statusInfo.class}">
+                            <i class="fas ${statusInfo.icon}"></i>
+                            ${statusInfo.label}
                         </span>
                     </div>
                     
-                    <p class="goal-card-description">${escapeHtml(goal.description)}</p>
+                    <p class="goal-card-description">${escapeHtml(goal.description || 'Sin descripción')}</p>
 
                     <!-- Objetivos -->
                     <div class="goal-objectives">
-                        ${goal.objectives.map(obj => `
-                            <div class="objective-item" data-objective-id="${obj.id}">
-                                <button class="objective-check ${obj.completed ? 'completed' : ''}" data-objective-id="${obj.id}">
+                        ${(goal.objectives || []).map((obj, index) => `
+                            <div class="objective-item" data-objective-index="${index}">
+                                <button class="objective-check ${obj.completed ? 'completed' : ''}" data-objective-index="${index}" ${isCompleted ? 'disabled' : ''}>
                                     <i class="fas ${obj.completed ? 'fa-check-square' : 'fa-square'}"></i>
                                 </button>
                                 <span class="objective-text ${obj.completed ? 'completed' : ''}">${escapeHtml(obj.text)}</span>
@@ -189,48 +214,88 @@ export function readGoalsController() {
     }
 
     function escapeHtml(text) {
+        if (!text) return '';
         const div = document.createElement('div');
         div.textContent = text;
         return div.innerHTML;
     }
 
-    // --- 5. CRUD Operations ---
+    // --- 7. CRUD Operations con Servicio ---
 
-    function toggleObjective(goalId, objectiveId) {
-        const goal = goals.find(g => g.id === goalId);
-        if (goal) {
-            const objective = goal.objectives.find(obj => obj.id === objectiveId);
-            if (objective) {
-                objective.completed = !objective.completed;
+    async function toggleObjective(goalId, objectiveIndex) {
+        try {
+            const goal = goals.find(g => g.id === goalId);
+            if (!goal) return;
+
+            if (goal.completed) {
+                showToast('⚠️ Esta meta ya está completada', 'warning');
+                return;
+            }
+
+            // Completar objetivo usando el servicio
+            const updatedGoal = await GoalService.completeObjective(goalId, objectiveIndex);
+            
+            // Actualizar en la lista local
+            const index = goals.findIndex(g => g.id === goalId);
+            if (index !== -1) {
+                goals[index] = updatedGoal;
+            }
+            
+            render();
+            
+            const objective = updatedGoal.objectives[objectiveIndex];
+            showToast(
+                objective.completed ? '✅ Objetivo completado' : '⏳ Objetivo pendiente',
+                'success'
+            );
+        } catch (error) {
+            console.error('Error al completar objetivo:', error);
+            showToast(error.message || 'Error al completar el objetivo', 'error');
+        }
+    }
+
+    async function deleteGoal(goalId) {
+        const result = await Swal.fire({
+            title: '🎯 ¿Eliminar Meta?',
+            text: '¿Estás seguro de que quieres eliminar esta meta? Esta acción no se puede deshacer.',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'SÍ, ELIMINAR',
+            cancelButtonText: 'CANCELAR',
+            customClass: {
+                popup: 'tyr-popup',
+                title: 'tyr-title',
+                htmlContainer: 'tyr-html',
+                confirmButton: 'tyr-btn-confirm',
+                cancelButton: 'tyr-btn-cancel',
+                actions: 'tyr-actions',
+                closeButton: 'tyr-close-btn'
+            }
+        });
+
+        if (result.isConfirmed) {
+            try {
+                await GoalService.deleteGoal(goalId);
+                goals = goals.filter(g => g.id !== goalId);
                 render();
-                
-                const allCompleted = goal.objectives.every(obj => obj.completed);
-                showToast(
-                    objective.completed ? '✅ Objetivo completado' : '⏳ Objetivo pendiente',
-                    'success'
-                );
+                showToast('🗑️ Meta eliminada correctamente', 'success');
+            } catch (error) {
+                console.error('Error al eliminar meta:', error);
+                showToast(error.message || 'Error al eliminar la meta', 'error');
             }
         }
     }
 
-    function deleteGoal(id) {
-        if (confirm('🎯 ¿Estás seguro de eliminar esta meta?')) {
-            goals = goals.filter(g => g.id !== id);
-            render();
-            showToast('🗑️ Meta eliminada', 'info');
-        }
-    }
-
-    // --- 6. Navegación a crear meta ---
+    // --- 8. Navegación ---
     function navigateToCreateGoal() {
         if (typeof window.navigateTo === 'function') {
-            window.navigateTo('/crearMeta');
+            window.navigateTo('/crearMetas');
         } else {
-            window.location.href = '/crearMeta';
+            window.location.href = '/crearMetas';
         }
     }
 
-    // --- 7. Toast notifications ---
+    // --- 9. Toast ---
     function showToast(message, icon = 'info') {
         const Toast = Swal.mixin({
             toast: true,
@@ -251,7 +316,7 @@ export function readGoalsController() {
         });
     }
 
-    // --- 8. Event Listeners ---
+    // --- 10. Event Listeners ---
 
     // Nueva meta
     const newGoalBtn = document.getElementById('newGoalBtn');
@@ -315,12 +380,12 @@ export function readGoalsController() {
         goalsGrid.addEventListener('click', (e) => {
             // Toggle objetivo
             const checkBtn = e.target.closest('.objective-check');
-            if (checkBtn) {
-                const objectiveId = parseInt(checkBtn.dataset.objectiveId);
+            if (checkBtn && !checkBtn.disabled) {
+                const objectiveIndex = parseInt(checkBtn.dataset.objectiveIndex);
                 const goalCard = checkBtn.closest('.goal-card');
                 if (goalCard) {
-                    const goalId = parseInt(goalCard.dataset.id);
-                    toggleObjective(goalId, objectiveId);
+                    const goalId = goalCard.dataset.id;
+                    toggleObjective(goalId, objectiveIndex);
                 }
                 return;
             }
@@ -328,7 +393,7 @@ export function readGoalsController() {
             // Editar
             const editBtn = e.target.closest('.edit-goal');
             if (editBtn) {
-                const goalId = parseInt(editBtn.dataset.id);
+                const goalId = editBtn.dataset.id;
                 showToast('✏️ Edición en desarrollo', 'info');
                 return;
             }
@@ -336,31 +401,24 @@ export function readGoalsController() {
             // Eliminar
             const deleteBtn = e.target.closest('.delete-goal');
             if (deleteBtn) {
-                const goalId = parseInt(deleteBtn.dataset.id);
+                const goalId = deleteBtn.dataset.id;
                 deleteGoal(goalId);
                 return;
             }
         });
     }
 
-    // --- 9. Escuchar evento de meta creada ---
+    // --- 11. Escuchar evento de meta creada ---
     document.addEventListener('goal:created', (e) => {
         const newGoal = e.detail;
         if (newGoal) {
-            goals.unshift({
-                id: newGoal.id || Date.now(),
-                title: newGoal.title,
-                category: newGoal.category || 'personal',
-                description: newGoal.description || '',
-                objectives: newGoal.objectives || [],
-                createdAt: new Date().toISOString()
-            });
-            render();
-            showToast('🎯 Nueva meta creada', 'success');
+            // Recargar metas desde Firestore
+            loadGoals();
+            showToast('🎯 Nueva meta creada!', 'success');
         }
     });
 
-    // --- 10. Inicializar ---
-    render();
+    // --- 12. Inicializar ---
+    loadGoals();
     console.log('✅ Mis Metas inicializado correctamente');
 }

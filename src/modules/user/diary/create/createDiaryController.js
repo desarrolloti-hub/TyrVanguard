@@ -1,276 +1,129 @@
 /* ========================================
-   diaryController.js
-   Controlador CRUD para el Diario del Guerrero
+   createDiaryController.js
+   Controlador para la creación de entradas del diario
    ======================================== */
 
-export function diaryController() {
-    console.log('📖 Inicializando Diario del Guerrero...');
+import { DiaryService, DIARY_TAGS } from '../../../../services/diaryService.js';
 
-    // --- 1. Estado ---
-    let entries = [
-        {
-            id: 1,
-            date: '25 de Junio, 2026',
-            title: 'Victoria Matutina',
-            content: '"Hoy sentí el impulso, pero recordé mi misión. Salí a correr y la batalla fue ganada. Un día más en la vanguardia."',
-            tag: 'victoria'
-        },
-        {
-            id: 2,
-            date: '24 de Junio, 2026',
-            title: 'Lección del Día',
-            content: '"Aprendí que la paciencia es tan importante como la fuerza. No todas las batallas se ganan con el puño."',
-            tag: 'aprendizaje'
-        }
-    ];
+export function createDiaryController() {
+    console.log('✍️ Inicializando formulario de creación de diario...');
 
-    let currentPage = 1;
-    const entriesPerPage = 5;
-    let filteredEntries = [...entries];
-    let currentFilter = 'all';
-    let searchTerm = '';
+    // --- DOM References ---
+    const form = document.getElementById('diaryCreateForm');
+    const titleInput = document.getElementById('diaryTitle');
+    const contentInput = document.getElementById('diaryContent');
+    const tagSelect = document.getElementById('diaryTag');
+    const titleError = document.getElementById('titleError');
+    const contentError = document.getElementById('contentError');
+    const cancelBtn = document.getElementById('cancelFormBtn');
+    const cancelHeaderBtn = document.getElementById('cancelDiaryBtn');
 
-    // --- 2. DOM References ---
-    const tableBody = document.getElementById('diaryTableBody');
-    const emptyState = document.getElementById('diaryEmpty');
-    const entryCount = document.getElementById('entryCount');
-    const paginationInfo = document.getElementById('paginationInfo');
-    const prevPageBtn = document.getElementById('prevPage');
-    const nextPageBtn = document.getElementById('nextPage');
-    const searchInput = document.getElementById('searchDiary');
-    const filterSelect = document.getElementById('filterTag');
+    // --- MAPEO DE ETIQUETAS (Español -> Inglés) ---
+    const TAG_MAP = {
+        'victoria': DIARY_TAGS.VICTORIA,
+        'aprendizaje': DIARY_TAGS.APRENDIZAJE,
+        'batalla': DIARY_TAGS.BATALLA,
+        'reflexion': DIARY_TAGS.REFLEXION,
+        'logro': DIARY_TAGS.LOGRO
+    };
 
-    // --- 3. Render ---
-    function render() {
-        // Aplicar filtros
-        filteredEntries = entries.filter(entry => {
-            const matchesSearch = entry.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                                  entry.content.toLowerCase().includes(searchTerm.toLowerCase());
-            const matchesTag = currentFilter === 'all' || entry.tag === currentFilter;
-            return matchesSearch && matchesTag;
-        });
+    // --- Helpers ---
+    function showError(element) {
+        if (element) element.style.display = 'flex';
+    }
 
-        // Actualizar contador
-        if (entryCount) {
-            entryCount.textContent = filteredEntries.length;
-        }
+    function hideError(element) {
+        if (element) element.style.display = 'none';
+    }
 
-        // Paginación
-        const totalPages = Math.ceil(filteredEntries.length / entriesPerPage) || 1;
-        if (currentPage > totalPages) currentPage = totalPages;
-        const start = (currentPage - 1) * entriesPerPage;
-        const end = start + entriesPerPage;
-        const pageEntries = filteredEntries.slice(start, end);
+    function validateForm() {
+        let isValid = true;
 
-        // Mostrar/ocultar estado vacío
-        if (filteredEntries.length === 0) {
-            if (emptyState) emptyState.style.display = 'flex';
-            if (tableBody) tableBody.innerHTML = '';
+        if (!titleInput.value.trim()) {
+            showError(titleError);
+            isValid = false;
         } else {
-            if (emptyState) emptyState.style.display = 'none';
-            renderTableRows(pageEntries);
+            hideError(titleError);
         }
 
-        // Actualizar paginación
-        if (paginationInfo) {
-            paginationInfo.textContent = `Página ${currentPage} de ${totalPages}`;
+        if (!contentInput.value.trim()) {
+            showError(contentError);
+            isValid = false;
+        } else {
+            hideError(contentError);
         }
-        if (prevPageBtn) {
-            prevPageBtn.disabled = currentPage <= 1;
-        }
-        if (nextPageBtn) {
-            nextPageBtn.disabled = currentPage >= totalPages;
-        }
+
+        return isValid;
     }
 
-    function renderTableRows(entriesToRender) {
-        if (!tableBody) return;
-
-        if (entriesToRender.length === 0) {
-            tableBody.innerHTML = '';
-            return;
-        }
-
-        const tagMap = {
-            victoria: '🏆 Victoria',
-            aprendizaje: '📖 Aprendizaje',
-            batalla: '⚔️ Batalla',
-            reflexion: '🧠 Reflexión',
-            logro: '⭐ Logro'
-        };
-
-        tableBody.innerHTML = entriesToRender.map(entry => `
-            <tr class="diary-row" data-id="${entry.id}">
-                <td data-label="Fecha">${entry.date}</td>
-                <td data-label="Título">${escapeHtml(entry.title)}</td>
-                <td data-label="Entrada">${escapeHtml(entry.content)}</td>
-                <td data-label="Etiqueta">
-                    <span class="tag tag-${entry.tag}">${tagMap[entry.tag] || entry.tag}</span>
-                </td>
-                <td data-label="Acciones" class="actions-cell">
-                    <button class="btn btn-sm btn-ghost view-entry" title="Ver" data-id="${entry.id}">
-                        <i class="fas fa-eye"></i>
-                    </button>
-                    <button class="btn btn-sm btn-ghost edit-entry" title="Editar" data-id="${entry.id}">
-                        <i class="fas fa-edit"></i>
-                    </button>
-                    <button class="btn btn-sm btn-ghost delete-entry" title="Eliminar" data-id="${entry.id}">
-                        <i class="fas fa-trash"></i>
-                    </button>
-                </td>
-            </tr>
-        `).join('');
-    }
-
-    // Helper para escapar HTML
     function escapeHtml(text) {
         const div = document.createElement('div');
         div.textContent = text;
         return div.innerHTML;
     }
 
-    // --- 4. CRUD Operations ---
+    // --- Guardar entrada usando el servicio ---
+    async function saveEntry(title, content, tag) {
+        try {
+            // Obtener usuario actual
+            const session = JSON.parse(localStorage.getItem('user-TYRVANGUARD') || '{}');
+            if (!session || !session.id) {
+                throw new Error('Debes iniciar sesión para crear una entrada');
+            }
 
-    // Crear
-    function createEntry(title, content, tag) {
-        const newEntry = {
-            id: Date.now(),
-            date: new Date().toLocaleDateString('es-ES', {
-                day: 'numeric',
-                month: 'long',
-                year: 'numeric'
-            }),
-            title: title.trim(),
-            content: content.trim(),
-            tag: tag || 'reflexion'
-        };
-        entries.unshift(newEntry);
-        render();
-        showToast('✅ Nueva entrada creada con éxito');
-    }
+            // Mapear etiqueta de español a inglés
+            const tagSpanish = tag;
+            const tagEnglish = TAG_MAP[tagSpanish] || DIARY_TAGS.REFLEXION;
 
-    // Leer (Ver)
-    function viewEntry(id) {
-        const entry = entries.find(e => e.id === id);
-        if (entry) {
-            const tagMap = {
-                victoria: '🏆 Victoria',
-                aprendizaje: '📖 Aprendizaje',
-                batalla: '⚔️ Batalla',
-                reflexion: '🧠 Reflexión',
-                logro: '⭐ Logro'
+            // Preparar datos
+            const entryData = {
+                title: title.trim(),
+                content: content.trim(),
+                tag: tagEnglish,
+                date: new Date().toISOString()
             };
-            alert(`📖 ${entry.title}\n\n📅 ${entry.date}\n🏷️ ${tagMap[entry.tag] || entry.tag}\n\n${entry.content}`);
-        }
-    }
 
-    // Actualizar
-    function updateEntry(id, title, content, tag) {
-        const entry = entries.find(e => e.id === id);
-        if (entry) {
-            entry.title = title.trim();
-            entry.content = content.trim();
-            entry.tag = tag || entry.tag;
-            render();
-            showToast('✏️ Entrada actualizada correctamente');
-        }
-    }
+            console.log('📦 Datos a enviar al servicio:', entryData);
 
-    // Eliminar
-    function deleteEntry(id) {
-        if (confirm('⚔️ ¿Estás seguro de eliminar esta entrada del diario?')) {
-            entries = entries.filter(e => e.id !== id);
-            render();
-            showToast('🗑️ Entrada eliminada');
-        }
-    }
+            // Crear entrada usando el servicio
+            const newEntry = await DiaryService.createEntry(session.id, entryData);
+            
+            console.log('✍️ Nueva entrada creada:', newEntry);
 
-    // --- 5. Modal de creación/edición ---
-    function openEntryModal(entryData = null) {
-        const isEdit = !!entryData;
-        const title = isEdit ? entryData.title : '';
-        const content = isEdit ? entryData.content : '';
-        const tag = isEdit ? entryData.tag : 'reflexion';
+            // Disparar evento para actualizar la lista
+            document.dispatchEvent(new CustomEvent('diary:created', {
+                detail: newEntry
+            }));
 
-        // Crear modal con SweetAlert2
-        Swal.fire({
-            title: isEdit ? '✏️ Editar Entrada' : '📝 Nueva Entrada',
-            html: `
-                <div class="form" style="text-align: left;">
-                    <div class="form-group">
-                        <label class="form-label">
-                            <i class="fas fa-tag label-icon"></i>
-                            TÍTULO
-                        </label>
-                        <input type="text" class="form-input" id="entryTitle" value="${escapeHtml(title)}" placeholder="Ej: Victoria Matutina" />
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">
-                            <i class="fas fa-tag label-icon"></i>
-                            ETIQUETA
-                        </label>
-                        <select class="form-select" id="entryTag">
-                            <option value="victoria" ${tag === 'victoria' ? 'selected' : ''}>🏆 Victoria</option>
-                            <option value="aprendizaje" ${tag === 'aprendizaje' ? 'selected' : ''}>📖 Aprendizaje</option>
-                            <option value="batalla" ${tag === 'batalla' ? 'selected' : ''}>⚔️ Batalla</option>
-                            <option value="reflexion" ${tag === 'reflexion' ? 'selected' : ''}>🧠 Reflexión</option>
-                            <option value="logro" ${tag === 'logro' ? 'selected' : ''}>⭐ Logro</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">
-                            <i class="fas fa-feather-alt label-icon"></i>
-                            ENTRADA
-                        </label>
-                        <textarea class="form-textarea" id="entryContent" rows="5" placeholder="Escribe tu experiencia...">${escapeHtml(content)}</textarea>
-                    </div>
-                </div>
-            `,
-            confirmButtonText: isEdit ? '✏️ ACTUALIZAR' : '📝 GUARDAR',
-            cancelButtonText: 'CANCELAR',
-            showCancelButton: true,
-            customClass: {
-                popup: 'tyr-popup',
-                title: 'tyr-title',
-                htmlContainer: 'tyr-html',
-                confirmButton: 'tyr-btn-confirm',
-                cancelButton: 'tyr-btn-cancel',
-                actions: 'tyr-actions',
-                closeButton: 'tyr-close-btn'
-            },
-            preConfirm: () => {
-                const titleInput = document.getElementById('entryTitle');
-                const contentInput = document.getElementById('entryContent');
-                const tagInput = document.getElementById('entryTag');
+            // Mostrar notificación
+            showToast('✅ ¡Entrada guardada con éxito!', 'success');
 
-                const title = titleInput?.value.trim();
-                const content = contentInput?.value.trim();
-                const tag = tagInput?.value;
-
-                if (!title) {
-                    Swal.showValidationMessage('El título es obligatorio');
-                    return false;
-                }
-                if (!content) {
-                    Swal.showValidationMessage('La entrada no puede estar vacía');
-                    return false;
-                }
-
-                return { title, content, tag };
-            }
-        }).then((result) => {
-            if (result.isConfirmed && result.value) {
-                const { title, content, tag } = result.value;
-                if (isEdit) {
-                    updateEntry(entryData.id, title, content, tag);
+            // Redirigir a la lista
+            setTimeout(() => {
+                if (typeof window.navigateTo === 'function') {
+                    window.navigateTo('/diario');
                 } else {
-                    createEntry(title, content, tag);
+                    window.location.href = '/diario';
                 }
-            }
-        });
+            }, 1200);
+
+        } catch (error) {
+            console.error('Error al crear entrada:', error);
+            Swal.fire({
+                title: '❌ Error',
+                text: error.message || 'No se pudo crear la entrada',
+                icon: 'error',
+                customClass: {
+                    popup: 'tyr-popup tyr-error-popup',
+                    title: 'tyr-title',
+                    htmlContainer: 'tyr-html',
+                    confirmButton: 'tyr-btn-confirm'
+                }
+            });
+        }
     }
 
-    // --- 6. Toast notifications ---
+    // --- Toast ---
     function showToast(message, icon = 'success') {
         const Toast = Swal.mixin({
             toast: true,
@@ -291,80 +144,72 @@ export function diaryController() {
         });
     }
 
-    // --- 7. Event Listeners ---
+    // --- Event Listeners ---
 
-    // Botón Nueva Entrada
-    const newEntryBtn = document.getElementById('newDiaryEntryBtn');
-    const emptyNewEntryBtn = document.getElementById('emptyNewEntryBtn');
-    
-    if (newEntryBtn) {
-        newEntryBtn.addEventListener('click', () => openEntryModal());
-    }
-    if (emptyNewEntryBtn) {
-        emptyNewEntryBtn.addEventListener('click', () => openEntryModal());
-    }
+    // Submit del formulario
+    if (form) {
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
 
-    // Búsqueda
-    if (searchInput) {
-        searchInput.addEventListener('input', (e) => {
-            searchTerm = e.target.value;
-            currentPage = 1;
-            render();
-        });
-    }
+            if (validateForm()) {
+                const title = titleInput.value.trim();
+                const content = contentInput.value.trim();
+                const tag = tagSelect.value;
 
-    // Filtro
-    if (filterSelect) {
-        filterSelect.addEventListener('change', (e) => {
-            currentFilter = e.target.value;
-            currentPage = 1;
-            render();
-        });
-    }
-
-    // Paginación
-    if (prevPageBtn) {
-        prevPageBtn.addEventListener('click', () => {
-            if (currentPage > 1) {
-                currentPage--;
-                render();
+                await saveEntry(title, content, tag);
             }
         });
     }
 
-    if (nextPageBtn) {
-        nextPageBtn.addEventListener('click', () => {
-            const totalPages = Math.ceil(filteredEntries.length / entriesPerPage);
-            if (currentPage < totalPages) {
-                currentPage++;
-                render();
+    // Cancelar
+    function handleCancel() {
+        Swal.fire({
+            title: '⚠️ ¿Cancelar?',
+            text: 'Tienes cambios sin guardar. ¿Seguro que quieres salir?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'SÍ, SALIR',
+            cancelButtonText: 'SEGUIR EDITANDO',
+            customClass: {
+                popup: 'tyr-popup',
+                title: 'tyr-title',
+                htmlContainer: 'tyr-html',
+                confirmButton: 'tyr-btn-confirm',
+                cancelButton: 'tyr-btn-cancel',
+                actions: 'tyr-actions',
+                closeButton: 'tyr-close-btn'
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                if (typeof window.navigateTo === 'function') {
+                    window.navigateTo('/diario');
+                } else {
+                    window.location.href = '/diario';
+                }
             }
         });
     }
 
-    // Acciones de la tabla (delegación de eventos)
-    if (tableBody) {
-        tableBody.addEventListener('click', (e) => {
-            const btn = e.target.closest('button');
-            if (!btn) return;
+    if (cancelBtn) {
+        cancelBtn.addEventListener('click', handleCancel);
+    }
 
-            const row = btn.closest('.diary-row');
-            if (!row) return;
+    if (cancelHeaderBtn) {
+        cancelHeaderBtn.addEventListener('click', handleCancel);
+    }
 
-            const id = parseInt(row.dataset.id);
-
-            if (btn.classList.contains('view-entry')) {
-                viewEntry(id);
-            } else if (btn.classList.contains('edit-entry')) {
-                const entry = entries.find(e => e.id === id);
-                if (entry) openEntryModal(entry);
-            } else if (btn.classList.contains('delete-entry')) {
-                deleteEntry(id);
-            }
+    // Limpiar errores al escribir
+    if (titleInput) {
+        titleInput.addEventListener('input', () => {
+            if (titleInput.value.trim()) hideError(titleError);
         });
     }
 
-    // --- 8. Inicializar ---
-    render();
-    console.log('✅ Diario del Guerrero inicializado correctamente');
+    if (contentInput) {
+        contentInput.addEventListener('input', () => {
+            if (contentInput.value.trim()) hideError(contentError);
+        });
+    }
+
+    console.log('✅ Formulario de creación de diario inicializado correctamente');
 }

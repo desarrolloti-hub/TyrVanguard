@@ -44,15 +44,17 @@
                 </div>
                 <select class="form-select" id="filterStatus">
                     <option value="all">Todas las metas</option>
+                    <option value="pending">Pendientes</option>
+                    <option value="in_progress">En Curso</option>
                     <option value="completed">Completadas</option>
-                    <option value="pending">En progreso</option>
+                    <option value="abandoned">Abandonadas</option>
                 </select>
                 <select class="form-select" id="filterCategory">
                     <option value="all">Todas las categorías</option>
                     <option value="personal">Personal</option>
-                    <option value="profesional">Profesional</option>
-                    <option value="salud">Salud</option>
-                    <option value="espiritual">Espiritual</option>
+                    <option value="professional">Profesional</option>
+                    <option value="health">Salud</option>
+                    <option value="spiritual">Espiritual</option>
                     <option value="social">Social</option>
                 </select>
             </div>
@@ -72,141 +74,7 @@
              LISTA DE METAS (TARJETAS)
              ========================================== -->
         <div class="goals-grid" id="goalsGrid">
-            <!-- Ejemplo de meta -->
-            <div class="goal-card" data-id="1" data-completed="false">
-                <div class="goal-card-header">
-                    <div class="goal-card-title-group">
-                        <h3 class="goal-card-title">Llegar a 30 días de racha</h3>
-                        <span class="goal-card-category category-personal">
-                            <i class="fas fa-user"></i> Personal
-                        </span>
-                    </div>
-                    <span class="goal-card-status pending">
-                        <i class="fas fa-clock"></i> En progreso
-                    </span>
-                </div>
-                
-                <p class="goal-card-description">
-                    Mantener la disciplina diaria para alcanzar los 30 días de racha.
-                </p>
-
-                <!-- Objetivos -->
-                <div class="goal-objectives">
-                    <div class="objective-item" data-completed="false">
-                        <button class="objective-check">
-                            <i class="fas fa-square"></i>
-                        </button>
-                        <span class="objective-text">Completar 7 días de racha</span>
-                    </div>
-                    <div class="objective-item" data-completed="false">
-                        <button class="objective-check">
-                            <i class="fas fa-square"></i>
-                        </button>
-                        <span class="objective-text">Completar 14 días de racha</span>
-                    </div>
-                    <div class="objective-item" data-completed="false">
-                        <button class="objective-check">
-                            <i class="fas fa-square"></i>
-                        </button>
-                        <span class="objective-text">Completar 21 días de racha</span>
-                    </div>
-                    <div class="objective-item" data-completed="false">
-                        <button class="objective-check">
-                            <i class="fas fa-square"></i>
-                        </button>
-                        <span class="objective-text">Completar 30 días de racha</span>
-                    </div>
-                </div>
-
-                <!-- Barra de progreso -->
-                <div class="goal-progress-container">
-                    <div class="goal-progress-header">
-                        <span class="goal-progress-label">Progreso</span>
-                        <span class="goal-progress-percentage">0%</span>
-                    </div>
-                    <div class="goal-progress-bar">
-                        <div class="goal-progress-fill" style="width: 0%;"></div>
-                    </div>
-                </div>
-
-                <!-- Acciones -->
-                <div class="goal-card-actions">
-                    <button class="btn btn-sm btn-ghost edit-goal" title="Editar">
-                        <i class="fas fa-edit"></i>
-                    </button>
-                    <button class="btn btn-sm btn-ghost delete-goal" title="Eliminar">
-                        <i class="fas fa-trash"></i>
-                    </button>
-                </div>
-            </div>
-
-            <!-- Ejemplo de meta completada -->
-            <div class="goal-card" data-id="2" data-completed="true">
-                <div class="goal-card-header">
-                    <div class="goal-card-title-group">
-                        <h3 class="goal-card-title">Meditar diario</h3>
-                        <span class="goal-card-category category-espiritual">
-                            <i class="fas fa-spa"></i> Espiritual
-                        </span>
-                    </div>
-                    <span class="goal-card-status completed">
-                        <i class="fas fa-check-circle"></i> Completada
-                    </span>
-                </div>
-                
-                <p class="goal-card-description">
-                    Establecer el hábito de meditar 15 minutos cada mañana.
-                </p>
-
-                <!-- Objetivos -->
-                <div class="goal-objectives">
-                    <div class="objective-item" data-completed="true">
-                        <button class="objective-check completed">
-                            <i class="fas fa-check-square"></i>
-                        </button>
-                        <span class="objective-text completed">Meditar 7 días seguidos</span>
-                    </div>
-                    <div class="objective-item" data-completed="true">
-                        <button class="objective-check completed">
-                            <i class="fas fa-check-square"></i>
-                        </button>
-                        <span class="objective-text completed">Meditar 14 días seguidos</span>
-                    </div>
-                    <div class="objective-item" data-completed="true">
-                        <button class="objective-check completed">
-                            <i class="fas fa-check-square"></i>
-                        </button>
-                        <span class="objective-text completed">Meditar 21 días seguidos</span>
-                    </div>
-                    <div class="objective-item" data-completed="true">
-                        <button class="objective-check completed">
-                            <i class="fas fa-check-square"></i>
-                        </button>
-                        <span class="objective-text completed">Meditar 30 días seguidos</span>
-                    </div>
-                </div>
-
-                <!-- Barra de progreso -->
-                <div class="goal-progress-container">
-                    <div class="goal-progress-header">
-                        <span class="goal-progress-label">Progreso</span>
-                        <span class="goal-progress-percentage">100%</span>
-                    </div>
-                    <div class="goal-progress-bar">
-                        <div class="goal-progress-fill" style="width: 100%;"></div>
-                    </div>
-                </div>
-
-                <!-- Acciones -->
-                <div class="goal-card-actions">
-                    <button class="btn btn-sm btn-ghost edit-goal" title="Editar">
-                        <i class="fas fa-edit"></i>
-                    </button>
-                    <button class="btn btn-sm btn-ghost delete-goal" title="Eliminar">
-                        <i class="fas fa-trash"></i>
-                    </button>
-                </div>
-            </div>
+            <!-- Renderizado dinámico -->
         </div>
 
         <!-- ==========================================

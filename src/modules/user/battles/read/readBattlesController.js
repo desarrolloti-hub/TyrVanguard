@@ -3,52 +3,20 @@
    Controlador para listar y gestionar batallas
    ======================================== */
 
+import { BattleService, BATTLE_TYPES, BATTLE_STATUS } from '../../../../services/battleService.js';
+
 export function readBattlesController() {
     console.log('⚔️ Inicializando Bitácora de Batallas...');
 
     // --- 1. Estado ---
-    let battles = [
-        {
-            id: 1,
-            name: 'Ejercicio Físico',
-            type: 'fisico',
-            description: '30 min de cardio matutino',
-            date: '25 de Junio, 2026',
-            completed: false,
-            duration: 30,
-            durationUnit: 'minutos',
-            durationText: '30 minutos'
-        },
-        {
-            id: 2,
-            name: 'Lectura Motivacional',
-            type: 'mental',
-            description: '10 min de lectura de filosofía',
-            date: '24 de Junio, 2026',
-            completed: true,
-            duration: 10,
-            durationUnit: 'minutos',
-            durationText: '10 minutos'
-        },
-        {
-            id: 3,
-            name: 'Meditación Guiada',
-            type: 'espiritual',
-            description: '15 min de meditación para enfocar la mente',
-            date: '23 de Junio, 2026',
-            completed: false,
-            duration: 15,
-            durationUnit: 'minutos',
-            durationText: '15 minutos'
-        }
-    ];
-
+    let battles = [];
     let currentPage = 1;
     const itemsPerPage = 5;
-    let filteredBattles = [...battles];
+    let filteredBattles = [];
     let currentStatus = 'all';
     let currentType = 'all';
     let searchTerm = '';
+    let userId = null;
 
     // --- 2. DOM References ---
     const tableBody = document.getElementById('battlesTableBody');
@@ -62,25 +30,69 @@ export function readBattlesController() {
     const filterStatus = document.getElementById('filterStatus');
     const filterType = document.getElementById('filterType');
 
-    // --- 3. Mapeo de tipos a iconos ---
+    // --- 3. Mapeo de tipos (Inglés -> Español para mostrar) ---
     const typeConfig = {
-        fisico: { icon: 'fa-running', label: 'Físico', class: 'type-fisico' },
-        mental: { icon: 'fa-brain', label: 'Mental', class: 'type-mental' },
-        espiritual: { icon: 'fa-spa', label: 'Espiritual', class: 'type-espiritual' },
-        social: { icon: 'fa-users', label: 'Social', class: 'type-social' },
-        creativo: { icon: 'fa-paint-brush', label: 'Creativo', class: 'type-creativo' }
+        'physical': { icon: 'fa-running', label: 'Físico', class: 'type-fisico' },
+        'mental': { icon: 'fa-brain', label: 'Mental', class: 'type-mental' },
+        'spiritual': { icon: 'fa-spa', label: 'Espiritual', class: 'type-espiritual' },
+        'social': { icon: 'fa-users', label: 'Social', class: 'type-social' },
+        'creative': { icon: 'fa-paint-brush', label: 'Creativo', class: 'type-creativo' }
     };
 
-    // --- 4. Render ---
+    // --- 4. Mapeo de estados (Inglés -> Español) ---
+    const statusConfig = {
+        'pending': { label: 'Pendiente', icon: 'fa-clock', class: 'pending' },
+        'in_progress': { label: 'En Curso', icon: 'fa-spinner', class: 'in-progress' },
+        'completed': { label: 'Completada', icon: 'fa-check-circle', class: 'completed' },
+        'abandoned': { label: 'Abandonada', icon: 'fa-times-circle', class: 'abandoned' },
+        'failed': { label: 'Fallida', icon: 'fa-skull', class: 'failed' }
+    };
+
+    // --- 5. Cargar datos desde Firestore ---
+    async function loadBattles() {
+        try {
+            // Obtener usuario actual
+            const session = JSON.parse(localStorage.getItem('user-TYRVANGUARD') || '{}');
+            if (!session || !session.id) {
+                console.warn('⚠️ Usuario no autenticado');
+                return;
+            }
+            
+            userId = session.id;
+            console.log('👤 Cargando batallas para usuario:', userId);
+            
+            // Obtener batallas del servicio
+            const battleList = await BattleService.getUserBattles(userId);
+            battles = battleList;
+            
+            console.log(`✅ ${battles.length} batallas cargadas`);
+            render();
+        } catch (error) {
+            console.error('❌ Error cargando batallas:', error);
+            showToast('Error al cargar las batallas', 'error');
+        }
+    }
+
+    // --- 6. Render ---
     function render() {
         // Aplicar filtros
         filteredBattles = battles.filter(battle => {
             const matchesSearch = battle.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                                  battle.description.toLowerCase().includes(searchTerm.toLowerCase());
+                                  (battle.description || '').toLowerCase().includes(searchTerm.toLowerCase());
+            
+            // Mapear estado para filtro
+            let battleStatus = 'pending';
+            if (battle.completed) battleStatus = 'completed';
+            else if (battle.status === 'in_progress') battleStatus = 'in_progress';
+            else if (battle.status === 'abandoned') battleStatus = 'abandoned';
+            else if (battle.status === 'failed') battleStatus = 'failed';
             
             const matchesStatus = currentStatus === 'all' || 
                                   (currentStatus === 'completed' && battle.completed) ||
-                                  (currentStatus === 'pending' && !battle.completed);
+                                  (currentStatus === 'pending' && !battle.completed && battle.status !== 'in_progress') ||
+                                  (currentStatus === 'in_progress' && battle.status === 'in_progress') ||
+                                  (currentStatus === 'abandoned' && battle.status === 'abandoned') ||
+                                  (currentStatus === 'failed' && battle.status === 'failed');
             
             const matchesType = currentType === 'all' || battle.type === currentType;
             
@@ -132,13 +144,28 @@ export function readBattlesController() {
         }
 
         tableBody.innerHTML = battlesToRender.map(battle => {
-            const type = typeConfig[battle.type] || typeConfig.fisico;
+            const type = typeConfig[battle.type] || typeConfig['physical'];
+            
+            // Determinar estado para mostrar
+            let statusInfo;
+            if (battle.completed) {
+                statusInfo = statusConfig['completed'];
+            } else if (battle.status === 'in_progress') {
+                statusInfo = statusConfig['in_progress'];
+            } else if (battle.status === 'abandoned') {
+                statusInfo = statusConfig['abandoned'];
+            } else if (battle.status === 'failed') {
+                statusInfo = statusConfig['failed'];
+            } else {
+                statusInfo = statusConfig['pending'];
+            }
+
             return `
                 <tr class="battle-row" data-id="${battle.id}" data-completed="${battle.completed}">
                     <td data-label="Estado">
-                        <span class="status-badge ${battle.completed ? 'completed' : 'pending'}">
-                            <i class="fas ${battle.completed ? 'fa-check-circle' : 'fa-clock'}"></i>
-                            ${battle.completed ? 'Completada' : 'Pendiente'}
+                        <span class="status-badge ${statusInfo.class}">
+                            <i class="fas ${statusInfo.icon}"></i>
+                            ${statusInfo.label}
                         </span>
                     </td>
                     <td data-label="Nombre">${escapeHtml(battle.name)}</td>
@@ -147,12 +174,15 @@ export function readBattlesController() {
                             <i class="fas ${type.icon}"></i> ${type.label}
                         </span>
                     </td>
-                    <td data-label="Descripción">${escapeHtml(battle.description)}</td>
-                    <td data-label="Fecha">${battle.date}</td>
+                    <td data-label="Descripción">${escapeHtml(battle.description || 'Sin descripción')}</td>
+                    <td data-label="Duración">${battle.durationText || '--'}</td>
+                    <td data-label="Fecha">${battle.formattedDate || '--'}</td>
                     <td data-label="Acciones" class="actions-cell">
-                        <button class="btn btn-sm complete-battle" title="Completar" ${battle.completed ? 'disabled' : ''}>
-                            <i class="fas fa-check"></i>
-                        </button>
+                        ${!battle.completed ? `
+                            <button class="btn btn-sm complete-battle" title="Completar">
+                                <i class="fas fa-check"></i>
+                            </button>
+                        ` : ''}
                         <button class="btn btn-sm btn-ghost edit-battle" title="Editar">
                             <i class="fas fa-edit"></i>
                         </button>
@@ -166,31 +196,75 @@ export function readBattlesController() {
     }
 
     function escapeHtml(text) {
+        if (!text) return '';
         const div = document.createElement('div');
         div.textContent = text;
         return div.innerHTML;
     }
 
-    // --- 5. CRUD Operations ---
+    // --- 7. CRUD Operations con Servicio ---
 
-    function toggleComplete(id) {
-        const battle = battles.find(b => b.id === id);
-        if (battle) {
-            battle.completed = !battle.completed;
+    async function toggleComplete(id) {
+        try {
+            const battle = battles.find(b => b.id === id);
+            if (!battle) return;
+
+            if (battle.completed) {
+                // Si ya está completada, no hacer nada
+                showToast('⚠️ Esta batalla ya está completada', 'warning');
+                return;
+            }
+
+            // Completar batalla usando el servicio
+            const updatedBattle = await BattleService.completeBattle(id);
+            
+            // Actualizar en la lista local
+            const index = battles.findIndex(b => b.id === id);
+            if (index !== -1) {
+                battles[index] = updatedBattle;
+            }
+            
             render();
-            showToast(battle.completed ? '✅ Batalla completada' : '⏳ Batalla pendiente', 'success');
+            showToast('🏆 Batalla completada con éxito!', 'success');
+        } catch (error) {
+            console.error('Error al completar batalla:', error);
+            showToast(error.message || 'Error al completar la batalla', 'error');
         }
     }
 
-    function deleteBattle(id) {
-        if (confirm('⚔️ ¿Estás seguro de eliminar esta batalla?')) {
-            battles = battles.filter(b => b.id !== id);
-            render();
-            showToast('🗑️ Batalla eliminada');
+    async function deleteBattle(id) {
+        const result = await Swal.fire({
+            title: '⚔️ ¿Eliminar Batalla?',
+            text: '¿Estás seguro de que quieres eliminar esta batalla? Esta acción no se puede deshacer.',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'SÍ, ELIMINAR',
+            cancelButtonText: 'CANCELAR',
+            customClass: {
+                popup: 'tyr-popup',
+                title: 'tyr-title',
+                htmlContainer: 'tyr-html',
+                confirmButton: 'tyr-btn-confirm',
+                cancelButton: 'tyr-btn-cancel',
+                actions: 'tyr-actions',
+                closeButton: 'tyr-close-btn'
+            }
+        });
+
+        if (result.isConfirmed) {
+            try {
+                await BattleService.deleteBattle(id);
+                battles = battles.filter(b => b.id !== id);
+                render();
+                showToast('🗑️ Batalla eliminada correctamente', 'success');
+            } catch (error) {
+                console.error('Error al eliminar batalla:', error);
+                showToast(error.message || 'Error al eliminar la batalla', 'error');
+            }
         }
     }
 
-    // --- 6. Navegación a crear batalla ---
+    // --- 8. Navegación ---
     function navigateToCreateBattle() {
         if (typeof window.navigateTo === 'function') {
             window.navigateTo('/crearBatallas');
@@ -199,7 +273,7 @@ export function readBattlesController() {
         }
     }
 
-    // --- 7. Toast notifications ---
+    // --- 9. Toast ---
     function showToast(message, icon = 'info') {
         const Toast = Swal.mixin({
             toast: true,
@@ -220,9 +294,9 @@ export function readBattlesController() {
         });
     }
 
-    // --- 8. Event Listeners ---
+    // --- 10. Event Listeners ---
 
-    // NUEVA BATALLA - Redirige a /crearBatallas
+    // NUEVA BATALLA
     const newBattleBtn = document.getElementById('newBattleBtn');
     const emptyNewBattleBtn = document.getElementById('emptyNewBattleBtn');
     
@@ -288,12 +362,11 @@ export function readBattlesController() {
             const row = btn.closest('.battle-row');
             if (!row) return;
 
-            const id = parseInt(row.dataset.id);
+            const id = row.dataset.id;
 
             if (btn.classList.contains('complete-battle')) {
                 toggleComplete(id);
             } else if (btn.classList.contains('edit-battle')) {
-                // Aquí puedes redirigir a editar o abrir modal
                 showToast('✏️ Función de edición en desarrollo', 'info');
             } else if (btn.classList.contains('delete-battle')) {
                 deleteBattle(id);
@@ -301,31 +374,17 @@ export function readBattlesController() {
         });
     }
 
-    // --- 9. Escuchar evento de batalla creada ---
+    // --- 11. Escuchar evento de batalla creada ---
     document.addEventListener('battle:created', (e) => {
         const newBattle = e.detail;
         if (newBattle) {
-            battles.unshift({
-                id: newBattle.id || Date.now(),
-                name: newBattle.name,
-                type: newBattle.type || 'fisico',
-                description: newBattle.description || 'Sin descripción',
-                date: new Date().toLocaleDateString('es-ES', {
-                    day: 'numeric',
-                    month: 'long',
-                    year: 'numeric'
-                }),
-                completed: false,
-                duration: newBattle.duration || 0,
-                durationUnit: newBattle.durationUnit || 'minutos',
-                durationText: newBattle.durationText || '--'
-            });
-            render();
-            showToast('⚔️ Nueva batalla agregada a la lista', 'success');
+            // Recargar batallas desde Firestore
+            loadBattles();
+            showToast('⚔️ Nueva batalla agregada!', 'success');
         }
     });
 
-    // --- 10. Inicializar ---
-    render();
+    // --- 12. Inicializar ---
+    loadBattles();
     console.log('✅ Bitácora de Batallas inicializada correctamente');
 }

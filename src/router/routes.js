@@ -4,7 +4,8 @@ import { createAccountController } from '../modules/visitor/createAccount/create
 import { homeUserController } from '../modules/user/home/homeUserController.js';
 import { notFoundController } from '../modules/shared/errors/404Controller.js';
 import { createAdminController } from '../modules/admin/createAdmin/createAdminController.js';
-import { diaryController} from '../modules/user/diary/create/createDiaryController.js';
+import { readDiaryController} from '../modules/user/diary/read/readDiaryController.js';
+import {createDiaryController } from '../modules/user/diary/create/createDiaryController.js';
 import {profileController} from '../modules/user/profile/profileController.js';
 import { readBattlesController } from '../modules/user/battles/read/readBattlesController.js';
 import { battleCreateController } from '../modules/user/battles/create/createBattlesController.js';
@@ -73,8 +74,14 @@ export const routes = {
 
         // diary
     "/diario": {
+        view: "/modules/user/diary/read/readDiary.html",
+        controller: readDiaryController,
+    },
+
+           // diary
+    "/crearDiario": {
         view: "/modules/user/diary/create/createDiary.html",
-        controller: diaryController,
+        controller: createDiaryController,
     },
 
     //profile
