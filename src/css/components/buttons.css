@@ -50,8 +50,8 @@
 }
 
 .btn-primary:hover:not(:disabled) {
-    background-color: var(--color-secondary-dark);
-    box-shadow: 0 0 35px 5px rgba(124, 213, 213, 0.3);
+    background-color: #5ab8b8; /* ← Color más oscuro pero visible */
+    box-shadow: 0 0 35px 5px rgba(124, 213, 213, 0.4);
     transform: translateY(-2px);
 }
 
@@ -68,7 +68,7 @@
 }
 
 .btn-secondary:hover:not(:disabled) {
-    background-color: rgba(124, 213, 213, 0.08);
+    background-color: rgba(124, 213, 213, 0.12);
     border-color: var(--color-secondary);
     transform: translateY(-2px);
 }
@@ -94,6 +94,32 @@
 .btn-dark:hover:not(:disabled) {
     background-color: var(--bg-surface-container-high);
     border-color: var(--border-primary);
+    transform: translateY(-2px);
+}
+
+/* Danger - Para eliminar */
+.btn-danger {
+    background-color: transparent;
+    color: #f87171;
+    border: 1px solid rgba(248, 113, 113, 0.2);
+}
+
+.btn-danger:hover:not(:disabled) {
+    background-color: rgba(248, 113, 113, 0.1);
+    border-color: rgba(248, 113, 113, 0.4);
+    transform: translateY(-2px);
+}
+
+/* Success - Para completar */
+.btn-success {
+    background-color: transparent;
+    color: #34d399;
+    border: 1px solid rgba(52, 211, 153, 0.2);
+}
+
+.btn-success:hover:not(:disabled) {
+    background-color: rgba(52, 211, 153, 0.1);
+    border-color: rgba(52, 211, 153, 0.4);
     transform: translateY(-2px);
 }
 
@@ -244,6 +270,67 @@
 }
 
 /* ============================================
+   BOTÓN DE GOOGLE
+   ============================================ */
+.btn-google {
+    background: var(--color-surface-container-highest);
+    color: var(--text-primary);
+    border: 1px solid var(--border-secondary);
+    clip-path: polygon(4% 0, 100% 0, 96% 100%, 0 100%);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    transition: all var(--transition-normal);
+    font-weight: 600;
+    padding: 12px 28px;
+}
+
+.btn-google:hover:not(:disabled) {
+    background: #1f3a5a; /* ← Color más claro pero visible */
+    border-color: var(--border-primary);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    transform: translateY(-2px);
+}
+
+.btn-google .btn-icon {
+    color: #ffffff;
+    font-size: 1.2em;
+}
+
+.btn-google:active:not(:disabled) {
+    transform: scale(0.96) translateY(0);
+}
+
+/* ============================================
+   DIVISOR "O"
+   ============================================ */
+.divider-or {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-md);
+    width: 100%;
+    margin: var(--spacing-xs) 0;
+}
+
+.divider-or::before,
+.divider-or::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border-tertiary);
+}
+
+.divider-or-text {
+    font-size: var(--font-size-xs);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-muted);
+    opacity: 0.6;
+    padding: 0 var(--spacing-sm);
+    flex-shrink: 0;
+}
+
+/* ============================================
    RESPONSIVE
    ============================================ */
 @media (max-width: 768px) {
@@ -292,75 +379,7 @@
     .btn-group .btn {
         width: 100%;
     }
-}
 
-/* ============================================
-   BOTÓN DE GOOGLE
-   ============================================ */
-
-.btn-google {
-    background: var(--color-surface-container-highest); /* #1f3857 */
-    color: var(--text-primary);
-    border: 1px solid var(--border-secondary);
-    clip-path: polygon(4% 0, 100% 0, 96% 100%, 0 100%);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    transition: all var(--transition-normal);
-    font-weight: 600;
-    padding: 12px 28px;
-}
-
-.btn-google:hover:not(:disabled) {
-    background: var(--color-surface-container-high); /* #1a2f4a */
-    border-color: var(--border-primary);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-    transform: translateY(-2px);
-}
-
-.btn-google .btn-icon {
-    color: #ffffff;
-    font-size: 1.2em;
-}
-
-.btn-google:active:not(:disabled) {
-    transform: scale(0.96) translateY(0);
-}
-
-/* ============================================
-   DIVISOR "O"
-   ============================================ */
-
-.divider-or {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: var(--spacing-md);
-    width: 100%;
-    margin: var(--spacing-xs) 0;
-}
-
-.divider-or::before,
-.divider-or::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: var(--border-tertiary);
-}
-
-.divider-or-text {
-    font-size: var(--font-size-xs);
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--text-muted);
-    opacity: 0.6;
-    padding: 0 var(--spacing-sm);
-    flex-shrink: 0;
-}
-
-/* ============================================
-   RESPONSIVE - Ajustes del botón Google
-   ============================================ */
-@media (max-width: 480px) {
     .btn-google {
         padding: 10px 20px;
         font-size: var(--font-size-xs);

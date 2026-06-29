@@ -1,0 +1,224 @@
+<section class="profile-section">
+    <!-- Espada de fondo -->
+    <div class="sword-bg subtle">
+        <img class="sword-image" src="/assets/img/espada.svg" alt="" loading="lazy" />
+    </div>
+
+    <div class="profile-container">
+        <!-- ==========================================
+             HEADER DEL PERFIL
+             ========================================== -->
+        <header class="profile-header">
+            <div class="profile-header-left">
+                <div class="profile-badge">
+                    <i class="fas fa-user-shield"></i>
+                    <span>PERFIL DEL GUERRERO</span>
+                </div>
+                <h1 class="profile-title">
+                    Mi <span>Identidad</span>
+                </h1>
+                <p class="profile-subtitle">
+                    "Conoce tu esencia, forja tu leyenda."
+                </p>
+            </div>
+            <div class="profile-header-right">
+                <button class="btn btn-secondary btn-sm" id="cancelProfileBtn">
+                    <i class="fas fa-arrow-left"></i> VOLVER
+                </button>
+            </div>
+        </header>
+
+        <!-- ==========================================
+             FORMULARIO DE PERFIL
+             ========================================== -->
+        <div class="profile-card form-card">
+            <!-- Scanline efecto -->
+            <div class="form-scanline"></div>
+
+            <form class="form" id="profileForm" novalidate>
+                <!-- AVATAR -->
+                <div class="profile-avatar-section">
+                    <div class="avatar-container">
+                        <div class="avatar-ring">
+                            <img 
+                                id="profileAvatar" 
+                                class="avatar-image" 
+                                src="https://ui-avatars.com/api/?name=Usuario&background=7cd5d5&color=003737&size=128&font-size=0.5&bold=true" 
+                                alt="Avatar" 
+                            />
+                            <div class="avatar-ring-glow"></div>
+                        </div>
+                        <button type="button" class="btn btn-sm btn-ghost avatar-upload-btn" id="avatarUploadBtn">
+                            <i class="fas fa-camera"></i>
+                            <span>Cambiar foto</span>
+                        </button>
+                        <input type="file" id="avatarInput" accept="image/*" style="display: none;" />
+                    </div>
+                </div>
+
+                <!-- DATOS PERSONALES -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" for="firstName">
+                            <i class="fas fa-user label-icon"></i>
+                            Nombre
+                            <span class="label-required">*</span>
+                        </label>
+                        <div class="input-icon-wrapper">
+                            <i class="fas fa-user input-icon"></i>
+                            <input 
+                                type="text" 
+                                class="form-input" 
+                                id="firstName" 
+                                placeholder="Tu nombre de guerra" 
+                                required
+                            />
+                        </div>
+                        <span class="form-error" id="firstNameError" style="display: none;">El nombre es requerido</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="lastName">
+                            <i class="fas fa-user-tag label-icon"></i>
+                            Apellido
+                            <span class="label-required">*</span>
+                        </label>
+                        <div class="input-icon-wrapper">
+                            <i class="fas fa-user-tag input-icon"></i>
+                            <input 
+                                type="text" 
+                                class="form-input" 
+                                id="lastName" 
+                                placeholder="Tu apellido de batalla" 
+                                required
+                            />
+                        </div>
+                        <span class="form-error" id="lastNameError" style="display: none;">El apellido es requerido</span>
+                    </div>
+                </div>
+
+                <!-- CORREO (solo lectura) -->
+                <div class="form-group">
+                    <label class="form-label" for="email">
+                        <i class="fas fa-envelope label-icon"></i>
+                        Correo Electrónico
+                    </label>
+                    <div class="input-icon-wrapper">
+                        <i class="fas fa-envelope input-icon"></i>
+                        <input 
+                            type="email" 
+                            class="form-input" 
+                            id="email" 
+                            placeholder="tu@email.com" 
+                            disabled
+                            style="opacity: 0.6; cursor: not-allowed;"
+                        />
+                        <span class="input-badge">Inmutable</span>
+                    </div>
+                    <span class="form-help">
+                        <i class="fas fa-info-circle"></i>
+                        El correo no se puede modificar por seguridad
+                    </span>
+                </div>
+
+                <!-- PLAN Y ROL (solo lectura) -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" for="plan">
+                            <i class="fas fa-crown label-icon"></i>
+                            Plan Actual
+                        </label>
+                        <div class="input-icon-wrapper">
+                            <i class="fas fa-crown input-icon"></i>
+                            <input 
+                                type="text" 
+                                class="form-input" 
+                                id="plan" 
+                                disabled
+                                style="opacity: 0.6; cursor: not-allowed;"
+                            />
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="role">
+                            <i class="fas fa-shield-halved label-icon"></i>
+                            Rol
+                        </label>
+                        <div class="input-icon-wrapper">
+                            <i class="fas fa-shield-halved input-icon"></i>
+                            <input 
+                                type="text" 
+                                class="form-input" 
+                                id="role" 
+                                disabled
+                                style="opacity: 0.6; cursor: not-allowed;"
+                            />
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CAMBIAR CONTRASEÑA -->
+                <div class="form-group password-section">
+                    <label class="form-label">
+                        <i class="fas fa-key label-icon"></i>
+                        Contraseña
+                    </label>
+                    <div class="password-actions">
+                        <button type="button" class="btn btn-secondary btn-sm" id="changePasswordBtn">
+                            <i class="fas fa-key"></i>
+                            CAMBIAR CONTRASEÑA
+                        </button>
+                        <span class="form-help">
+                            <i class="fas fa-info-circle"></i>
+                            Recomendamos cambiarla cada 90 días
+                        </span>
+                    </div>
+                </div>
+
+                <!-- ESTADO DE LA CUENTA -->
+                <div class="form-group account-status">
+                    <div class="status-indicator">
+                        <span class="status-dot" id="statusDot"></span>
+                        <span class="status-label" id="statusLabel">Activo</span>
+                    </div>
+                    <div class="status-meta">
+                        <span class="status-item">
+                            <i class="fas fa-calendar-plus"></i>
+                            Creado: <span id="createdAt">--</span>
+                        </span>
+                        <span class="status-item">
+                            <i class="fas fa-clock"></i>
+                            Último acceso: <span id="lastLogin">--</span>
+                        </span>
+                    </div>
+                </div>
+
+                <!-- ACCIONES -->
+                <div class="form-actions form-actions-center">
+                    <button type="button" class="btn btn-ghost" id="cancelBtn">
+                        <i class="fas fa-times"></i> CANCELAR
+                    </button>
+                    <button type="submit" class="btn btn-primary" id="saveProfileBtn">
+                        <i class="fas fa-save"></i> GUARDAR CAMBIOS
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- ==========================================
+             PIE DE PÁGINA CON MANTRA
+             ========================================== -->
+        <footer class="profile-footer">
+            <div class="motto-divider">
+                <i class="fas fa-grip-lines"></i>
+                <div class="motto-line"></div>
+                <i class="fas fa-grip-lines"></i>
+            </div>
+            <p class="motto-text">
+                UN <span class="text-primary">GUERRERO</span> SE CONOCE A SÍ MISMO ANTES DE ENFRENTAR AL ENEMIGO
+            </p>
+            <p class="motto-subtext">"La verdadera batalla comienza en el interior."</p>
+        </footer>
+    </div>
+</section>

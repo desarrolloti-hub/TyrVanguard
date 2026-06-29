@@ -1,0 +1,189 @@
+/* ============================================
+   TYR VANGUARD - BATTLE CREATE
+   Estilos para crear nueva batalla
+   ============================================ */
+
+/* ============================================
+   CONTENEDOR PRINCIPAL
+   ============================================ */
+.battle-create-section {
+    min-height: 100vh;
+    padding: 94px 0 var(--spacing-xl) 0;
+    position: relative;
+    background: var(--bg-dark);
+}
+
+.battle-create-container {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 0 var(--spacing-xl);
+    position: relative;
+    z-index: 1;
+}
+
+/* ============================================
+   HEADER
+   ============================================ */
+.battle-create-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: var(--spacing-xl);
+    margin-bottom: var(--spacing-xl);
+    flex-wrap: wrap;
+}
+
+.battle-create-header-left {
+    flex: 1;
+    min-width: 280px;
+}
+
+.battle-create-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(124, 213, 213, 0.08);
+    border: 1px solid var(--border-secondary);
+    padding: 4px 14px;
+    font-size: var(--font-size-xs);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--color-secondary);
+    margin-bottom: var(--spacing-xs);
+}
+
+.battle-create-title {
+    font-size: var(--font-size-3xl);
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+}
+
+.battle-create-title span {
+    color: var(--color-secondary);
+}
+
+.battle-create-subtitle {
+    font-size: var(--font-size-base);
+    color: var(--text-muted);
+    opacity: 0.8;
+    font-style: italic;
+    margin-bottom: 0;
+}
+
+.battle-create-header-right {
+    flex-shrink: 0;
+    padding-top: 8px;
+}
+
+/* ============================================
+   TARJETA DEL FORMULARIO
+   ============================================ */
+.battle-create-card {
+    max-width: 100%;
+    padding: var(--spacing-xl) var(--spacing-xl) var(--spacing-lg);
+    margin: 0 auto;
+}
+
+/* ============================================
+   SELECTOR DE DURACIÓN
+   ============================================ */
+.duration-selector {
+    display: flex;
+    gap: var(--spacing-sm);
+    width: 100%;
+}
+
+.duration-selector .input-icon-wrapper {
+    flex: 2;
+}
+
+.duration-selector .form-select {
+    flex: 1;
+    min-width: 100px;
+}
+
+/* ============================================
+   FOOTER
+   ============================================ */
+.battle-create-footer {
+    margin-top: var(--spacing-xl);
+    text-align: center;
+    padding: var(--spacing-md) 0;
+}
+
+.battle-create-footer .motto-subtext {
+    font-size: var(--font-size-sm);
+    color: var(--text-muted);
+    opacity: 0.5;
+    font-style: italic;
+    margin-top: 4px;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 768px) {
+    .battle-create-section {
+        padding: 88px 0 var(--spacing-lg) 0;
+    }
+
+    .battle-create-container {
+        padding: 0 var(--spacing-md);
+    }
+
+    .battle-create-header {
+        flex-direction: column;
+        gap: var(--spacing-sm);
+    }
+
+    .battle-create-header-right {
+        width: 100%;
+    }
+
+    .battle-create-header-right .btn {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .battle-create-title {
+        font-size: var(--font-size-2xl);
+    }
+
+    .battle-create-card {
+        padding: var(--spacing-md);
+    }
+
+    .duration-selector {
+        flex-direction: column;
+    }
+
+    .duration-selector .form-select {
+        min-width: auto;
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .battle-create-section {
+        padding: 82px 0 var(--spacing-sm) 0;
+    }
+
+    .battle-create-container {
+        padding: 0 var(--spacing-sm);
+    }
+
+    .battle-create-title {
+        font-size: var(--font-size-xl);
+    }
+
+    .battle-create-subtitle {
+        font-size: var(--font-size-sm);
+    }
+
+    .battle-create-card {
+        padding: var(--spacing-sm);
+    }
+}

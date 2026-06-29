@@ -1,0 +1,227 @@
+/* ============================================
+   TYR VANGUARD - GOAL CREATE
+   Estilos para crear nueva meta
+   ============================================ */
+
+/* ============================================
+   CONTENEDOR PRINCIPAL
+   ============================================ */
+.goal-create-section {
+    min-height: 100vh;
+    padding: 94px 0 var(--spacing-xl) 0;
+    position: relative;
+    background: var(--bg-dark);
+}
+
+.goal-create-container {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 0 var(--spacing-xl);
+    position: relative;
+    z-index: 1;
+}
+
+/* ============================================
+   HEADER
+   ============================================ */
+.goal-create-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: var(--spacing-xl);
+    margin-bottom: var(--spacing-xl);
+    flex-wrap: wrap;
+}
+
+.goal-create-header-left {
+    flex: 1;
+    min-width: 280px;
+}
+
+.goal-create-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(124, 213, 213, 0.08);
+    border: 1px solid var(--border-secondary);
+    padding: 4px 14px;
+    font-size: var(--font-size-xs);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--color-secondary);
+    margin-bottom: var(--spacing-xs);
+}
+
+.goal-create-title {
+    font-size: var(--font-size-3xl);
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+}
+
+.goal-create-title span {
+    color: var(--color-secondary);
+}
+
+.goal-create-subtitle {
+    font-size: var(--font-size-base);
+    color: var(--text-muted);
+    opacity: 0.8;
+    font-style: italic;
+    margin-bottom: 0;
+}
+
+.goal-create-header-right {
+    flex-shrink: 0;
+    padding-top: 8px;
+}
+
+/* ============================================
+   TARJETA DEL FORMULARIO
+   ============================================ */
+.goal-create-card {
+    max-width: 100%;
+    padding: var(--spacing-xl) var(--spacing-xl) var(--spacing-lg);
+    margin: 0 auto;
+}
+
+/* ============================================
+   LISTA DE OBJETIVOS
+   ============================================ */
+.objectives-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-xs);
+    width: 100%;
+}
+
+.objective-input-group {
+    display: flex;
+    gap: var(--spacing-sm);
+    align-items: center;
+    width: 100%;
+}
+
+.objective-input-group .input-icon-wrapper {
+    flex: 1;
+}
+
+.objective-input-group .remove-objective {
+    flex-shrink: 0;
+    padding: 8px 12px;
+    color: #f87171;
+    border: 1px solid rgba(248, 113, 113, 0.2);
+    border-radius: var(--border-radius-sm);
+    background: transparent;
+    transition: all var(--transition-fast);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.objective-input-group .remove-objective:hover {
+    background: rgba(248, 113, 113, 0.1);
+    border-color: #f87171;
+    transform: scale(1.05);
+}
+
+.objective-input-group .remove-objective i {
+    font-size: 14px;
+}
+
+.add-objective-btn {
+    align-self: flex-start;
+    color: var(--color-secondary);
+    padding: 6px 12px;
+    font-size: var(--font-size-xs);
+}
+
+.add-objective-btn:hover {
+    color: var(--color-secondary);
+    transform: translateX(4px);
+}
+
+/* ============================================
+   FOOTER
+   ============================================ */
+.goal-create-footer {
+    margin-top: var(--spacing-xl);
+    text-align: center;
+    padding: var(--spacing-md) 0;
+}
+
+.goal-create-footer .motto-subtext {
+    font-size: var(--font-size-sm);
+    color: var(--text-muted);
+    opacity: 0.5;
+    font-style: italic;
+    margin-top: 4px;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 768px) {
+    .goal-create-section {
+        padding: 88px 0 var(--spacing-lg) 0;
+    }
+
+    .goal-create-container {
+        padding: 0 var(--spacing-md);
+    }
+
+    .goal-create-header {
+        flex-direction: column;
+        gap: var(--spacing-sm);
+    }
+
+    .goal-create-header-right {
+        width: 100%;
+    }
+
+    .goal-create-header-right .btn {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .goal-create-title {
+        font-size: var(--font-size-2xl);
+    }
+
+    .goal-create-card {
+        padding: var(--spacing-md);
+    }
+
+    .objective-input-group {
+        flex-direction: row;
+    }
+
+    .objective-input-group .input-icon-wrapper {
+        flex: 1;
+    }
+}
+
+@media (max-width: 480px) {
+    .goal-create-section {
+        padding: 82px 0 var(--spacing-sm) 0;
+    }
+
+    .goal-create-container {
+        padding: 0 var(--spacing-sm);
+    }
+
+    .goal-create-title {
+        font-size: var(--font-size-xl);
+    }
+
+    .goal-create-subtitle {
+        font-size: var(--font-size-sm);
+    }
+
+    .goal-create-card {
+        padding: var(--spacing-sm);
+    }
+}

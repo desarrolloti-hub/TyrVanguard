@@ -169,6 +169,18 @@ function bindEvents() {
         console.log('🔄 Layout recargado, actualizando navbar user');
         reinitialize();
     });
+
+    // Escuchar cambios en el perfil (cuando se actualiza desde profileController)
+    document.addEventListener('profile:updated', (e) => {
+        console.log('🔄 Perfil actualizado, actualizando avatar');
+        const { photoURL, firstName, lastName } = e.detail || {};
+        if (photoURL) {
+            setAvatar(photoURL);
+        } else if (firstName || lastName) {
+            // Si no hay foto, regenerar con iniciales
+            loadUserAvatar();
+        }
+    });
 }
 
 /**
@@ -205,7 +217,6 @@ function toggleMenu() {
         }
         state.isMenuOpen = true;
         elements.body.style.overflow = 'hidden';
-        // Cerrar dropdown si está abierto
         closeDropdown();
     } else {
         if (icon) {
@@ -272,7 +283,6 @@ function toggleDropdown(e) {
     elements.avatarBtn?.classList.toggle('open');
     state.isDropdownOpen = elements.profileDropdown.classList.contains('open');
 
-    // En móvil, cerrar menú si está abierto
     if (state.isDropdownOpen && state.isMenuOpen) {
         closeMenu();
     }
@@ -346,21 +356,68 @@ export function updateNotifications(count) {
 }
 
 /**
- * Carga avatar del usuario
+ * Carga avatar del usuario desde localStorage
  */
-async function loadUserAvatar() {
+function loadUserAvatar() {
     try {
-        if (window.AuthService) {
-            const user = await window.AuthService.getCurrentUser();
-            if (user && user.avatar && elements.avatarImg) {
-                elements.avatarImg.src = user.avatar;
-            } else if (user && user.name && elements.avatarImg) {
-                const initials = user.name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
-                elements.avatarImg.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(initials || 'U')}&background=1a2f4a&color=7cd5d5&size=64`;
-            }
+        // Obtener sesión del localStorage
+        const sessionData = localStorage.getItem('user-TYRVANGUARD');
+        
+        if (!sessionData) {
+            console.warn('⚠️ No hay sesión de usuario en localStorage');
+            setDefaultAvatar();
+            return;
         }
+
+        const user = JSON.parse(sessionData);
+        console.log('👤 Usuario en sesión:', user);
+
+        if (!elements.avatarImg) {
+            console.warn('⚠️ Elemento avatarImg no encontrado');
+            return;
+        }
+
+        // 1. Si tiene photoURL (base64 o URL)
+        if (user.photoURL && user.photoURL.startsWith('data:image/')) {
+            // Es base64, mostrarlo directamente
+            elements.avatarImg.src = user.photoURL;
+            console.log('✅ Avatar cargado desde base64 en localStorage');
+            return;
+        }
+
+        if (user.photoURL) {
+            // Es URL normal
+            elements.avatarImg.src = user.photoURL;
+            console.log('✅ Avatar cargado desde URL en localStorage');
+            return;
+        }
+
+        // 2. Si no tiene photoURL, generar con iniciales
+        if (user.fullName) {
+            const name = user.fullName;
+            const initials = name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+            elements.avatarImg.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(initials || 'U')}&background=1a2f4a&color=7cd5d5&size=64&bold=true`;
+            console.log('✅ Avatar generado con iniciales:', initials);
+            return;
+        }
+
+        // 3. Fallback: avatar por defecto
+        setDefaultAvatar();
+
     } catch (error) {
-        console.error('Error cargando avatar:', error);
+        console.error('❌ Error cargando avatar desde localStorage:', error);
+        setDefaultAvatar();
+    }
+}
+
+/**
+ * Establece avatar por defecto
+ */
+function setDefaultAvatar() {
+    if (elements.avatarImg) {
+        elements.avatarImg.src = '/assets/avatar-placeholder.png';
+        // Si no existe el placeholder, usar UI Avatars
+        elements.avatarImg.src = `https://ui-avatars.com/api/?name=U&background=1a2f4a&color=7cd5d5&size=64&bold=true`;
     }
 }
 
@@ -368,8 +425,9 @@ async function loadUserAvatar() {
  * Establece avatar desde otros controllers
  */
 export function setAvatar(url) {
-    if (elements.avatarImg) {
+    if (elements.avatarImg && url) {
         elements.avatarImg.src = url;
+        console.log('🖼️ Avatar actualizado manualmente');
     }
 }
 
@@ -414,48 +472,37 @@ function handleSettings(e) {
 /**
  * Maneja cierre de sesión
  */
-/**
- * Maneja cierre de sesión
- */
 async function handleLogout(e) {
     e.preventDefault();
     
-    // Mostrar confirmación (opcional)
     if (!confirm('¿Estás seguro de que deseas cerrar sesión?')) {
         return;
     }
     
     try {
-        // 1. Cerrar dropdown primero (feedback visual)
         closeDropdown();
         
-        // 2. Mostrar estado de carga (opcional)
         if (elements.logoutBtn) {
             elements.logoutBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Cerrando...';
             elements.logoutBtn.style.pointerEvents = 'none';
         }
         
-        // 3. Ejecutar logout del AuthService
         if (window.AuthService) {
             await window.AuthService.logout();
         }
         
-        // 4. Limpiar localStorage (por si acaso)
         localStorage.removeItem('user-TYRVANGUARD');
         localStorage.removeItem('user-TYRVANGUARD-session');
         
-        // 5. ✅ FORZAR RECARGA DE LAYOUT - esto es lo más importante
         if (window.reloadLayout) {
             console.log('🔄 Recargando layout después de logout...');
             await window.reloadLayout();
         } else {
-            // Fallback: recargar la página completa si no está disponible
             console.warn('⚠️ reloadLayout no disponible, recargando página...');
             window.location.reload();
             return;
         }
         
-        // 6. Navegar a login (usando navigateTo si está disponible)
         if (typeof window.navigateTo === 'function') {
             await window.navigateTo('/iniciarSesion');
         } else {
@@ -464,8 +511,6 @@ async function handleLogout(e) {
         
     } catch (error) {
         console.error('❌ Error en logout:', error);
-        
-        // Fallback: recargar página
         showToast('Error al cerrar sesión, recargando...', 'error');
         setTimeout(() => {
             window.location.reload();
@@ -545,3 +590,4 @@ document.head.appendChild(toastStyles);
 
 // Exponer funciones globalmente
 window.showToast = showToast;
+window.setNavbarAvatar = setAvatar; // Para que otros controllers puedan actualizar el avatar

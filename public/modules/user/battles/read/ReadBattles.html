@@ -1,0 +1,175 @@
+<section class="battles-section">
+    <!-- Espada de fondo -->
+    <div class="sword-bg subtle">
+        <img class="sword-image" src="/assets/img/espada.svg" alt="" loading="lazy" />
+    </div>
+
+    <div class="battles-container">
+        <!-- ==========================================
+             HEADER DE BATALLAS
+             ========================================== -->
+        <header class="battles-header">
+            <div class="battles-header-left">
+                <div class="battles-badge">
+                    <i class="fas fa-dumbbell"></i>
+                    <span>BITÁCORA DE BATALLAS</span>
+                </div>
+                <h1 class="battles-title">
+                    Mis <span>Actividades</span>
+                </h1>
+                <p class="battles-subtitle">
+                    "Cada batalla forja un guerrero más fuerte. Registra tus victorias y construye tu leyenda."
+                </p>
+            </div>
+            <div class="battles-header-right">
+                <button class="btn btn-primary" id="newBattleBtn">
+                    <i class="fas fa-plus"></i> NUEVA BATALLA
+                </button>
+            </div>
+        </header>
+
+        <!-- ==========================================
+             FILTROS Y BÚSQUEDA
+             ========================================== -->
+        <div class="battles-filters">
+            <div class="filter-group">
+                <div class="search-wrapper">
+                    <i class="fas fa-search search-icon"></i>
+                    <input 
+                        type="text" 
+                        class="form-input" 
+                        id="searchBattle" 
+                        placeholder="Buscar batallas..."
+                    />
+                </div>
+                <select class="form-select" id="filterStatus">
+                    <option value="all">Todas las batallas</option>
+                    <option value="completed">Completadas</option>
+                    <option value="pending">Pendientes</option>
+                </select>
+                <select class="form-select" id="filterType">
+                    <option value="all">Todos los tipos</option>
+                    <option value="fisico">Físico</option>
+                    <option value="mental">Mental</option>
+                    <option value="espiritual">Espiritual</option>
+                    <option value="social">Social</option>
+                    <option value="creativo">Creativo</option>
+                </select>
+            </div>
+            <div class="filter-stats">
+                <span class="filter-stat">
+                    <i class="fas fa-sword"></i>
+                    <span id="battleCount">0</span> batallas
+                </span>
+                <span class="filter-stat">
+                    <i class="fas fa-check-circle" style="color: #34d399;"></i>
+                    <span id="completedCount">0</span> completadas
+                </span>
+            </div>
+        </div>
+
+        <!-- ==========================================
+             TABLA DE BATALLAS
+             ========================================== -->
+        <div class="battles-table-wrapper">
+            <table class="battles-table" id="battlesTable">
+                <thead>
+                    <tr>
+                        <th class="col-status">ESTADO</th>
+                        <th class="col-name">NOMBRE</th>
+                        <th class="col-type">TIPO</th>
+                        <th class="col-description">DESCRIPCIÓN</th>
+                        <th class="col-date">FECHA</th>
+                        <th class="col-actions">ACCIONES</th>
+                    </tr>
+                </thead>
+                <tbody id="battlesTableBody">
+                    <!-- Ejemplo de batalla -->
+                    <tr class="battle-row" data-id="1" data-completed="false">
+                        <td data-label="Estado">
+                            <span class="status-badge pending">
+                                <i class="fas fa-clock"></i> Pendiente
+                            </span>
+                        </td>
+                        <td data-label="Nombre">Ejercicio Físico</td>
+                        <td data-label="Tipo">
+                            <span class="type-tag type-fisico">
+                                <i class="fas fa-running"></i> Físico
+                            </span>
+                        </td>
+                        <td data-label="Descripción">30 min de cardio matutino</td>
+                        <td data-label="Fecha">25 de Junio, 2026</td>
+                        <td data-label="Acciones" class="actions-cell">
+                            <button class="btn btn-sm btn-success complete-battle" title="Completar">
+                                <i class="fas fa-check"></i>
+                            </button>
+                            <button class="btn btn-sm btn-ghost edit-battle" title="Editar">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn btn-sm btn-ghost delete-battle" title="Eliminar">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                    <!-- Ejemplo completada -->
+                    <tr class="battle-row" data-id="2" data-completed="true">
+                        <td data-label="Estado">
+                            <span class="status-badge completed">
+                                <i class="fas fa-check-circle"></i> Completada
+                            </span>
+                        </td>
+                        <td data-label="Nombre">Lectura Motivacional</td>
+                        <td data-label="Tipo">
+                            <span class="type-tag type-mental">
+                                <i class="fas fa-brain"></i> Mental
+                            </span>
+                        </td>
+                        <td data-label="Descripción">10 min de lectura de filosofía</td>
+                        <td data-label="Fecha">24 de Junio, 2026</td>
+                        <td data-label="Acciones" class="actions-cell">
+                            <button class="btn btn-sm btn-success complete-battle" title="Completar" disabled>
+                                <i class="fas fa-check"></i>
+                            </button>
+                            <button class="btn btn-sm btn-ghost edit-battle" title="Editar">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn btn-sm btn-ghost delete-battle" title="Eliminar">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- ==========================================
+             PAGINACIÓN
+             ========================================== -->
+        <div class="battles-pagination">
+            <button class="btn btn-ghost btn-sm" id="prevPage" disabled>
+                <i class="fas fa-chevron-left"></i> Anterior
+            </button>
+            <span class="pagination-info" id="paginationInfo">Página 1 de 1</span>
+            <button class="btn btn-ghost btn-sm" id="nextPage" disabled>
+                Siguiente <i class="fas fa-chevron-right"></i>
+            </button>
+        </div>
+
+        <!-- ==========================================
+             ESTADO VACÍO
+             ========================================== -->
+        <div class="battles-empty" id="battlesEmpty" style="display: none;">
+            <div class="empty-icon">
+                <i class="fas fa-dumbbell"></i>
+            </div>
+            <h3 class="empty-title">Aún no hay batallas</h3>
+            <p class="empty-text">
+                Comienza a registrar tus actividades diarias.
+                <br> Cada batalla es un paso hacia la victoria.
+            </p>
+            <button class="btn btn-primary" id="emptyNewBattleBtn">
+                <i class="fas fa-plus"></i> REGISTRAR PRIMERA BATALLA
+            </button>
+        </div>
+    </div>
+</section>

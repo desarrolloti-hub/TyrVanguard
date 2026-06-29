@@ -1,0 +1,182 @@
+<section class="battle-create-section">
+    <!-- Espada de fondo -->
+    <div class="sword-bg subtle">
+        <img class="sword-image" src="/assets/img/espada.svg" alt="" loading="lazy" />
+    </div>
+
+    <div class="battle-create-container">
+        <!-- ==========================================
+             HEADER
+             ========================================== -->
+        <header class="battle-create-header">
+            <div class="battle-create-header-left">
+                <div class="battle-create-badge">
+                    <i class="fas fa-dumbbell"></i>
+                    <span>NUEVA BATALLA</span>
+                </div>
+                <h1 class="battle-create-title">
+                    Forja tu <span>Próxima Victoria</span>
+                </h1>
+                <p class="battle-create-subtitle">
+                    "Cada batalla comienza con una decisión. Define tu misión y conquístala."
+                </p>
+            </div>
+            <div class="battle-create-header-right">
+                <button class="btn btn-secondary btn-sm" id="cancelBattleBtn">
+                    <i class="fas fa-arrow-left"></i> VOLVER
+                </button>
+            </div>
+        </header>
+
+        <!-- ==========================================
+             FORMULARIO DE CREACIÓN
+             ========================================== -->
+        <div class="battle-create-card form-card">
+            <div class="form-scanline"></div>
+
+            <form class="form" id="battleCreateForm" novalidate>
+                <!-- NOMBRE -->
+                <div class="form-group">
+                    <label class="form-label" for="battleName">
+                        <i class="fas fa-sword label-icon"></i>
+                        Nombre de la Batalla
+                        <span class="label-required">*</span>
+                    </label>
+                    <div class="input-icon-wrapper">
+                        <i class="fas fa-tag input-icon"></i>
+                        <input 
+                            type="text" 
+                            class="form-input" 
+                            id="battleName" 
+                            placeholder="Ej: Ejercicio Matutino, Lectura Diaria..." 
+                            required
+                        />
+                    </div>
+                    <span class="form-error" id="nameError" style="display: none;">
+                        <i class="fas fa-exclamation-circle"></i>
+                        El nombre es obligatorio
+                    </span>
+                </div>
+
+                <!-- TIPO -->
+                <div class="form-group">
+                    <label class="form-label" for="battleType">
+                        <i class="fas fa-tag label-icon"></i>
+                        Tipo de Batalla
+                        <span class="label-required">*</span>
+                    </label>
+                    <div class="input-icon-wrapper">
+                        <i class="fas fa-layer-group input-icon"></i>
+                        <select class="form-select" id="battleType" required>
+                            <option value="">Selecciona un tipo...</option>
+                            <option value="fisico"><i class="fas fa-running"></i> Físico</option>
+                            <option value="mental"><i class="fas fa-brain"></i> Mental</option>
+                            <option value="espiritual"><i class="fas fa-spa"></i> Espiritual</option>
+                            <option value="social"><i class="fas fa-users"></i> Social</option>
+                            <option value="creativo"><i class="fas fa-paint-brush"></i> Creativo</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- TIEMPO (DURACIÓN) - NUEVO CAMPO -->
+                <div class="form-group">
+                    <label class="form-label" for="battleDuration">
+                        <i class="fas fa-clock label-icon"></i>
+                        Tiempo de Batalla
+                        <span class="label-required">*</span>
+                    </label>
+                    <div class="duration-selector">
+                        <div class="input-icon-wrapper" style="flex: 2;">
+                            <i class="fas fa-hourglass-half input-icon"></i>
+                            <input 
+                                type="number" 
+                                class="form-input" 
+                                id="battleDuration" 
+                                placeholder="30" 
+                                min="1"
+                                max="480"
+                                value="30"
+                                required
+                            />
+                        </div>
+                        <select class="form-select" id="battleDurationUnit" style="flex: 1; min-width: 100px;">
+                            <option value="minutos">Minutos</option>
+                            <option value="horas">Horas</option>
+                        </select>
+                    </div>
+                    <span class="form-help">
+                        <i class="fas fa-info-circle"></i>
+                        ¿Cuánto tiempo dedicarás a esta batalla? (máx. 8 horas)
+                    </span>
+                    <span class="form-error" id="durationError" style="display: none;">
+                        <i class="fas fa-exclamation-circle"></i>
+                        El tiempo debe ser mayor a 0
+                    </span>
+                </div>
+
+                <!-- DESCRIPCIÓN -->
+                <div class="form-group">
+                    <label class="form-label" for="battleDescription">
+                        <i class="fas fa-align-left label-icon"></i>
+                        Estrategia de Batalla
+                    </label>
+                    <div class="input-icon-wrapper">
+                        <i class="fas fa-feather-alt input-icon" style="top: 16px; transform: none;"></i>
+                        <textarea 
+                            class="form-textarea" 
+                            id="battleDescription" 
+                            rows="4" 
+                            placeholder="Describe tu plan de batalla... ¿Qué vas a hacer? ¿Cómo lo vas a lograr?"
+                        ></textarea>
+                    </div>
+                </div>
+
+                <!-- METAS (sub-objetivos) -->
+                <div class="form-group">
+                    <label class="form-label" for="battleGoals">
+                        <i class="fas fa-bullseye label-icon"></i>
+                        Metas Específicas
+                    </label>
+                    <div class="input-icon-wrapper">
+                        <i class="fas fa-list-check input-icon" style="top: 16px; transform: none;"></i>
+                        <textarea 
+                            class="form-textarea" 
+                            id="battleGoals" 
+                            rows="3" 
+                            placeholder="Ej: Hacer 3 series de 10 repeticiones&#10;Leer 10 páginas&#10;Meditar 15 minutos sin interrupciones"
+                        ></textarea>
+                    </div>
+                    <span class="form-help">
+                        <i class="fas fa-info-circle"></i>
+                        Divide tu batalla en metas concretas (una por línea)
+                    </span>
+                </div>
+
+                <!-- ACCIONES -->
+                <div class="form-actions form-actions-center">
+                    <button type="button" class="btn btn-ghost" id="cancelFormBtn">
+                        <i class="fas fa-times"></i> CANCELAR
+                    </button>
+                    <button type="submit" class="btn btn-primary" id="saveBattleBtn">
+                        <i class="fas fa-sword"></i> REGISTRAR BATALLA
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- ==========================================
+             PIE DE PÁGINA CON MANTRA
+             ========================================== -->
+        <footer class="battle-create-footer">
+            <div class="motto-divider">
+                <i class="fas fa-grip-lines"></i>
+                <div class="motto-line"></div>
+                <i class="fas fa-grip-lines"></i>
+            </div>
+            <p class="motto-text">
+                UN <span class="text-primary">GUERRERO</span> PLANEA SU <span class="text-secondary">VICTORIA</span> ANTES DE ENFRENTAR LA BATALLA
+            </p>
+            <p class="motto-subtext">"La preparación es la clave de la victoria."</p>
+        </footer>
+    </div>
+</section>

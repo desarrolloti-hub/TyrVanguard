@@ -4,6 +4,12 @@ import { createAccountController } from '../modules/visitor/createAccount/create
 import { homeUserController } from '../modules/user/home/homeUserController.js';
 import { notFoundController } from '../modules/shared/errors/404Controller.js';
 import { createAdminController } from '../modules/admin/createAdmin/createAdminController.js';
+import { diaryController} from '../modules/user/diary/create/createDiaryController.js';
+import {profileController} from '../modules/user/profile/profileController.js';
+import { readBattlesController } from '../modules/user/battles/read/readBattlesController.js';
+import { battleCreateController } from '../modules/user/battles/create/createBattlesController.js';
+import { readGoalsController } from '../modules/user/goals/read/readGoalsController.js';
+import { createGoalController } from '../modules/user/goals/create/createGoalsController.js';
 
 
 
@@ -64,6 +70,48 @@ export const routes = {
         view: "/modules/user/home/homeUser.html",
         controller: homeUserController,
     },
+
+        // diary
+    "/diario": {
+        view: "/modules/user/diary/create/createDiary.html",
+        controller: diaryController,
+    },
+
+    //profile
+        "/perfilUsuario": {
+        view: "/modules/user/profile/profile.html",
+        controller: profileController,
+    },
+    
+    //batalla
+    "/batallas": {
+        view: "/modules/user/battles/read/ReadBattles.html",
+        controller: readBattlesController,
+    },
+    //crear  batalla
+
+    "/crearBatallas": {
+        view: "/modules/user/battles/create/createBattles.html",
+        controller: battleCreateController,
+    },
+    
+
+      //metas
+
+      //read metas
+    "/metas": {
+        view: "/modules/user/goals/read/readGoals.html",
+        controller: readGoalsController,
+    },
+    //crear metas
+
+    "/crearMetas": {
+        view: "/modules/user/goals/create/createGoals.html",
+        controller: createGoalController,
+    },
+
+
+    
 
     // Login
     "/iniciarSesion": {

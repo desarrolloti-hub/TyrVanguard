@@ -1,0 +1,131 @@
+<section class="diary-section">
+    <!-- Espada de fondo -->
+    <div class="sword-bg subtle">
+        <img class="sword-image" src="/assets/img/espada.svg" alt="" loading="lazy" />
+    </div>
+
+    <div class="diary-container">
+        <!-- ==========================================
+             HEADER DEL DIARIO
+             ========================================== -->
+        <header class="diary-header">
+            <div class="diary-header-left">
+                <div class="diary-badge">
+                    <i class="fas fa-feather-alt"></i>
+                    <span>DIARIO DEL GUERRERO</span>
+                </div>
+                <h1 class="diary-title">
+                    Bitácora de <span>Batalla</span>
+                </h1>
+                <p class="diary-subtitle">
+                    "Registra tus victorias, aprendizajes y el camino hacia el Valhalla."
+                </p>
+            </div>
+            <div class="diary-header-right">
+                <button class="btn btn-primary" id="newDiaryEntryBtn">
+                    <i class="fas fa-plus"></i> NUEVA ENTRADA
+                </button>
+            </div>
+        </header>
+
+        <!-- ==========================================
+             FILTROS Y BÚSQUEDA
+             ========================================== -->
+        <div class="diary-filters">
+            <div class="filter-group">
+                <div class="search-wrapper">
+                    <i class="fas fa-search search-icon"></i>
+                    <input 
+                        type="text" 
+                        class="form-input" 
+                        id="searchDiary" 
+                        placeholder="Buscar entradas..."
+                    />
+                </div>
+                <select class="form-select" id="filterTag">
+                    <option value="all">Todas las etiquetas</option>
+                    <option value="victoria">🏆 Victoria</option>
+                    <option value="aprendizaje">📖 Aprendizaje</option>
+                    <option value="batalla">⚔️ Batalla</option>
+                    <option value="reflexion">🧠 Reflexión</option>
+                    <option value="logro">⭐ Logro</option>
+                </select>
+            </div>
+            <div class="filter-stats">
+                <span class="filter-stat">
+                    <i class="fas fa-file-alt"></i>
+                    <span id="entryCount">0</span> entradas
+                </span>
+            </div>
+        </div>
+
+        <!-- ==========================================
+             TABLA DEL DIARIO
+             ========================================== -->
+        <div class="diary-table-wrapper">
+            <table class="diary-table" id="diaryTable">
+                <thead>
+                    <tr>
+                        <th class="col-date">FECHA</th>
+                        <th class="col-title">TÍTULO</th>
+                        <th class="col-entry">ENTRADA</th>
+                        <th class="col-tag">ETIQUETA</th>
+                        <th class="col-actions">ACCIONES</th>
+                    </tr>
+                </thead>
+                <tbody id="diaryTableBody">
+                    <!-- Ejemplo de entrada -->
+                    <tr class="diary-row">
+                        <td data-label="Fecha">25 de Junio, 2026</td>
+                        <td data-label="Título">Victoria Matutina</td>
+                        <td data-label="Entrada">"Hoy sentí el impulso, pero recordé mi misión. Salí a correr y la batalla fue ganada. Un día más en la vanguardia."</td>
+                        <td data-label="Etiqueta">
+                            <span class="tag tag-victoria">🏆 Victoria</span>
+                        </td>
+                        <td data-label="Acciones" class="actions-cell">
+                            <button class="btn btn-sm btn-ghost view-entry" title="Ver" data-id="1">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <button class="btn btn-sm btn-ghost edit-entry" title="Editar" data-id="1">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn btn-sm btn-ghost delete-entry" title="Eliminar" data-id="1">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- ==========================================
+             PAGINACIÓN
+             ========================================== -->
+        <div class="diary-pagination">
+            <button class="btn btn-ghost btn-sm" id="prevPage" disabled>
+                <i class="fas fa-chevron-left"></i> Anterior
+            </button>
+            <span class="pagination-info" id="paginationInfo">Página 1 de 1</span>
+            <button class="btn btn-ghost btn-sm" id="nextPage" disabled>
+                Siguiente <i class="fas fa-chevron-right"></i>
+            </button>
+        </div>
+
+        <!-- ==========================================
+             ESTADO VACÍO
+             ========================================== -->
+        <div class="diary-empty" id="diaryEmpty" style="display: none;">
+            <div class="empty-icon">
+                <i class="fas fa-feather-alt"></i>
+            </div>
+            <h3 class="empty-title">Aún no hay entradas</h3>
+            <p class="empty-text">
+                Comienza a registrar tus batallas, victorias y aprendizajes.
+                <br> Cada entrada es un paso hacia el Valhalla.
+            </p>
+            <button class="btn btn-primary" id="emptyNewEntryBtn">
+                <i class="fas fa-plus"></i> CREAR PRIMERA ENTRADA
+            </button>
+        </div>
+    </div>
+</section>

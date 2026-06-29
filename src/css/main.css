@@ -44,6 +44,23 @@
 /* homeUser */
 @import url('./pages/user/home/homeUser.css');
 
+/* diary */
+@import url('./pages/user/diary/create/createDiary.css');
+
+/* perfil */
+@import url('./pages/user/profile/profile.css');
+
+/* batallas */
+@import url('./pages/user/battles/read/readbattles.css');
+
+/* crear batalla */
+@import url('./pages/user/battles/create/createBattle.css');
+
+/* read metas */
+@import url('./pages/user/goals/read/readGoals.css');
+
+/* crear metas */
+@import url('./pages/user/goals/create/createGoals.css');
 
 /* admin */
 

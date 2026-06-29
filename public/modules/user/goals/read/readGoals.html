@@ -1,0 +1,242 @@
+<section class="goals-section">
+    <!-- Espada de fondo -->
+    <div class="sword-bg subtle">
+        <img class="sword-image" src="/assets/img/espada.svg" alt="" loading="lazy" />
+    </div>
+
+    <div class="goals-container">
+        <!-- ==========================================
+             HEADER DE METAS
+             ========================================== -->
+        <header class="goals-header">
+            <div class="goals-header-left">
+                <div class="goals-badge">
+                    <i class="fas fa-bullseye"></i>
+                    <span>MIS METAS</span>
+                </div>
+                <h1 class="goals-title">
+                    Mis <span>Objetivos</span>
+                </h1>
+                <p class="goals-subtitle">
+                    "Un guerrero sin metas es como un barco sin rumbo. Define tu destino y conquístalo."
+                </p>
+            </div>
+            <div class="goals-header-right">
+                <button class="btn btn-primary" id="newGoalBtn">
+                    <i class="fas fa-plus"></i> NUEVA META
+                </button>
+            </div>
+        </header>
+
+        <!-- ==========================================
+             FILTROS Y BÚSQUEDA
+             ========================================== -->
+        <div class="goals-filters">
+            <div class="filter-group">
+                <div class="search-wrapper">
+                    <i class="fas fa-search search-icon"></i>
+                    <input 
+                        type="text" 
+                        class="form-input" 
+                        id="searchGoal" 
+                        placeholder="Buscar metas..."
+                    />
+                </div>
+                <select class="form-select" id="filterStatus">
+                    <option value="all">Todas las metas</option>
+                    <option value="completed">Completadas</option>
+                    <option value="pending">En progreso</option>
+                </select>
+                <select class="form-select" id="filterCategory">
+                    <option value="all">Todas las categorías</option>
+                    <option value="personal">Personal</option>
+                    <option value="profesional">Profesional</option>
+                    <option value="salud">Salud</option>
+                    <option value="espiritual">Espiritual</option>
+                    <option value="social">Social</option>
+                </select>
+            </div>
+            <div class="filter-stats">
+                <span class="filter-stat">
+                    <i class="fas fa-bullseye"></i>
+                    <span id="goalCount">0</span> metas
+                </span>
+                <span class="filter-stat">
+                    <i class="fas fa-check-circle" style="color: #34d399;"></i>
+                    <span id="completedCount">0</span> completadas
+                </span>
+            </div>
+        </div>
+
+        <!-- ==========================================
+             LISTA DE METAS (TARJETAS)
+             ========================================== -->
+        <div class="goals-grid" id="goalsGrid">
+            <!-- Ejemplo de meta -->
+            <div class="goal-card" data-id="1" data-completed="false">
+                <div class="goal-card-header">
+                    <div class="goal-card-title-group">
+                        <h3 class="goal-card-title">Llegar a 30 días de racha</h3>
+                        <span class="goal-card-category category-personal">
+                            <i class="fas fa-user"></i> Personal
+                        </span>
+                    </div>
+                    <span class="goal-card-status pending">
+                        <i class="fas fa-clock"></i> En progreso
+                    </span>
+                </div>
+                
+                <p class="goal-card-description">
+                    Mantener la disciplina diaria para alcanzar los 30 días de racha.
+                </p>
+
+                <!-- Objetivos -->
+                <div class="goal-objectives">
+                    <div class="objective-item" data-completed="false">
+                        <button class="objective-check">
+                            <i class="fas fa-square"></i>
+                        </button>
+                        <span class="objective-text">Completar 7 días de racha</span>
+                    </div>
+                    <div class="objective-item" data-completed="false">
+                        <button class="objective-check">
+                            <i class="fas fa-square"></i>
+                        </button>
+                        <span class="objective-text">Completar 14 días de racha</span>
+                    </div>
+                    <div class="objective-item" data-completed="false">
+                        <button class="objective-check">
+                            <i class="fas fa-square"></i>
+                        </button>
+                        <span class="objective-text">Completar 21 días de racha</span>
+                    </div>
+                    <div class="objective-item" data-completed="false">
+                        <button class="objective-check">
+                            <i class="fas fa-square"></i>
+                        </button>
+                        <span class="objective-text">Completar 30 días de racha</span>
+                    </div>
+                </div>
+
+                <!-- Barra de progreso -->
+                <div class="goal-progress-container">
+                    <div class="goal-progress-header">
+                        <span class="goal-progress-label">Progreso</span>
+                        <span class="goal-progress-percentage">0%</span>
+                    </div>
+                    <div class="goal-progress-bar">
+                        <div class="goal-progress-fill" style="width: 0%;"></div>
+                    </div>
+                </div>
+
+                <!-- Acciones -->
+                <div class="goal-card-actions">
+                    <button class="btn btn-sm btn-ghost edit-goal" title="Editar">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    <button class="btn btn-sm btn-ghost delete-goal" title="Eliminar">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Ejemplo de meta completada -->
+            <div class="goal-card" data-id="2" data-completed="true">
+                <div class="goal-card-header">
+                    <div class="goal-card-title-group">
+                        <h3 class="goal-card-title">Meditar diario</h3>
+                        <span class="goal-card-category category-espiritual">
+                            <i class="fas fa-spa"></i> Espiritual
+                        </span>
+                    </div>
+                    <span class="goal-card-status completed">
+                        <i class="fas fa-check-circle"></i> Completada
+                    </span>
+                </div>
+                
+                <p class="goal-card-description">
+                    Establecer el hábito de meditar 15 minutos cada mañana.
+                </p>
+
+                <!-- Objetivos -->
+                <div class="goal-objectives">
+                    <div class="objective-item" data-completed="true">
+                        <button class="objective-check completed">
+                            <i class="fas fa-check-square"></i>
+                        </button>
+                        <span class="objective-text completed">Meditar 7 días seguidos</span>
+                    </div>
+                    <div class="objective-item" data-completed="true">
+                        <button class="objective-check completed">
+                            <i class="fas fa-check-square"></i>
+                        </button>
+                        <span class="objective-text completed">Meditar 14 días seguidos</span>
+                    </div>
+                    <div class="objective-item" data-completed="true">
+                        <button class="objective-check completed">
+                            <i class="fas fa-check-square"></i>
+                        </button>
+                        <span class="objective-text completed">Meditar 21 días seguidos</span>
+                    </div>
+                    <div class="objective-item" data-completed="true">
+                        <button class="objective-check completed">
+                            <i class="fas fa-check-square"></i>
+                        </button>
+                        <span class="objective-text completed">Meditar 30 días seguidos</span>
+                    </div>
+                </div>
+
+                <!-- Barra de progreso -->
+                <div class="goal-progress-container">
+                    <div class="goal-progress-header">
+                        <span class="goal-progress-label">Progreso</span>
+                        <span class="goal-progress-percentage">100%</span>
+                    </div>
+                    <div class="goal-progress-bar">
+                        <div class="goal-progress-fill" style="width: 100%;"></div>
+                    </div>
+                </div>
+
+                <!-- Acciones -->
+                <div class="goal-card-actions">
+                    <button class="btn btn-sm btn-ghost edit-goal" title="Editar">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    <button class="btn btn-sm btn-ghost delete-goal" title="Eliminar">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==========================================
+             PAGINACIÓN
+             ========================================== -->
+        <div class="goals-pagination">
+            <button class="btn btn-ghost btn-sm" id="prevPage" disabled>
+                <i class="fas fa-chevron-left"></i> Anterior
+            </button>
+            <span class="pagination-info" id="paginationInfo">Página 1 de 1</span>
+            <button class="btn btn-ghost btn-sm" id="nextPage" disabled>
+                Siguiente <i class="fas fa-chevron-right"></i>
+            </button>
+        </div>
+
+        <!-- ==========================================
+             ESTADO VACÍO
+             ========================================== -->
+        <div class="goals-empty" id="goalsEmpty" style="display: none;">
+            <div class="empty-icon">
+                <i class="fas fa-bullseye"></i>
+            </div>
+            <h3 class="empty-title">Aún no hay metas</h3>
+            <p class="empty-text">
+                Define tus objetivos y comienza a forjar tu camino.
+                <br> Cada meta es un paso hacia la grandeza.
+            </p>
+            <button class="btn btn-primary" id="emptyNewGoalBtn">
+                <i class="fas fa-plus"></i> CREAR PRIMERA META
+            </button>
+        </div>
+    </div>
+</section>
