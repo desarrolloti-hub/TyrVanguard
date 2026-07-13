@@ -72,10 +72,15 @@
 /* crearcuenta */
 @import url('./pages/admin/createAdmin/createAdmin.css');
 
-
+@import url('./pages/admin/home/homeAdmin.css');
 
 /* shared  osea el 404*/
 @import url('./shared/errors/404.css');
+
+
+/* nav y footer de administrador */
+@import url('./components/admin/navbarAdmin.css');
+@import url('./components/admin/footerAdmin.css');
 
 
 /* firebase */

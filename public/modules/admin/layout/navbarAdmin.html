@@ -1,0 +1,56 @@
+<!-- navbarAdmin.html (partial) - Top Nav para Administradores -->
+<nav class="navbar-admin" id="navbarAdmin">
+    <div class="nav-container">
+        <!-- Logo -->
+        <a href="/homeAdmin" data-link class="nav-logo">
+            <div class="logo-icon">
+                <img src="/assets/icons/logoTyr.png" alt="Tyr Vanguard">
+            </div>
+            <span class="logo-text">TYR VANGUARD</span>
+            <span class="logo-badge">ADMIN</span>
+        </a>
+
+        <!-- Botón Hamburguesa (móvil) -->
+        <button class="menu-toggle" id="menuToggleAdmin" aria-label="Menú">
+            <i class="fas fa-bars"></i>
+        </button>
+
+        <!-- Acciones -->
+        <ul class="nav-actions" id="navActionsAdmin">
+
+            <!-- Notificaciones -->
+            <li>
+                <button class="nav-btn-icon" id="notifBtnAdmin" aria-label="Notificaciones">
+                    <i class="fas fa-bell"></i>
+                    <span class="notif-badge" id="notifBadgeAdmin">0</span>
+                </button>
+            </li>
+            
+            <!-- Configuración -->
+            <li>
+                <button class="nav-btn-icon" id="settingsBtnAdmin" aria-label="Configuración">
+                    <i class="fas fa-cog"></i>
+                </button>
+            </li>
+            
+            <!-- Avatar con dropdown -->
+            <li class="nav-avatar-wrapper" id="avatarWrapperAdmin">
+                <button class="nav-avatar-btn" id="avatarBtnAdmin" aria-label="Perfil">
+                    <img src="/assets/avatar-placeholder.png" alt="Avatar" class="avatar-img" id="avatarImgAdmin">
+                    <i class="fas fa-chevron-down avatar-chevron"></i>
+                </button>
+                
+                <!-- Dropdown de perfil -->
+                <ul class="profile-dropdown" id="profileDropdownAdmin">
+                    <li><a href="/perfilUsuario" data-link><i class="fas fa-user-cog"></i> Mi Perfil</a></li>
+                    <li><a href="/homeAdmin" data-link><i class="fas fa-tachometer-alt"></i> Panel de Control</a></li>
+                    <li><a href="/homeAdmin#users" data-link><i class="fas fa-users"></i> Gestionar Usuarios</a></li>
+                    <li><a href="/homeAdmin#stats" data-link><i class="fas fa-chart-line"></i> Estadísticas</a></li>
+                    <li><a href="/crearCuentaAdmin" data-link><i class="fas fa-user-shield"></i> Crear Admin</a></li>
+                    <li class="dropdown-divider"></li>
+                    <li><a href="#" id="logoutBtnAdmin" class="logout-item"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</nav>

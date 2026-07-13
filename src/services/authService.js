@@ -1,230 +1,196 @@
 /* ========================================
-   AUTH SERVICE - Authentication management
-   Supports both Users and Admins
+   AUTH SERVICE - Servicio unificado de autenticación
+   Actúa como puente entre UserService y AdminService
    ======================================== */
 
-import { UserService, ROLES as UserRoles } from './userService.js';
-import { AdminService, ROLES as AdminRoles } from './adminService.js';
-
-export const ROLES = {
-    USER: 'user',
-    ADMIN: 'admin',
-    SUPER_ADMIN: 'super_admin',
-    GUEST: 'guest'
-};
+import { UserService } from './userService.js';
+import { AdminService } from './adminService.js';
 
 export const AuthService = {
     /**
-     * Observe authentication state changes
-     * Detecta si es admin o user y devuelve los datos correspondientes
+     * Obtiene la sesión actual (prioriza admin, luego user)
      */
-    onAuthStateChange(callback) {
-        // Verificar si hay sesión de admin
-        const adminData = AdminService.getSession();
-        if (adminData) {
-            callback(adminData);
-        } else {
-            // Si no hay admin, verificar sesión de user
-            const userData = UserService.getSession();
-            callback(userData);
-        }
-        
-        const handler = (e) => callback(e.detail);
-        window.addEventListener('auth:stateChanged', handler);
-        
-        return () => window.removeEventListener('auth:stateChanged', handler);
-    },
-    
-    /**
-     * Get current user role (sync)
-     */
-    getCurrentRole() {
-        // Primero verificar si es admin
+    getSession() {
+        // Primero verificar si hay sesión de admin
         const adminSession = AdminService.getSession();
         if (adminSession) {
-            return adminSession.role || ROLES.ADMIN;
+            return adminSession;
         }
         
-        // Si no, verificar si es user
+        // Si no, verificar sesión de usuario
         const userSession = UserService.getSession();
         if (userSession) {
-            return userSession.role || ROLES.USER;
+            return userSession;
         }
         
-        return ROLES.GUEST;
+        return null;
     },
-    
+
     /**
-     * Check if user is authenticated (admin or user)
-     */
-    isAuthenticated() {
-        return AdminService.isAuthenticated() || UserService.isAuthenticated();
-    },
-    
-    /**
-     * Get current user (admin or user)
+     * Obtiene el usuario actual
      */
     getCurrentUser() {
-        const admin = AdminService.getSession();
-        if (admin) return admin;
-        
-        return UserService.getSession();
+        return this.getSession();
     },
-    
+
     /**
-     * Check if current user is admin
+     * Verifica si hay un usuario autenticado
      */
-    isAdmin() {
-        const session = this.getCurrentUser();
-        if (!session) return false;
-        return session.role === ROLES.ADMIN || session.role === ROLES.SUPER_ADMIN;
+    isAuthenticated() {
+        const session = this.getSession();
+        return !!session;
     },
-    
+
     /**
-     * Check if current user is super admin
+     * Obtiene el rol del usuario actual (sync)
      */
-    isSuperAdmin() {
-        const session = this.getCurrentUser();
-        if (!session) return false;
-        return session.role === ROLES.SUPER_ADMIN;
+    getUserRoleSync() {
+        const session = this.getSession();
+        if (!session) return 'guest';
+        return session.role || 'guest';
     },
-    
+
     /**
-     * Check if current user has specific role
-     */
-    hasRole(requiredRole) {
-        const session = this.getCurrentUser();
-        if (!session) return false;
-        return session.role === requiredRole;
-    },
-    
-    /**
-     * Logout (cierra sesión de admin o user)
-     */
-    async logout() {
-        if (AdminService.isAuthenticated()) {
-            await AdminService.logout();
-        } else if (UserService.isAuthenticated()) {
-            await UserService.logout();
-        }
-        return true;
-    },
-    
-    // ========== ADMIN METHODS ==========
-    
-    /**
-     * Login as admin
-     */
-    async loginAdmin(email, password, isGoogle = false) {
-        return await AdminService.login(email, password, isGoogle);
-    },
-    
-    /**
-     * Register new admin
-     */
-    async registerAdmin(adminData, password) {
-        return await AdminService.register(adminData, password);
-    },
-    
-    /**
-     * Get admin session
-     */
-    getAdminSession() {
-        return AdminService.getSession();
-    },
-    
-    /**
-     * Check if admin is authenticated
-     */
-    isAdminAuthenticated() {
-        return AdminService.isAuthenticated();
-    },
-    
-    /**
-     * Get admin role
-     */
-    getAdminRole() {
-        return AdminService.getAdminRoleSync();
-    },
-    
-    /**
-     * Get all admins
-     */
-    async getAdmins(filters = {}) {
-        return await AdminService.getAdmins(filters);
-    },
-    
-    /**
-     * Promote admin to super admin
-     */
-    async promoteToSuperAdmin(adminId) {
-        return await AdminService.promoteToSuperAdmin(adminId);
-    },
-    
-    // ========== USER METHODS ==========
-    
-    /**
-     * Login as regular user
+     * Login como usuario regular
      */
     async loginUser(email, password, isGoogle = false) {
-        return await UserService.login(email, password, isGoogle);
-    },
-    
-    /**
-     * Register new user
-     */
-    async registerUser(userData, password) {
-        return await UserService.register(userData, password);
-    },
-    
-    /**
-     * Get user session
-     */
-    getUserSession() {
-        return UserService.getSession();
-    },
-    
-    /**
-     * Check if user is authenticated
-     */
-    isUserAuthenticated() {
-        return UserService.isAuthenticated();
-    },
-    
-    /**
-     * Get user role
-     */
-    getUserRole() {
-        return UserService.getUserRoleSync();
-    },
-    
-    /**
-     * Get all users
-     */
-    async getUsers(filters = {}) {
-        return await UserService.getUsers(filters);
-    },
-    // En authService.js - añadir este método
-
-/**
- * Login genérico (intenta user primero, luego admin)
- */
-    async login(email, password, isGoogle = false) {
         try {
-            // Intentar como usuario
-            return await this.loginUser(email, password, isGoogle);
-        } catch (userError) {
-            // Si el error es de usuario no encontrado, intentar como admin
-            if (userError.code === 'auth/user-not-found' || 
-                userError.message?.includes('user-not-found')) {
-                try {
-                    return await this.loginAdmin(email, password, isGoogle);
-                } catch (adminError) {
-                    // Si es admin no encontrado, lanzar el error original
-                    throw userError;
-                }
-            }
-            throw userError;
+            const result = await UserService.login(email, password, isGoogle);
+            
+            // Guardar en window para acceso global
+            window.AuthService = this;
+            
+            return {
+                success: true,
+                userData: result.userData,
+                user: result.user,
+                role: 'user',
+                service: 'UserService'
+            };
+        } catch (error) {
+            console.error('❌ Error en loginUser:', error);
+            throw error;
         }
+    },
+
+    /**
+     * Login como administrador
+     */
+    async loginAdmin(email, password, isGoogle = false) {
+        try {
+            const result = await AdminService.login(email, password, isGoogle);
+            
+            // Guardar en window para acceso global
+            window.AuthService = this;
+            
+            return {
+                success: true,
+                userData: result.adminData,
+                user: result.user,
+                role: 'admin',
+                service: 'AdminService'
+            };
+        } catch (error) {
+            console.error('❌ Error en loginAdmin:', error);
+            throw error;
+        }
+    },
+
+    /**
+     * Login automático - detecta si es admin o user
+     */
+    async login(email, password, isGoogle = false) {
+        let lastError = null;
+        
+        // 1. Intentar como usuario regular primero
+        try {
+            const result = await this.loginUser(email, password, isGoogle);
+            console.log('✅ Login exitoso como usuario');
+            return result;
+        } catch (error) {
+            console.log('⚠️ No es usuario, intentando como admin...');
+            lastError = error;
+        }
+        
+        // 2. Intentar como administrador
+        try {
+            const result = await this.loginAdmin(email, password, isGoogle);
+            console.log('✅ Login exitoso como administrador');
+            return result;
+        } catch (error) {
+            console.log('❌ Tampoco es admin');
+            lastError = error;
+        }
+        
+        // 3. Si ambos fallan, lanzar el error del primer intento
+        throw lastError || new Error('Credenciales inválidas');
+    },
+
+    /**
+     * Logout - cierra ambas sesiones
+     */
+    async logout() {
+        try {
+            // Cerrar sesión de usuario
+            await UserService.logout();
+        } catch (e) {
+            console.warn('Error cerrando sesión de usuario:', e);
+        }
+        
+        try {
+            // Cerrar sesión de admin
+            await AdminService.logout();
+        } catch (e) {
+            console.warn('Error cerrando sesión de admin:', e);
+        }
+        
+        // Limpiar window
+        window.AuthService = null;
+        
+        // Disparar evento
+        this._dispatchAuthChange(null);
+        
+        return true;
+    },
+
+    /**
+     * Observa cambios en el estado de autenticación
+     */
+    onAuthStateChange(callback) {
+        // Obtener estado actual
+        const session = this.getSession();
+        callback(session);
+
+        // Escuchar eventos de auth
+        const handler = (e) => callback(e.detail);
+        window.addEventListener('auth:stateChanged', handler);
+
+        // También escuchar cambios en localStorage
+        const storageHandler = (e) => {
+            if (e.key === 'user-TYRVANGUARD' || e.key === 'admin_session') {
+                const newSession = this.getSession();
+                callback(newSession);
+            }
+        };
+        window.addEventListener('storage', storageHandler);
+
+        return () => {
+            window.removeEventListener('auth:stateChanged', handler);
+            window.removeEventListener('storage', storageHandler);
+        };
+    },
+
+    /**
+     * Dispara evento de cambio de autenticación
+     */
+    _dispatchAuthChange(userData) {
+        window.dispatchEvent(new CustomEvent('auth:stateChanged', { 
+            detail: userData 
+        }));
     }
 };
+
+// Exponer AuthService globalmente
+window.AuthService = AuthService;
+
+export default AuthService;

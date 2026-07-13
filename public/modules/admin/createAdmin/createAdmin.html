@@ -10,7 +10,6 @@
             <!-- Brand Header -->
             <header class="register-header">
                 <div class="logo-ring">
-                    <!-- 🆕 Ícono de Admin (escudo/seguridad) -->
                     <i class="fas fa-shield-halved logo-icon-admin"></i>
                     <div class="logo-pulse"></div>
                 </div>
@@ -21,23 +20,10 @@
                 <p class="brand-subtitle">CREAR CUENTA DE ADMINISTRADOR</p>
             </header>
 
-            <!-- Register Card usando componentes -->
+            <!-- Register Card -->
             <div class="register-card form-card">
                 <div class="form-scanline"></div>
                 <form class="register-form form" id="registerAdminForm">
-                    <!-- 🆕 BOTÓN DE GOOGLE (opcional para admin) -->
-                    <div class="form-group">
-                        <button type="button" class="btn btn-google btn-block" id="googleAdminBtn">
-                            <i class="fab fa-google btn-icon"></i>
-                            <span class="btn-text">CONTINUAR CON GOOGLE</span>
-                        </button>
-                    </div>
-
-                    <!-- Divisor -->
-                    <div class="divider-or">
-                        <span class="divider-or-text">O</span>
-                    </div>
-
                     <!-- Fila: Nombre y Apellido -->
                     <div class="form-row">
                         <!-- Nombre -->
@@ -118,7 +104,7 @@
                                 <i class="fas fa-eye"></i>
                             </button>
                         </div>
-                        <span class="form-help">Mínimo 8 caracteres</span>
+                        <span class="form-help">Minimum 8 characters</span>
                     </div>
 
                     <!-- Confirmar Contraseña -->
@@ -140,36 +126,6 @@
                                 <i class="fas fa-eye"></i>
                             </button>
                         </div>
-                    </div>
-
-                    <!-- Código de Administrador (campo extra) -->
-                    <div class="form-group">
-                        <label class="form-label">
-                            <i class="fas fa-key label-icon"></i>
-                            CÓDIGO DE ADMINISTRADOR
-                            <span class="label-required">*</span>
-                        </label>
-                        <div class="input-icon-wrapper">
-                            <input 
-                                class="form-input" 
-                                placeholder="CÓDIGO DE ACCESO ADMIN" 
-                                type="password" 
-                                id="adminCode"
-                                required
-                            />
-                            <i class="fas fa-key input-icon"></i>
-                        </div>
-                        <span class="form-help">Ingresa el código secreto de administrador</span>
-                    </div>
-
-                    <!-- Términos y condiciones -->
-                    <div class="form-group">
-                        <label class="form-check">
-                            <input class="form-check-input" type="checkbox" id="adminTerms" required />
-                            <span class="form-check-label">
-                                Acepto los <a href="#">términos y condiciones</a> de la Vanguardia
-                            </span>
-                        </label>
                     </div>
 
                     <!-- Submit Action -->

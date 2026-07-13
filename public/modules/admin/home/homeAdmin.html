@@ -1,0 +1,236 @@
+<!-- homeAdmin.html - Dashboard de Administrador -->
+<section class="admin-dashboard-section">
+    <!-- Espada de fondo -->
+    <div class="sword-bg">
+        <img class="sword-image" src="/assets/img/espada.svg" alt="" loading="lazy" />
+    </div>
+
+    <div class="admin-dashboard-container">
+        <!-- Header -->
+        <header class="admin-dashboard-header">
+            <div class="admin-header-left">
+                <div class="admin-badge">
+                    <i class="fas fa-shield-halved"></i>
+                    PANEL DE COMANDO
+                </div>
+                <h1 class="admin-dashboard-title">
+                    BIENVENIDO, <span id="adminNameDisplay">COMANDANTE</span>
+                </h1>
+                <p class="admin-dashboard-subtitle">
+                    Gestiona la Vanguardia y supervisa el progreso de tus guerreros
+                </p>
+            </div>
+            <div class="admin-header-right">
+                <button class="btn btn-secondary btn-sm" id="refreshStatsBtn">
+                    <i class="fas fa-sync-alt"></i>
+                    ACTUALIZAR
+                </button>
+            </div>
+        </header>
+
+        <!-- Stats Grid -->
+        <div class="admin-stats-grid">
+            <div class="admin-stat-card">
+                <div class="admin-stat-icon users">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="admin-stat-info">
+                    <span class="admin-stat-label">TOTAL GUERREROS</span>
+                    <span class="admin-stat-value" id="totalUsers">0</span>
+                </div>
+                <div class="admin-stat-change">
+                    <i class="fas fa-arrow-up"></i>
+                    <span>+0%</span>
+                </div>
+            </div>
+
+            <div class="admin-stat-card">
+                <div class="admin-stat-icon active">
+                    <i class="fas fa-user-check"></i>
+                </div>
+                <div class="admin-stat-info">
+                    <span class="admin-stat-label">ACTIVOS</span>
+                    <span class="admin-stat-value" id="activeUsers">0</span>
+                </div>
+                <div class="admin-stat-change">
+                    <i class="fas fa-arrow-up"></i>
+                    <span>+0%</span>
+                </div>
+            </div>
+
+            <div class="admin-stat-card">
+                <div class="admin-stat-icon battles">
+                    <i class="fas fa-swords"></i>
+                </div>
+                <div class="admin-stat-info">
+                    <span class="admin-stat-label">BATALLAS TOTALES</span>
+                    <span class="admin-stat-value" id="totalBattles">0</span>
+                </div>
+                <div class="admin-stat-change">
+                    <i class="fas fa-arrow-up"></i>
+                    <span>+0%</span>
+                </div>
+            </div>
+
+            <div class="admin-stat-card">
+                <div class="admin-stat-icon goals">
+                    <i class="fas fa-bullseye"></i>
+                </div>
+                <div class="admin-stat-info">
+                    <span class="admin-stat-label">METAS COMPLETADAS</span>
+                    <span class="admin-stat-value" id="completedGoals">0</span>
+                </div>
+                <div class="admin-stat-change">
+                    <i class="fas fa-arrow-up"></i>
+                    <span>+0%</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content Row -->
+        <div class="admin-content-row">
+            <!-- Users Table -->
+            <div class="admin-col admin-col-users">
+                <div class="admin-card">
+                    <div class="admin-card-header">
+                        <h3 class="admin-card-title">
+                            <i class="fas fa-users-cog"></i>
+                            GESTIÓN DE GUERREROS
+                        </h3>
+                        <div class="admin-card-actions">
+                            <div class="admin-search-wrapper">
+                                <i class="fas fa-search admin-search-icon"></i>
+                                <input 
+                                    type="text" 
+                                    class="admin-search-input" 
+                                    id="adminUserSearch" 
+                                    placeholder="Buscar guerrero..."
+                                />
+                            </div>
+                            <button class="btn btn-primary btn-sm" id="adminAddUserBtn">
+                                <i class="fas fa-plus"></i>
+                                NUEVO
+                            </button>
+                        </div>
+                    </div>
+                    <div class="admin-card-body">
+                        <div class="admin-table-wrapper">
+                            <table class="admin-users-table">
+                                <thead>
+                                    <tr>
+                                        <th>GUERRERO</th>
+                                        <th>CORREO</th>
+                                        <th>ESTADO</th>
+                                        <th>ROL</th>
+                                        <th>BATALLAS</th>
+                                        <th>ACCIONES</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="adminUsersTableBody">
+                                    <!-- Renderizado por JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="admin-table-footer">
+                            <span class="admin-table-info" id="usersTableInfo">Mostrando 0 de 0 usuarios</span>
+                            <div class="admin-pagination">
+                                <button class="btn btn-ghost btn-sm" id="adminPrevPage" disabled>
+                                    <i class="fas fa-chevron-left"></i>
+                                </button>
+                                <span class="admin-page-info" id="adminPageInfo">1 / 1</span>
+                                <button class="btn btn-ghost btn-sm" id="adminNextPage" disabled>
+                                    <i class="fas fa-chevron-right"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions & Stats -->
+            <div class="admin-col admin-col-actions">
+                <!-- Quick Actions -->
+                <div class="admin-card">
+                    <div class="admin-card-header">
+                        <h3 class="admin-card-title">
+                            <i class="fas fa-bolt"></i>
+                            ACCESO RÁPIDO
+                        </h3>
+                    </div>
+                    <div class="admin-card-body">
+                        <div class="admin-quick-actions">
+                            <a href="/crearCuentaAdmin" data-link class="admin-quick-action">
+                                <div class="admin-quick-icon">
+                                    <i class="fas fa-user-plus"></i>
+                                </div>
+                                <span>Crear Admin</span>
+                            </a>
+                            <a href="/metas" data-link class="admin-quick-action">
+                                <div class="admin-quick-icon">
+                                    <i class="fas fa-bullseye"></i>
+                                </div>
+                                <span>Metas</span>
+                            </a>
+                            <a href="/batallas" data-link class="admin-quick-action">
+                                <div class="admin-quick-icon">
+                                    <i class="fas fa-swords"></i>
+                                </div>
+                                <span>Batallas</span>
+                            </a>
+                            <a href="/diario" data-link class="admin-quick-action">
+                                <div class="admin-quick-icon">
+                                    <i class="fas fa-book"></i>
+                                </div>
+                                <span>Diario</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- System Info -->
+                <div class="admin-card">
+                    <div class="admin-card-header">
+                        <h3 class="admin-card-title">
+                            <i class="fas fa-server"></i>
+                            ESTADO DEL SISTEMA
+                        </h3>
+                    </div>
+                    <div class="admin-card-body">
+                        <div class="admin-system-info">
+                            <div class="admin-system-item">
+                                <span class="admin-system-label">Versión</span>
+                                <span class="admin-system-value">v1.0.0</span>
+                            </div>
+                            <div class="admin-system-item">
+                                <span class="admin-system-label">Última actualización</span>
+                                <span class="admin-system-value" id="lastUpdateTime">--:--</span>
+                            </div>
+                            <div class="admin-system-item">
+                                <span class="admin-system-label">Total de registros</span>
+                                <span class="admin-system-value" id="totalRecords">0</span>
+                            </div>
+                            <div class="admin-system-item">
+                                <span class="admin-system-label">Estado</span>
+                                <span class="admin-system-value status-online">
+                                    <i class="fas fa-circle"></i> Online
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="admin-footer">
+            <div class="motto-divider">
+                <i class="fas fa-grip-lines"></i>
+                <div class="motto-line"></div>
+                <i class="fas fa-grip-lines"></i>
+            </div>
+            <p class="admin-motto-text">
+                FORJANDO <span class="text-primary">CAMPEONES</span> — COMANDANDO EL <span class="text-secondary">FUTURO</span>
+            </p>
+        </footer>
+    </div>
+</section>

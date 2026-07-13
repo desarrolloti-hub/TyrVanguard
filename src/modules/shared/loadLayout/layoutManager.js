@@ -4,26 +4,26 @@
 
 import { AuthService } from '../../../services/authService.js';
 
-// Mapeo de roles a layouts
+// Mapeo de roles a layouts - ✅ Usando rutas lógicas
 const LAYOUTS = {
     GUEST: {
         navbar: '/modules/visitor/layout/navbar.html',
         footer: '/modules/visitor/layout/footer.html',
-        home: '/modules/visitor/home/home.html',
+        home: '/home', // ✅ Ruta lógica
         navbarController: 'visitor',
         footerController: 'visitor'
     },
     USER: {
         navbar: '/modules/user/layout/navbarUser.html',
         footer: '/modules/user/layout/footerUser.html',
-        home: '/modules/user/home/homeUser.html',
+        home: '/homeUser', // ✅ Ruta lógica
         navbarController: 'user',
         footerController: 'user'
     },
     ADMIN: {
         navbar: '/modules/admin/layout/navbarAdmin.html',
         footer: '/modules/admin/layout/footerAdmin.html',
-        home: '/modules/admin/home/homeAdmin.html',
+        home: '/homeAdmin', // ✅ Ruta lógica
         navbarController: 'admin',
         footerController: 'admin'
     }
@@ -56,33 +56,41 @@ let currentLayout = {
 let isUpdating = false;
 
 /**
- * Obtiene el rol del usuario desde localStorage directamente
- * (más confiable que depender del AuthService)
+ * Obtiene el rol del usuario desde AuthService o localStorage
  */
 function getUserRole() {
     try {
-        // 1. Intentar desde localStorage directamente (más confiable)
-        const sessionData = localStorage.getItem('user-TYRVANGUARD');
-        if (sessionData) {
-            try {
-                const user = JSON.parse(sessionData);
-                if (user?.role) {
-                    console.log(`👤 Rol desde localStorage: ${user.role}`);
-                    return user.role;
-                }
-            } catch (e) {
-                console.warn('Error parsing session data:', e);
-            }
-        }
-        
-        // 2. Intentar desde AuthService
-        if (window.AuthService) {
-            const session = window.AuthService.getCurrentUser?.() || 
-                           window.AuthService.getUserRoleSync?.();
+        // 1. Intentar desde AuthService
+        if (AuthService) {
+            const session = AuthService.getSession();
             if (session?.role) {
                 console.log(`👤 Rol desde AuthService: ${session.role}`);
                 return session.role;
             }
+        }
+        
+        // 2. Intentar desde localStorage (user)
+        const userSession = localStorage.getItem('user-TYRVANGUARD');
+        if (userSession) {
+            try {
+                const user = JSON.parse(userSession);
+                if (user?.role) {
+                    console.log(`👤 Rol desde localStorage (user): ${user.role}`);
+                    return user.role;
+                }
+            } catch (e) {}
+        }
+        
+        // 3. Intentar desde localStorage (admin)
+        const adminSession = localStorage.getItem('admin_session');
+        if (adminSession) {
+            try {
+                const admin = JSON.parse(adminSession);
+                if (admin?.role) {
+                    console.log(`👤 Rol desde localStorage (admin): ${admin.role}`);
+                    return admin.role;
+                }
+            } catch (e) {}
         }
         
         console.log('👤 No hay sesión activa, rol: guest');
@@ -175,9 +183,6 @@ async function initLayoutControllers(controllers) {
 /**
  * Actualiza el layout actual (navbar y footer)
  */
-/**
- * Actualiza el layout actual (navbar y footer)
- */
 export async function updateLayout() {
     // Evitar actualizaciones concurrentes
     if (isUpdating) {
@@ -200,7 +205,7 @@ export async function updateLayout() {
     try {
         console.log('🔄 Actualizando layout...');
         
-        // 1. Obtener rol del usuario (ahora debería ser 'guest' después del logout)
+        // 1. Obtener rol del usuario
         const role = getUserRole();
         console.log(`👤 Rol detectado: ${role}`);
         
@@ -225,7 +230,6 @@ export async function updateLayout() {
         const footerContainer = document.getElementById('footer');
         
         if (navbarContainer) {
-            // Limpiar completamente antes de insertar
             navbarContainer.innerHTML = '';
             navbarContainer.innerHTML = navbarHTML;
             console.log('✅ Navbar HTML insertado');
@@ -241,7 +245,7 @@ export async function updateLayout() {
             console.warn('⚠️ Contenedor footer no encontrado');
         }
         
-        // 5. Inicializar controladores (con delay para que el DOM se actualice)
+        // 5. Inicializar controladores
         await new Promise(resolve => setTimeout(resolve, 100));
         await initLayoutControllers(controllers);
         
@@ -281,7 +285,6 @@ async function loadGuestLayout() {
         if (navbarContainer) navbarContainer.innerHTML = navbarHTML;
         if (footerContainer) footerContainer.innerHTML = footerHTML;
         
-        // Inicializar controladores visitor
         const controllers = CONTROLLERS.visitor;
         await new Promise(resolve => setTimeout(resolve, 50));
         await initLayoutControllers(controllers);
@@ -320,21 +323,18 @@ export function getCurrentLayout() {
  * Escucha cambios de autenticación y actualiza el layout automáticamente
  */
 export function initLayoutListener() {
-    // Escuchar cambios de autenticación
-    if (window.AuthService) {
-        window.AuthService.onAuthStateChange(async (userData) => {
+    // Escuchar cambios de autenticación usando AuthService
+    if (AuthService) {
+        AuthService.onAuthStateChange(async (userData) => {
             console.log('🔄 Cambio de autenticación detectado:', userData ? 'logueado' : 'invitado');
             
-            // Esperar un momento para que el router procese el cambio
             await new Promise(resolve => setTimeout(resolve, 150));
             
-            // Actualizar layout
             const result = await updateLayout();
             
-            // Si hay un home específico para el rol, navegar a él
             if (result && result.home) {
                 const currentPath = window.location.pathname;
-                const isHome = currentPath === '/' || currentPath === '/homeUser' || currentPath === '/index.html';
+                const isHome = currentPath === '/' || currentPath === '/homeUser' || currentPath === '/homeAdmin' || currentPath === '/index.html';
                 
                 if (isHome && typeof window.navigateTo === 'function') {
                     window.navigateTo(result.home);
@@ -345,9 +345,9 @@ export function initLayoutListener() {
         });
     }
     
-    // También escuchar cambios en localStorage (por si alguien modifica directamente)
+    // Escuchar cambios en localStorage
     window.addEventListener('storage', async (e) => {
-        if (e.key === 'user-TYRVANGUARD') {
+        if (e.key === 'user-TYRVANGUARD' || e.key === 'admin_session') {
             console.log('🔄 Cambio en localStorage detectado');
             await updateLayout();
         }

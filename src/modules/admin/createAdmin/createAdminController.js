@@ -1,22 +1,19 @@
 /* ========================================
-   REGISTER ADMIN CONTROLLER - Solo maneja eventos del formulario
-   NO contiene lógica de negocio
+   REGISTER ADMIN CONTROLLER - Only handles form events
+   NO business logic
    ======================================== */
 
-import { AuthService } from '../../../services/authService.js';
 import { AdminService } from '../../../services/adminService.js';
 
 export async function createAdminController() {
-    console.log('⚔️ Register Admin controller inicializado');
+    console.log('⚔️ Register Admin controller initialized');
 
     const form = document.getElementById('registerAdminForm');
     const submitBtn = document.getElementById('submitAdminBtn');
-    const googleBtn = document.getElementById('googleAdminBtn');
     const passwordInput = document.getElementById('adminPasswordInput');
     const confirmPassword = document.getElementById('adminConfirmPassword');
-    const adminCodeInput = document.getElementById('adminCode');
 
-    // Inicializar efectos visuales
+    // Initialize visual effects
     initInputEffects();
     initTogglePassword();
     initButtonEffects();
@@ -25,17 +22,12 @@ export async function createAdminController() {
 
     // ============ EVENT LISTENERS ============
 
-    // Registro de admin con email y password
+    // Admin registration with email and password
     if (form) {
         form.addEventListener('submit', handleAdminRegisterSubmit);
     }
 
-    // Registro de admin con Google
-    if (googleBtn) {
-        googleBtn.addEventListener('click', handleAdminGoogleRegister);
-    }
-
-    // Enter key en campos
+    // Enter key on fields
     const inputs = form?.querySelectorAll('input');
     inputs?.forEach((input, index) => {
         input.addEventListener('keydown', (e) => {
@@ -56,16 +48,14 @@ export async function createAdminController() {
     async function handleAdminRegisterSubmit(e) {
         e.preventDefault();
 
-        // Obtener valores del formulario
+        // Get form values
         const firstName = document.getElementById('adminFirstName').value.trim();
         const lastName = document.getElementById('adminLastName').value.trim();
         const email = document.getElementById('adminEmail').value.trim();
         const password = passwordInput.value;
         const confirmPasswordValue = confirmPassword.value;
-        const adminCode = adminCodeInput?.value?.trim() || '';
-        const termsChecked = document.getElementById('adminTerms').checked;
 
-        // Validaciones básicas frontend
+        // Frontend validations
         if (!firstName || firstName.length < 2) {
             showError('El nombre debe tener al menos 2 caracteres');
             document.getElementById('adminFirstName')?.focus();
@@ -96,32 +86,11 @@ export async function createAdminController() {
             return;
         }
 
-        if (!adminCode || adminCode.length < 4) {
-            showError('Debes ingresar un código de administrador válido');
-            adminCodeInput?.focus();
-            return;
-        }
-
-        if (!termsChecked) {
-            showError('Debes aceptar los términos y condiciones');
-            return;
-        }
-
-        // Mostrar estado de carga
+        // Show loading state
         setLoading(true);
 
         try {
-            // ✅ Validar código de administrador usando AdminService
-            const isValidCode = AdminService.validateAdminCode(adminCode);
-            
-            if (!isValidCode) {
-                showError('Código de administrador inválido. Verifica e intenta nuevamente.');
-                setLoading(false);
-                adminCodeInput?.focus();
-                return;
-            }
-
-            // Construir objeto de admin
+            // Build admin object
             const adminData = {
                 firstName: firstName,
                 lastName: lastName,
@@ -132,23 +101,23 @@ export async function createAdminController() {
                 provider: 'email'
             };
 
-            // ✅ Llamar al servicio de administrador
+            // Call admin service
             const result = await AdminService.register(adminData, password);
 
-            console.log('✅ Administrador registrado exitosamente:', result);
+            console.log('✅ Admin registered successfully:', result);
 
             showSuccess('¡Administrador creado exitosamente! Verifica tu correo.');
 
-            // Limpiar formulario
+            // Clear form
             form.reset();
 
-            // Redirigir al panel de admin después de un momento
+            // Redirect to admin panel after a moment
             setTimeout(() => {
                 window.location.href = '/admin/dashboard';
             }, 2000);
 
         } catch (error) {
-            console.error('❌ Error en registro de admin:', error);
+            console.error('❌ Admin registration error:', error);
             
             let errorMsg = error.message || 'Error al crear la cuenta de administrador';
             
@@ -166,59 +135,14 @@ export async function createAdminController() {
         }
     }
 
-    async function handleAdminGoogleRegister() {
-        setLoading(true);
-
-        try {
-            // ✅ Login con Google usando AuthService.loginAdmin()
-            const result = await AuthService.loginAdmin(null, null, true);
-
-            console.log('✅ Registro de admin con Google exitoso:', result);
-
-            // ✅ Verificar si el usuario tiene permisos de admin
-            const admin = AuthService.getAdminSession();
-            
-            if (!admin || (admin.role !== 'admin' && admin.role !== 'super_admin')) {
-                showError('Esta cuenta no tiene permisos de administrador.');
-                setTimeout(() => {
-                    window.location.href = '/dashboard';
-                }, 2000);
-                return;
-            }
-
-            showSuccess('¡Bienvenido Administrador! Has iniciado sesión con Google.');
-
-            setTimeout(() => {
-                window.location.href = '/admin/dashboard';
-            }, 1500);
-
-        } catch (error) {
-            console.error('❌ Error en registro de admin con Google:', error);
-            
-            let errorMsg = 'Error al iniciar sesión con Google';
-            
-            if (error.code === 'auth/popup-closed-by-user') {
-                errorMsg = 'Ventana de Google cerrada. Intenta nuevamente.';
-            } else if (error.code === 'auth/popup-blocked') {
-                errorMsg = 'El popup fue bloqueado. Permite ventanas emergentes.';
-            } else if (error.message?.includes('configuration-not-found')) {
-                errorMsg = 'Error de configuración. Contacta al soporte.';
-            }
-            
-            showError(errorMsg);
-        } finally {
-            setLoading(false);
-        }
-    }
-
-    // ============ FUNCIONES DE UTILIDAD ============
+    // ============ UTILITY FUNCTIONS ============
 
     function validateEmail(email) {
         const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return re.test(email);
     }
 
-    // ============ FUNCIONES DE UI ============
+    // ============ UI FUNCTIONS ============
 
     function setLoading(isLoading) {
         if (!submitBtn) return;
@@ -241,7 +165,7 @@ export async function createAdminController() {
     }
 
     function showError(message) {
-        // Limpiar mensajes anteriores
+        // Remove previous messages
         const oldError = document.querySelector('.form-error-message');
         if (oldError) oldError.remove();
 
@@ -271,11 +195,11 @@ export async function createAdminController() {
             form.insertBefore(errorEl, form.firstChild);
         }
 
-        // Ocultar mensaje de éxito si existe
+        // Hide success message if exists
         const successEl = document.querySelector('.form-success-message');
         if (successEl) successEl.remove();
 
-        // Auto-ocultar después de 6 segundos
+        // Auto-hide after 6 seconds
         clearTimeout(errorEl._timeout);
         errorEl._timeout = setTimeout(() => {
             if (errorEl.parentNode) {
@@ -287,7 +211,7 @@ export async function createAdminController() {
     }
 
     function showSuccess(message) {
-        // Limpiar mensajes anteriores
+        // Remove previous messages
         const oldSuccess = document.querySelector('.form-success-message');
         if (oldSuccess) oldSuccess.remove();
 
@@ -317,12 +241,12 @@ export async function createAdminController() {
             form.insertBefore(successEl, form.firstChild);
         }
 
-        // Ocultar mensaje de error si existe
+        // Hide error message if exists
         const errorEl = document.querySelector('.form-error-message');
         if (errorEl) errorEl.remove();
     }
 
-    // ============ FUNCIONES VISUALES ============
+    // ============ VISUAL FUNCTIONS ============
 
     function initInputEffects() {
         const inputs = document.querySelectorAll('.form-input');
@@ -476,7 +400,7 @@ export async function createAdminController() {
         }
     }
 
-    // Efecto de bienvenida
+    // Welcome effect
     setTimeout(() => {
         const title = document.querySelector('.brand-title');
         if (title) {
@@ -488,10 +412,10 @@ export async function createAdminController() {
         }
     }, 500);
 
-    console.log('✨ Register Admin con componentes cargado');
+    console.log('✨ Register Admin component loaded');
 }
 
-// ============ AGREGAR ESTILOS CSS PARA ANIMACIONES ============
+// ============ ADD CSS STYLES FOR ANIMATIONS ============
 const style = document.createElement('style');
 style.textContent = `
     @keyframes shakeAnim {

@@ -11,6 +11,7 @@ import { readBattlesController } from '../modules/user/battles/read/readBattlesC
 import { battleCreateController } from '../modules/user/battles/create/createBattlesController.js';
 import { readGoalsController } from '../modules/user/goals/read/readGoalsController.js';
 import { createGoalController } from '../modules/user/goals/create/createGoalsController.js';
+import { homeAdminController } from '../modules/admin/home/homeAdminController.js';
 
 
 
@@ -147,6 +148,13 @@ export const routes = {
       "/crearCuentaAdmin": {
         view: "/modules/admin/createAdmin/createAdmin.html",
         controller: createAdminController,
+  
+    },
+
+    //homeAdmin
+      "/homeAdmin": {
+        view: "/modules/admin/home/homeAdmin.html",
+        controller: homeAdminController,
   
     },
 

@@ -25,7 +25,6 @@ const SWEET_CONFIG = {
     background: 'rgba(10, 26, 46, 0.98)',
     backdrop: 'rgba(4, 11, 20, 0.6)',
     didOpen: (popup) => {
-        // Aplicar estilos adicionales para toast
         popup.style.borderLeft = '3px solid #7cd5d5';
         popup.style.clipPath = 'polygon(0 0, 100% 0, 100% 92%, 96% 100%, 0 100%)';
         popup.style.maxWidth = '420px';
@@ -35,7 +34,7 @@ const SWEET_CONFIG = {
     }
 };
 
-// Función para mostrar toast de éxito
+// Funciones de toast
 function showSuccessToast(message, title = 'ÉXITO') {
     return Swal.fire({
         ...SWEET_CONFIG,
@@ -46,7 +45,6 @@ function showSuccessToast(message, title = 'ÉXITO') {
     });
 }
 
-// Función para mostrar toast de error
 function showErrorToast(message, title = 'ERROR') {
     return Swal.fire({
         ...SWEET_CONFIG,
@@ -61,7 +59,6 @@ function showErrorToast(message, title = 'ERROR') {
     });
 }
 
-// Función para mostrar toast de advertencia
 function showWarningToast(message, title = 'ATENCIÓN') {
     return Swal.fire({
         ...SWEET_CONFIG,
@@ -72,7 +69,6 @@ function showWarningToast(message, title = 'ATENCIÓN') {
     });
 }
 
-// Función para mostrar toast de info
 function showInfoToast(message, title = 'INFORMACIÓN') {
     return Swal.fire({
         ...SWEET_CONFIG,
@@ -83,7 +79,6 @@ function showInfoToast(message, title = 'INFORMACIÓN') {
     });
 }
 
-// Función para mostrar loading toast
 function showLoadingToast(message = 'Procesando...') {
     return Swal.fire({
         ...SWEET_CONFIG,
@@ -98,7 +93,6 @@ function showLoadingToast(message = 'Procesando...') {
     });
 }
 
-// Función para cerrar toast de loading
 function closeLoadingToast() {
     Swal.close();
 }
@@ -187,44 +181,27 @@ export async function loginController() {
         const loadingToast = showLoadingToast('Verificando credenciales...');
 
         try {
-            // ✅ INTENTAR LOGIN COMO USUARIO PRIMERO
-            let result = null;
-            let isAdmin = false;
-
-            try {
-                // Intentar login como usuario regular
-                result = await AuthService.loginUser(email, password, false);
-                console.log('✅ Login como usuario:', result);
-            } catch (userError) {
-                // Si falla como usuario, intentar como admin
-                console.log('⚠️ No es usuario, intentando como admin...');
-                try {
-                    result = await AuthService.loginAdmin(email, password, false);
-                    isAdmin = true;
-                    console.log('✅ Login como admin:', result);
-                } catch (adminError) {
-                    // Si ambos fallan, lanzar el error del usuario
-                    throw userError;
-                }
-            }
+            // ✅ Usar AuthService.login() que detecta automáticamente si es user o admin
+            const result = await AuthService.login(email, password, false);
+            console.log('✅ Login exitoso:', result);
 
             // Cerrar loading
             closeLoadingToast();
 
-            // ✅ VERIFICACIONES DE SEGURIDAD
+            // Verificaciones de seguridad
             if (!result || !result.userData) {
                 showErrorToast('No se encontró información del usuario', 'ERROR DE DATOS');
                 return;
             }
 
-            // ✅ Verificar que el usuario esté activo
+            // Verificar que el usuario esté activo
             if (result.userData.isActive === false) {
                 showErrorToast('Esta cuenta ha sido deshabilitada. Contacta al soporte.', 'CUENTA DESHABILITADA');
                 return;
             }
 
-            // ✅ Verificar que el email esté verificado (para usuarios regulares)
-            if (!isAdmin && result.userData.emailVerified === false) {
+            // Verificar email verificado (para usuarios regulares)
+            if (result.role !== 'admin' && result.userData.emailVerified === false) {
                 showErrorToast(
                     'Tu correo electrónico no ha sido verificado. Revisa tu bandeja de entrada (y spam) y haz clic en el enlace de verificación.',
                     'CORREO NO VERIFICADO'
@@ -232,8 +209,8 @@ export async function loginController() {
                 return;
             }
 
-            // ✅ Verificar email para admins
-            if (isAdmin && result.userData.emailVerified === false) {
+            // Verificar email para admins
+            if (result.role === 'admin' && result.userData.emailVerified === false) {
                 showErrorToast(
                     'Tu correo de administrador no ha sido verificado. Revisa tu bandeja de entrada (y spam) y haz clic en el enlace de verificación.',
                     'CORREO NO VERIFICADO'
@@ -241,30 +218,28 @@ export async function loginController() {
                 return;
             }
 
-            // ✅ ÉXITO - Mostrar toast de bienvenida
+            // ÉXITO - Mostrar toast de bienvenida
             const user = AuthService.getCurrentUser();
-            const userName = user?.displayName || user?.email || 'Guerrero';
+            const userName = user?.fullName || user?.displayName || user?.email || 'Guerrero';
             
             await showSuccessToast(
                 `Bienvenido, <strong style="color: #7cd5d5;">${userName}</strong>`,
                 'VICTORIA'
             );
 
-            // ✅ REDIRIGIR A RUTAS LIMPIAS
+            // REDIRIGIR según rol
             setTimeout(() => {
                 const currentUser = AuthService.getCurrentUser();
-                const isAdminUser = currentUser?.role === 'admin' || currentUser?.role === 'super_admin';
+                const isAdmin = currentUser?.role === 'admin' || currentUser?.role === 'super_admin';
                 
-                // ✅ Usar navigateTo si existe
                 if (typeof window.navigateTo === 'function') {
-                    if (isAdminUser) {
+                    if (isAdmin) {
                         window.navigateTo('/homeAdmin');
                     } else {
                         window.navigateTo('/homeUser');
                     }
                 } else {
-                    // Fallback
-                    if (isAdminUser) {
+                    if (isAdmin) {
                         window.location.href = '/homeAdmin';
                     } else {
                         window.location.href = '/homeUser';
@@ -275,13 +250,12 @@ export async function loginController() {
         } catch (error) {
             console.error('❌ Error en login:', error);
             
-            // Cerrar loading si está abierto
             closeLoadingToast();
             
             let errorMsg = error.message || 'Error al iniciar sesión';
             let errorTitle = 'ERROR';
             
-            // ✅ MENSAJES ESPECÍFICOS PARA CADA CASO
+            // Mensajes específicos
             if (error.message === 'email_not_verified') {
                 errorMsg = 'Tu correo electrónico no ha sido verificado. Revisa tu bandeja de entrada (y spam) y haz clic en el enlace de verificación.';
                 errorTitle = 'CORREO NO VERIFICADO';
@@ -289,7 +263,7 @@ export async function loginController() {
                 errorMsg = 'Tu correo de administrador no ha sido verificado. Revisa tu bandeja de entrada (y spam) y haz clic en el enlace de verificación.';
                 errorTitle = 'CORREO NO VERIFICADO';
             } else if (error.message === 'account_disabled') {
-                errorMsg = 'Esta cuenta ha sido deshabilitada. Por favor, contacta al soporte para más información.';
+                errorMsg = 'Esta cuenta ha sido deshabilitada. Contacta al soporte.';
                 errorTitle = 'CUENTA DESHABILITADA';
             } else if (error.code === 'auth/user-not-found') {
                 errorMsg = 'No existe una cuenta con este correo electrónico.';
@@ -309,9 +283,6 @@ export async function loginController() {
             } else if (error.code === 'auth/network-request-failed') {
                 errorMsg = 'Error de conexión a internet. Verifica tu red.';
                 errorTitle = 'SIN CONEXIÓN';
-            } else if (error.code === 'auth/internal-error') {
-                errorMsg = 'Error interno del servidor. Intenta más tarde.';
-                errorTitle = 'ERROR INTERNO';
             } else if (error.message?.includes('Invalid login credentials')) {
                 errorMsg = 'Credenciales inválidas. Verifica tu email y contraseña.';
                 errorTitle = 'CREDENCIALES INVÁLIDAS';
@@ -326,27 +297,10 @@ export async function loginController() {
         const loadingToast = showLoadingToast('Conectando con Google...');
 
         try {
-            // ✅ INTENTAR LOGIN CON GOOGLE
-            let result = null;
-            let isAdmin = false;
+            // ✅ Usar AuthService.login() con isGoogle = true
+            const result = await AuthService.login(null, null, true);
+            console.log('✅ Google login exitoso:', result);
 
-            try {
-                // Intentar login como usuario con Google
-                result = await AuthService.loginUser(null, null, true);
-                console.log('✅ Google login como usuario:', result);
-            } catch (userError) {
-                // Si falla como usuario, intentar como admin
-                console.log('⚠️ No es usuario Google, intentando como admin...');
-                try {
-                    result = await AuthService.loginAdmin(null, null, true);
-                    isAdmin = true;
-                    console.log('✅ Google login como admin:', result);
-                } catch (adminError) {
-                    throw userError;
-                }
-            }
-
-            // Cerrar loading
             closeLoadingToast();
 
             if (!result || !result.userData) {
@@ -354,14 +308,14 @@ export async function loginController() {
                 return;
             }
 
-            // ✅ Verificar que el usuario esté activo
+            // Verificar que el usuario esté activo
             if (result.userData.isActive === false) {
                 showErrorToast('Esta cuenta ha sido deshabilitada. Contacta al soporte.', 'CUENTA DESHABILITADA');
                 return;
             }
 
-            // ✅ Verificar que el email esté verificado
-            if (!isAdmin && result.userData.emailVerified === false) {
+            // Verificar email verificado
+            if (result.userData.emailVerified === false) {
                 showErrorToast(
                     'Tu correo no está verificado. Revisa tu bandeja de entrada (y spam).',
                     'CORREO NO VERIFICADO'
@@ -369,38 +323,28 @@ export async function loginController() {
                 return;
             }
 
-            if (isAdmin && result.userData.emailVerified === false) {
-                showErrorToast(
-                    'Tu correo de administrador no está verificado. Revisa tu bandeja de entrada (y spam).',
-                    'CORREO NO VERIFICADO'
-                );
-                return;
-            }
-
-            // ✅ ÉXITO - Mostrar toast de bienvenida
+            // ÉXITO - Mostrar toast de bienvenida
             const user = AuthService.getCurrentUser();
-            const userName = user?.displayName || user?.email || 'Guerrero';
+            const userName = user?.fullName || user?.displayName || user?.email || 'Guerrero';
             
             await showSuccessToast(
                 `Bienvenido, <strong style="color: #7cd5d5;">${userName}</strong>`,
                 'VICTORIA'
             );
 
-            // ✅ REDIRIGIR A RUTAS LIMPIAS
+            // REDIRIGIR según rol
             setTimeout(() => {
                 const currentUser = AuthService.getCurrentUser();
-                const isAdminUser = currentUser?.role === 'admin' || currentUser?.role === 'super_admin';
+                const isAdmin = currentUser?.role === 'admin' || currentUser?.role === 'super_admin';
                 
-                // ✅ Usar navigateTo si existe
                 if (typeof window.navigateTo === 'function') {
-                    if (isAdminUser) {
+                    if (isAdmin) {
                         window.navigateTo('/homeAdmin');
                     } else {
                         window.navigateTo('/homeUser');
                     }
                 } else {
-                    // Fallback
-                    if (isAdminUser) {
+                    if (isAdmin) {
                         window.location.href = '/homeAdmin';
                     } else {
                         window.location.href = '/homeUser';
@@ -411,7 +355,6 @@ export async function loginController() {
         } catch (error) {
             console.error('❌ Error en Google login:', error);
             
-            // Cerrar loading
             closeLoadingToast();
             
             let errorMsg = 'Error al iniciar sesión con Google';
@@ -420,12 +363,6 @@ export async function loginController() {
             if (error.message === 'email_not_verified') {
                 errorMsg = 'Tu correo no está verificado. Revisa tu bandeja de entrada (y spam).';
                 errorTitle = 'CORREO NO VERIFICADO';
-            } else if (error.message === 'email_not_verified_admin') {
-                errorMsg = 'Tu correo de administrador no está verificado. Revisa tu bandeja de entrada (y spam).';
-                errorTitle = 'CORREO NO VERIFICADO';
-            } else if (error.message === 'account_disabled') {
-                errorMsg = 'Esta cuenta ha sido deshabilitada. Contacta al soporte.';
-                errorTitle = 'CUENTA DESHABILITADA';
             } else if (error.code === 'auth/popup-closed-by-user') {
                 errorMsg = 'Ventana de Google cerrada. Intenta nuevamente.';
                 errorTitle = 'VENTANA CERRADA';
@@ -435,12 +372,6 @@ export async function loginController() {
             } else if (error.code === 'auth/account-exists-with-different-credential') {
                 errorMsg = 'Ya existe una cuenta con este correo usando otro método. Inicia sesión con email y contraseña.';
                 errorTitle = 'CUENTA EXISTENTE';
-            } else if (error.message?.includes('configuration-not-found')) {
-                errorMsg = 'Error de configuración de Google. Contacta al soporte.';
-                errorTitle = 'ERROR DE CONFIGURACIÓN';
-            } else if (error.code === 'auth/cancelled-popup-request') {
-                errorMsg = 'La solicitud de Google fue cancelada. Intenta nuevamente.';
-                errorTitle = 'SOLICITUD CANCELADA';
             } else if (error.code === 'auth/network-request-failed') {
                 errorMsg = 'Error de conexión a internet. Verifica tu red.';
                 errorTitle = 'SIN CONEXIÓN';
@@ -479,7 +410,7 @@ export async function loginController() {
         }
     }
 
-    // ============ FUNCIONES VISUALES EXISTENTES ============
+    // ============ FUNCIONES VISUALES ============
 
     function initInputEffects() {
         const inputs = document.querySelectorAll('.form-input');
@@ -548,7 +479,6 @@ export async function loginController() {
             submitBtn.addEventListener('click', function(e) {
                 if (this.disabled) return;
 
-                // Ripple effect
                 this.classList.add('btn-ripple');
                 const rect = this.getBoundingClientRect();
                 const ripple = document.createElement('span');
@@ -636,7 +566,7 @@ export async function loginController() {
     console.log('✨ Login con componentes cargado');
 }
 
-// ============ AGREGAR ESTILOS CSS PARA ANIMACIONES ============
+// ============ ESTILOS CSS PARA ANIMACIONES ============
 const style = document.createElement('style');
 style.textContent = `
     @keyframes shakeAnim {
@@ -668,7 +598,6 @@ style.textContent = `
         opacity: 0.8;
     }
 
-    /* Estilos adicionales para SweetAlert Toast */
     .tyr-error-popup {
         border-left: 3px solid #ef4444 !important;
     }
@@ -694,7 +623,6 @@ style.textContent = `
         height: 3px !important;
     }
 
-    /* Ajustes para el toast en móviles */
     @media (max-width: 480px) {
         .swal2-toast .tyr-popup {
             max-width: 95% !important;
