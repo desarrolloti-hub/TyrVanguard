@@ -1,0 +1,67 @@
+<!-- timerActivity.html - Modal de Timer para Actividades -->
+<div class="timer-modal-overlay" id="timerModal">
+    <div class="timer-modal">
+        <!-- Botón cerrar (X) -->
+        <button class="timer-close" id="timerCloseBtn">
+            <i class="fas fa-times"></i>
+        </button>
+
+        <!-- Título de la actividad -->
+        <h2 class="timer-title" id="timerTitle">🏋️ 20 Flexiones de Guerrero</h2>
+
+        <!-- Círculo de progreso SVG -->
+        <div class="timer-circle-wrapper">
+            <svg class="timer-circle" viewBox="0 0 120 120">
+                <!-- Círculo de fondo -->
+                <circle cx="60" cy="60" r="54" fill="none" class="timer-circle-bg"/>
+                <!-- Círculo de progreso -->
+                <circle cx="60" cy="60" r="54" fill="none" class="timer-circle-progress" id="timerCircleProgress"/>
+            </svg>
+            <!-- Tiempo centrado -->
+            <div class="timer-time-display" id="timerTimeDisplay">10:00</div>
+        </div>
+
+        <!-- Barra de progreso (extra) -->
+        <div class="timer-progress-bar-wrapper">
+            <div class="timer-progress-bar" id="timerProgressBar" style="width: 100%;"></div>
+        </div>
+
+        <!-- Info extra -->
+        <div class="timer-info">
+            <span class="timer-info-item">
+                <i class="fas fa-clock"></i>
+                <span id="timerCurrentTime">0:00</span>
+                <span class="timer-info-separator">/</span>
+                <span id="timerTotalTime">10:00</span>
+            </span>
+            <span class="timer-info-item">
+                <i class="fas fa-percentage"></i>
+                <span id="timerPercentage">0%</span>
+            </span>
+        </div>
+
+        <!-- Frase motivacional (se muestra al completar) -->
+        <div class="timer-message" id="timerMessage" style="display: none;">
+            <i class="fas fa-trophy timer-message-icon"></i>
+            <p class="timer-message-text" id="timerMessageText">¡Cada día más cerca de tu meta! 🏆</p>
+        </div>
+
+        <!-- Botones de control -->
+        <div class="timer-controls">
+            <button class="btn timer-btn timer-btn-pause" id="timerPauseBtn">
+                <i class="fas fa-pause"></i>
+                PAUSAR
+            </button>
+            <button class="btn timer-btn timer-btn-reset" id="timerResetBtn">
+                <i class="fas fa-undo"></i>
+                REINICIAR
+            </button>
+        </div>
+
+        <!-- Botón Completar (solo cuando termina) -->
+        <button class="btn btn-primary timer-btn-complete" id="timerCompleteBtn" style="display: none;">
+            <i class="fas fa-check-circle"></i>
+            COMPLETADO
+        </button>
+    </div>
+</div>

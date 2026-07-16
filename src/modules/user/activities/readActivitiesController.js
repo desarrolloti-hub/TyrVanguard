@@ -4,6 +4,8 @@
    ======================================== */
 
 import { ActivityService } from '../../../services/activityService.js';
+// ✅ Import del timer al inicio
+import { openTimerModal } from './timerActivitiesController.js';
 
 // Estado local
 let allActivities = [];
@@ -255,7 +257,7 @@ async function handleStartActivity(activityId) {
                 </div>
             `,
             showCancelButton: true,
-            confirmButtonText: '✅ COMPLETAR',
+            confirmButtonText: '✅ INICIAR TIMER',
             cancelButtonText: 'CERRAR',
             customClass: {
                 popup: 'tyr-popup',
@@ -267,24 +269,28 @@ async function handleStartActivity(activityId) {
         });
 
         if (confirm.isConfirmed) {
-            // Marcar como completada
-            if (!completedActivities.includes(activityId)) {
-                completedActivities.push(activityId);
-                saveCompletedActivities();
-
-                // ✅ Incrementar contador en Firestore
-                await ActivityService.incrementCompleted(activityId);
-
-                showToast('success', `🎉 ¡Completaste "${activity.title}"! Sigue así guerrero.`);
-
-                // Disparar evento
-                document.dispatchEvent(new CustomEvent('activity:completed', {
-                    detail: { activityId, title: activity.title }
-                }));
-
-                // Recargar vista
-                await loadActivities();
-            }
+            // ✅ ABRIR EL TIMER
+            openTimerModal({
+                activityId: activity.id,
+                title: activity.title,
+                duration: activity.duration,
+                onComplete: async (id) => {
+                    // Esto se ejecuta cuando el usuario da "COMPLETADO" en el timer
+                    if (!completedActivities.includes(id)) {
+                        completedActivities.push(id);
+                        saveCompletedActivities();
+                        await ActivityService.incrementCompleted(id);
+                        showToast('success', `🎉 ¡Completaste "${activity.title}"! Sigue así guerrero.`);
+                        
+                        // Disparar evento
+                        document.dispatchEvent(new CustomEvent('activity:completed', {
+                            detail: { activityId: id, title: activity.title }
+                        }));
+                        
+                        await loadActivities();
+                    }
+                }
+            });
         }
     } catch (error) {
         console.error('Error al iniciar actividad:', error);

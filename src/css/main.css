@@ -108,3 +108,5 @@
 
 /* leer actividades user */
 @import url('./pages/user/activities/readActivities.css');
+
+@import url('./pages/user/activities/timerActivities.css');
