@@ -1,0 +1,92 @@
+<!-- readActivities.html - Visualización de Actividades Distractoras -->
+<section class="read-activities-section">
+    <!-- Espada de fondo -->
+    <div class="sword-bg subtle">
+        <img class="sword-image" src="/assets/img/espada.svg" alt="" loading="lazy" />
+    </div>
+
+    <div class="read-activities-container">
+        <!-- Header -->
+        <header class="read-activities-header">
+            <div class="read-activities-header-left">
+                <div class="read-activities-badge">
+                    <i class="fas fa-running"></i>
+                    BIBLIOTECA DE ACTIVIDADES
+                </div>
+                <h1 class="read-activities-title">
+                    ACTIVIDADES <span>DISTRACTORAS</span>
+                </h1>
+                <p class="read-activities-subtitle">
+                    Encuentra actividades saludables para redirigir tu atención y fortalecer tu disciplina
+                </p>
+            </div>
+            <div class="read-activities-header-right">
+                <button class="btn btn-secondary btn-sm" id="refreshActivitiesBtn">
+                    <i class="fas fa-sync-alt"></i>
+                    ACTUALIZAR
+                </button>
+            </div>
+        </header>
+
+        <!-- Filtros y búsqueda -->
+        <div class="read-activities-filters">
+            <div class="read-activities-search">
+                <i class="fas fa-search search-icon"></i>
+                <input 
+                    type="text" 
+                    class="read-activities-search-input" 
+                    id="activitiesSearchInput" 
+                    placeholder="Buscar actividad..."
+                />
+            </div>
+            <div class="read-activities-filter-group">
+                <select class="read-activities-filter-select" id="categoryFilter">
+                    <option value="all">Todas las categorías</option>
+                    <option value="deporte">🏃 Deporte y Ejercicio</option>
+                    <option value="creatividad">🎨 Creatividad</option>
+                    <option value="relajacion">🧘 Relajación</option>
+                    <option value="social">👥 Social</option>
+                    <option value="aprendizaje">📚 Aprendizaje</option>
+                    <option value="domestica">🏠 Doméstica</option>
+                    <option value="juego">🎮 Juego</option>
+                    <option value="otros">⭐ Otros</option>
+                </select>
+                <select class="read-activities-filter-select" id="difficultyFilter">
+                    <option value="all">Todas las dificultades</option>
+                    <option value="easy">🟢 Fácil</option>
+                    <option value="medium">🟡 Media</option>
+                    <option value="hard">🔴 Difícil</option>
+                </select>
+                <select class="read-activities-filter-select" id="durationFilter">
+                    <option value="all">Cualquier duración</option>
+                    <option value="5">5-10 min</option>
+                    <option value="15">15-20 min</option>
+                    <option value="30">30-45 min</option>
+                    <option value="60">1 hora o más</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Grid de actividades -->
+        <div class="read-activities-grid" id="activitiesGrid">
+            <!-- Renderizado por JS -->
+            <div class="activity-empty">
+                <i class="fas fa-running"></i>
+                <p>No hay actividades disponibles</p>
+                <span>Vuelve más tarde para encontrar nuevas misiones</span>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="read-activities-footer">
+            <div class="motto-divider">
+                <i class="fas fa-grip-lines"></i>
+                <div class="motto-line"></div>
+                <i class="fas fa-grip-lines"></i>
+            </div>
+            <p class="read-activities-motto">
+                CADA ACTIVIDAD ES UN <span class="text-primary">PASO</span> HACIA LA <span class="text-secondary">VICTORIA</span>
+            </p>
+        </footer>
+    </div>
+</section>

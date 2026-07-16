@@ -1,18 +1,18 @@
 /* ========================================
    CACHE SERVICE - IndexedDB cache management
-   Supports multiple stores (Users, Admins, Battles, Goals, Diary)
+   Supports multiple stores (Users, Admins, Battles, Goals, Diary, Activities)
    ======================================== */
 
 const DB_NAME = 'App_Cache';
-const DB_VERSION = 5; // ✅ Actualizado para incluir el store de DIARIO
+const DB_VERSION = 6; // ✅ Actualizado para incluir ACTIVITIES
 
 export const STORES = {
     USERS: 'users',
     ADMINS: 'admins',
     BATTLES: 'battles',
     GOALS: 'goals',
-    DIARY: 'diary', // ✅ Nuevo store para el diario
-    // Add more stores as needed
+    DIARY: 'diary',
+    ACTIVITIES: 'activities', // ✅ Nuevo store para actividades
 };
 
 let db = null;
@@ -64,10 +64,16 @@ async function initDB() {
                 console.log('📦 Store created:', STORES.GOALS);
             }
 
-            // ✅ Create Diary store
+            // Create Diary store
             if (!database.objectStoreNames.contains(STORES.DIARY)) {
                 database.createObjectStore(STORES.DIARY, { keyPath: 'id' });
                 console.log('📦 Store created:', STORES.DIARY);
+            }
+
+            // ✅ Create Activities store
+            if (!database.objectStoreNames.contains(STORES.ACTIVITIES)) {
+                database.createObjectStore(STORES.ACTIVITIES, { keyPath: 'id' });
+                console.log('📦 Store created:', STORES.ACTIVITIES);
             }
         };
     });
@@ -201,6 +207,11 @@ export async function clearDiaryCache() {
     return await clearCache(STORES.DIARY);
 }
 
+// ✅ Nueva función para limpiar cache de actividades
+export async function clearActivityCache() {
+    return await clearCache(STORES.ACTIVITIES);
+}
+
 export const CacheService = {
     setCache,
     getCache,
@@ -210,6 +221,7 @@ export const CacheService = {
     clearAdminCache,
     clearBattleCache,
     clearGoalCache,
-    clearDiaryCache, // ✅ Nueva función para limpiar cache del diario
+    clearDiaryCache,
+    clearActivityCache, // ✅ Nueva función
     STORES
 };

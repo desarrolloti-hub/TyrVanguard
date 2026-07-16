@@ -1,0 +1,109 @@
+<!-- manageUsers.html - Gestión de Usuarios (CRUD) -->
+<section class="admin-users-section">
+    <!-- Espada de fondo -->
+    <div class="sword-bg">
+        <img class="sword-image" src="/assets/img/espada.svg" alt="" loading="lazy" />
+    </div>
+
+    <div class="admin-users-container">
+        <!-- Header -->
+        <header class="admin-users-header">
+            <div class="admin-users-header-left">
+                <div class="admin-users-badge">
+                    <i class="fas fa-users-cog"></i>
+                    GESTIÓN DE GUERREROS
+                </div>
+                <h1 class="admin-users-title">
+                    ADMINISTRACIÓN DE <span>USUARIOS</span>
+                </h1>
+                <p class="admin-users-subtitle">
+                    Visualiza, gestiona y controla el acceso de todos los guerreros de la Vanguardia
+                </p>
+            </div>
+            <div class="admin-users-header-right">
+                <button class="btn btn-secondary btn-sm" id="refreshUsersBtn">
+                    <i class="fas fa-sync-alt"></i>
+                    ACTUALIZAR
+                </button>
+            </div>
+        </header>
+
+        <!-- Filtros y búsqueda -->
+        <div class="admin-users-filters">
+            <div class="admin-users-search">
+                <i class="fas fa-search search-icon"></i>
+                <input 
+                    type="text" 
+                    class="admin-users-search-input" 
+                    id="usersSearchInput" 
+                    placeholder="Buscar por nombre, correo o rol..."
+                />
+            </div>
+            <div class="admin-users-filter-group">
+                <select class="admin-users-filter-select" id="roleFilter">
+                    <option value="all">Todos los roles</option>
+                    <option value="user">Usuarios</option>
+                    <option value="admin">Administradores</option>
+                    <option value="super_admin">Super Admins</option>
+                </select>
+                <select class="admin-users-filter-select" id="statusFilter">
+                    <option value="all">Todos los estados</option>
+                    <option value="active">Activos</option>
+                    <option value="inactive">Inactivos</option>
+                </select>
+                <button class="btn btn-primary btn-sm" id="addUserBtn">
+                    <i class="fas fa-plus"></i>
+                    NUEVO GUERRERO
+                </button>
+            </div>
+        </div>
+
+        <!-- Tabla de usuarios -->
+        <div class="admin-users-card">
+            <div class="admin-users-card-body">
+                <div class="admin-users-table-wrapper">
+                    <table class="admin-users-table">
+                        <thead>
+                            <tr>
+                                <th>GUERRERO</th>
+                                <th>CORREO</th>
+                                <th>ROL</th>
+                                <th>PLAN</th>
+                                <th>ESTADO</th>
+                                <th>VERIFICADO</th>
+                                <th>ACCIONES</th>
+                            </tr>
+                        </thead>
+                        <tbody id="usersTableBody">
+                            <!-- Renderizado por JS -->
+                        </tbody>
+                    </table>
+                </div>
+                <div class="admin-users-table-footer">
+                    <span class="admin-users-table-info" id="usersTableInfo">Mostrando 0 de 0 usuarios</span>
+                    <div class="admin-users-pagination">
+                        <button class="btn btn-ghost btn-sm" id="prevPage" disabled>
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <span class="admin-users-page-info" id="pageInfo">1 / 1</span>
+                        <button class="btn btn-ghost btn-sm" id="nextPage" disabled>
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="admin-users-footer">
+            <div class="motto-divider">
+                <i class="fas fa-grip-lines"></i>
+                <div class="motto-line"></div>
+                <i class="fas fa-grip-lines"></i>
+            </div>
+            <p class="admin-users-motto">
+                CONTROL Y <span class="text-primary">DISCIPLINA</span> — LA <span class="text-secondary">VANGUARDIA</span> VIGILA
+            </p>
+        </footer>
+    </div>
+</section>

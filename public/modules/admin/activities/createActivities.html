@@ -1,0 +1,256 @@
+<!-- createActivity.html - Crear Actividad Distractora (Admin) -->
+<section class="create-activity-section">
+    <!-- Espada de fondo -->
+    <div class="sword-bg subtle">
+        <img class="sword-image" src="/assets/img/espada.svg" alt="" loading="lazy" />
+    </div>
+
+    <div class="create-activity-container">
+        <!-- Header -->
+        <header class="create-activity-header">
+            <div class="create-activity-header-left">
+                <div class="create-activity-badge">
+                    <i class="fas fa-running"></i>
+                    ADMINISTRACIÓN DE ACTIVIDADES
+                </div>
+                <h1 class="create-activity-title">
+                    CREAR ACTIVIDAD <span>DISTRACTORA</span>
+                </h1>
+                <p class="create-activity-subtitle">
+                    Diseña actividades saludables que ayuden a los guerreros a redirigir su atención y fortalecer su disciplina
+                </p>
+            </div>
+            <div class="create-activity-header-right">
+                <a href="/leerActividades" data-link class="btn btn-secondary btn-sm">
+                    <i class="fas fa-arrow-left"></i>
+                    VER ACTIVIDADES
+                </a>
+            </div>
+        </header>
+
+        <!-- Formulario -->
+        <div class="create-activity-card">
+            <div class="create-activity-card-header">
+                <h3 class="create-activity-card-title">
+                    <i class="fas fa-plus-circle"></i>
+                    NUEVA ACTIVIDAD
+                </h3>
+                <span class="create-activity-card-badge">ADMIN</span>
+            </div>
+            <div class="create-activity-card-body">
+                <form id="createActivityForm" class="create-activity-form">
+                    <!-- Fila 1: Título -->
+                    <div class="form-group">
+                        <label class="form-label" for="activityTitle">
+                            <i class="fas fa-heading label-icon"></i>
+                            Título de la actividad
+                            <span class="label-required">*</span>
+                        </label>
+                        <input 
+                            type="text" 
+                            id="activityTitle" 
+                            class="form-input" 
+                            placeholder="Ej: 20 Flexiones de Guerrero"
+                            required
+                        />
+                        <span class="form-help">Nombre claro y motivador para la actividad</span>
+                    </div>
+
+                    <!-- Fila 2: Descripción -->
+                    <div class="form-group">
+                        <label class="form-label" for="activityDescription">
+                            <i class="fas fa-align-left label-icon"></i>
+                            Descripción
+                            <span class="label-required">*</span>
+                        </label>
+                        <textarea 
+                            id="activityDescription" 
+                            class="form-textarea" 
+                            rows="3"
+                            placeholder="Describe la actividad, su propósito y cómo ayuda al usuario..."
+                            required
+                        ></textarea>
+                    </div>
+
+                    <!-- Fila 3: Categoría y Dificultad -->
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="activityCategory">
+                                <i class="fas fa-tag label-icon"></i>
+                                Categoría
+                                <span class="label-required">*</span>
+                            </label>
+                            <select id="activityCategory" class="form-select" required>
+                                <option value="">Seleccionar...</option>
+                                <option value="deporte">🏃 Deporte y Ejercicio</option>
+                                <option value="creatividad">🎨 Creatividad</option>
+                                <option value="relajacion">🧘 Relajación</option>
+                                <option value="social">👥 Social</option>
+                                <option value="aprendizaje">📚 Aprendizaje</option>
+                                <option value="domestica">🏠 Doméstica</option>
+                                <option value="juego">🎮 Juego</option>
+                                <option value="otros">⭐ Otros</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="activityDifficulty">
+                                <i class="fas fa-signal label-icon"></i>
+                                Dificultad
+                                <span class="label-required">*</span>
+                            </label>
+                            <select id="activityDifficulty" class="form-select" required>
+                                <option value="">Seleccionar...</option>
+                                <option value="easy">🟢 Fácil</option>
+                                <option value="medium">🟡 Media</option>
+                                <option value="hard">🔴 Difícil</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Fila 4: Duración y Beneficios -->
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="activityDuration">
+                                <i class="fas fa-clock label-icon"></i>
+                                Duración estimada
+                                <span class="label-required">*</span>
+                            </label>
+                            <select id="activityDuration" class="form-select" required>
+                                <option value="">Seleccionar...</option>
+                                <option value="5">5 minutos</option>
+                                <option value="10">10 minutos</option>
+                                <option value="15">15 minutos</option>
+                                <option value="20">20 minutos</option>
+                                <option value="30">30 minutos</option>
+                                <option value="45">45 minutos</option>
+                                <option value="60">1 hora</option>
+                                <option value="90">1.5 horas</option>
+                                <option value="120">2 horas o más</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="activityBenefits">
+                                <i class="fas fa-star label-icon"></i>
+                                Beneficios
+                            </label>
+                            <input 
+                                type="text" 
+                                id="activityBenefits" 
+                                class="form-input" 
+                                placeholder="Ej: Mejora la disciplina, reduce ansiedad"
+                            />
+                            <span class="form-help">Separar con comas</span>
+                        </div>
+                    </div>
+
+                    <!-- Fila 5: Pasos -->
+                    <div class="form-group">
+                        <label class="form-label" for="activitySteps">
+                            <i class="fas fa-list-ol label-icon"></i>
+                            Pasos / Instrucciones
+                            <span class="label-required">*</span>
+                        </label>
+                        <textarea 
+                            id="activitySteps" 
+                            class="form-textarea" 
+                            rows="4"
+                            placeholder="1. Colócate en posición de plancha&#10;2. Baja el pecho hasta el suelo&#10;3. Empuja hacia arriba con fuerza&#10;4. Repite 20 veces"
+                            required
+                        ></textarea>
+                        <span class="form-help">Escribe cada paso en una línea nueva</span>
+                    </div>
+
+                    <!-- Fila 6: Recursos y Tags -->
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="activityResources">
+                                <i class="fas fa-toolbox label-icon"></i>
+                                Recursos necesarios
+                            </label>
+                            <input 
+                                type="text" 
+                                id="activityResources" 
+                                class="form-input" 
+                                placeholder="Ej: Ropa cómoda, esterilla, agua"
+                            />
+                            <span class="form-help">Separar con comas</span>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="activityTags">
+                                <i class="fas fa-hashtag label-icon"></i>
+                                Etiquetas
+                            </label>
+                            <input 
+                                type="text" 
+                                id="activityTags" 
+                                class="form-input" 
+                                placeholder="mental, físico, creativo, social"
+                            />
+                            <span class="form-help">Separar con comas</span>
+                        </div>
+                    </div>
+
+                    <!-- Fila 7: Imagen URL y Estado -->
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="activityImage">
+                                <i class="fas fa-image label-icon"></i>
+                                URL de imagen (opcional)
+                            </label>
+                            <input 
+                                type="url" 
+                                id="activityImage" 
+                                class="form-input" 
+                                placeholder="https://ejemplo.com/imagen.jpg"
+                            />
+                            <span class="form-help">Imagen representativa de la actividad</span>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="activityStatus">
+                                <i class="fas fa-toggle-on label-icon"></i>
+                                Estado
+                            </label>
+                            <select id="activityStatus" class="form-select">
+                                <option value="active">✅ Activa (visible)</option>
+                                <option value="inactive">⛔ Inactiva (oculta)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Mensaje de compromiso -->
+                    <div class="create-activity-commitment">
+                        <i class="fas fa-shield-alt"></i>
+                        <div>
+                            <strong>Actividades de calidad</strong>
+                            <p>Todas las actividades deben ser seguras, saludables y accesibles. Ayudan a los guerreros a desarrollar disciplina y bienestar.</p>
+                        </div>
+                    </div>
+
+                    <!-- Botones -->
+                    <div class="form-actions">
+                        <button type="reset" class="btn btn-ghost">
+                            <i class="fas fa-undo"></i>
+                            LIMPIAR
+                        </button>
+                        <button type="submit" class="btn btn-primary" id="submitActivityBtn">
+                            <i class="fas fa-save"></i>
+                            GUARDAR ACTIVIDAD
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="create-activity-footer">
+            <div class="motto-divider">
+                <i class="fas fa-grip-lines"></i>
+                <div class="motto-line"></div>
+                <i class="fas fa-grip-lines"></i>
+            </div>
+            <p class="create-activity-motto">
+                FORJANDO <span class="text-primary">DISCIPLINA</span> — UNA ACTIVIDAD A LA <span class="text-secondary">VEZ</span>
+            </p>
+        </footer>
+    </div>
+</section>

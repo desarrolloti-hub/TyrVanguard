@@ -1,0 +1,400 @@
+/* ============================================ */
+/* CREATE ACTIVITY - TYR VANGUARD               */
+/* Estilos para creación de actividades         */
+/* ============================================ */
+
+.create-activity-section {
+    min-height: 100vh;
+    padding: 94px 0 var(--spacing-xl) 0;
+    position: relative;
+    background: var(--bg-dark);
+}
+
+.create-activity-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 var(--spacing-xl);
+    position: relative;
+    z-index: 1;
+}
+
+/* ============================================ */
+/* HEADER                                        */
+/* ============================================ */
+
+.create-activity-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: var(--spacing-xl);
+    margin-bottom: var(--spacing-xl);
+    flex-wrap: wrap;
+}
+
+.create-activity-header-left {
+    flex: 1;
+    min-width: 280px;
+}
+
+.create-activity-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(124, 213, 213, 0.08);
+    border: 1px solid var(--border-secondary);
+    padding: 4px 14px;
+    font-size: var(--font-size-xs);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--color-secondary);
+    margin-bottom: var(--spacing-xs);
+}
+
+.create-activity-title {
+    font-size: var(--font-size-3xl);
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+}
+
+.create-activity-title span {
+    color: var(--color-secondary);
+}
+
+.create-activity-subtitle {
+    font-size: var(--font-size-base);
+    color: var(--text-muted);
+    opacity: 0.8;
+    font-style: italic;
+    margin-bottom: 0;
+}
+
+.create-activity-header-right {
+    flex-shrink: 0;
+    padding-top: 8px;
+}
+
+/* ============================================ */
+/* CARD PRINCIPAL                                */
+/* ============================================ */
+
+.create-activity-card {
+    background: var(--bg-surface-container);
+    border: 1px solid var(--border-tertiary);
+    overflow: hidden;
+    margin-bottom: var(--spacing-xl);
+}
+
+.create-activity-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--spacing-md);
+    padding: var(--spacing-md) var(--spacing-lg);
+    border-bottom: 1px solid var(--border-tertiary);
+    background: var(--bg-surface-container-high);
+    flex-wrap: wrap;
+}
+
+.create-activity-card-title {
+    font-size: var(--font-size-base);
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    margin: 0;
+}
+
+.create-activity-card-title i {
+    color: var(--color-secondary);
+    font-size: 18px;
+}
+
+.create-activity-card-badge {
+    font-size: var(--font-size-xs);
+    font-weight: 700;
+    color: var(--color-secondary);
+    background: rgba(124, 213, 213, 0.1);
+    border: 1px solid var(--border-secondary);
+    padding: 2px 12px;
+    border-radius: var(--border-radius-sm);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.create-activity-card-body {
+    padding: var(--spacing-lg) var(--spacing-lg) var(--spacing-lg);
+}
+
+/* ============================================ */
+/* FORMULARIO                                   */
+/* ============================================ */
+
+.create-activity-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+.create-activity-form .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-md);
+}
+
+.create-activity-form .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+}
+
+.create-activity-form .form-label {
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+}
+
+.create-activity-form .form-label .label-icon {
+    font-size: 14px;
+    color: var(--color-secondary);
+    opacity: 0.6;
+}
+
+.create-activity-form .form-label .label-required {
+    color: var(--color-secondary);
+    font-size: var(--font-size-xs);
+    margin-left: 2px;
+}
+
+.create-activity-form .form-input,
+.create-activity-form .form-textarea,
+.create-activity-form .form-select {
+    width: 100%;
+    padding: 12px 16px;
+    background: var(--bg-input);
+    border: 1px solid var(--border-tertiary);
+    color: var(--text-primary);
+    font-size: var(--font-size-sm);
+    font-family: var(--font-family);
+    transition: all var(--transition-fast);
+    border-radius: var(--border-radius-sm);
+}
+
+.create-activity-form .form-input:focus,
+.create-activity-form .form-textarea:focus,
+.create-activity-form .form-select:focus {
+    border-color: var(--color-secondary);
+    box-shadow: 0 0 15px var(--border-glow);
+    outline: none;
+}
+
+.create-activity-form .form-input::placeholder,
+.create-activity-form .form-textarea::placeholder {
+    color: var(--text-muted);
+    opacity: 0.4;
+}
+
+.create-activity-form .form-textarea {
+    resize: vertical;
+    min-height: 80px;
+    line-height: 1.6;
+}
+
+.create-activity-form .form-select {
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238c9196' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    padding-right: 40px;
+}
+
+.create-activity-form .form-select option {
+    background: var(--bg-surface);
+    color: var(--text-primary);
+}
+
+.create-activity-form .form-help {
+    font-size: var(--font-size-xs);
+    color: var(--text-muted);
+    opacity: 0.5;
+    margin-top: 2px;
+}
+
+/* ============================================ */
+/* COMPROMISO                                   */
+/* ============================================ */
+
+.create-activity-commitment {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-md) var(--spacing-md);
+    background: rgba(124, 213, 213, 0.04);
+    border: 1px solid var(--border-tertiary);
+    border-radius: var(--border-radius-sm);
+    margin-top: var(--spacing-xs);
+}
+
+.create-activity-commitment i {
+    font-size: 22px;
+    color: var(--color-secondary);
+    margin-top: 2px;
+    flex-shrink: 0;
+}
+
+.create-activity-commitment strong {
+    display: block;
+    font-size: var(--font-size-sm);
+    color: var(--text-primary);
+    letter-spacing: 0.05em;
+}
+
+.create-activity-commitment p {
+    font-size: var(--font-size-xs);
+    color: var(--text-muted);
+    opacity: 0.7;
+    margin: 0;
+    line-height: 1.5;
+}
+
+/* ============================================ */
+/* BOTONES                                      */
+/* ============================================ */
+
+.create-activity-form .form-actions {
+    display: flex;
+    gap: var(--spacing-md);
+    margin-top: var(--spacing-sm);
+    padding-top: var(--spacing-sm);
+    border-top: 1px solid var(--border-tertiary);
+}
+
+.create-activity-form .form-actions .btn {
+    flex: 1;
+}
+
+/* ============================================ */
+/* FOOTER                                       */
+/* ============================================ */
+
+.create-activity-footer {
+    margin-top: var(--spacing-xl);
+    text-align: center;
+    padding: var(--spacing-md) 0;
+}
+
+.create-activity-motto {
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--text-muted);
+    opacity: 0.6;
+}
+
+/* ============================================ */
+/* RESPONSIVE                                   */
+/* ============================================ */
+
+@media (max-width: 768px) {
+    .create-activity-section {
+        padding: 88px 0 var(--spacing-lg) 0;
+    }
+
+    .create-activity-container {
+        padding: 0 var(--spacing-md);
+        max-width: 100%;
+    }
+
+    .create-activity-header {
+        flex-direction: column;
+        gap: var(--spacing-sm);
+    }
+
+    .create-activity-title {
+        font-size: var(--font-size-2xl);
+    }
+
+    .create-activity-header-right {
+        width: 100%;
+    }
+
+    .create-activity-header-right .btn {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .create-activity-card-body {
+        padding: var(--spacing-md);
+    }
+
+    .create-activity-form .form-row {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-sm);
+    }
+
+    .create-activity-form .form-actions {
+        flex-direction: column;
+    }
+
+    .create-activity-form .form-actions .btn {
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .create-activity-section {
+        padding: 82px 0 var(--spacing-sm) 0;
+    }
+
+    .create-activity-container {
+        padding: 0 var(--spacing-sm);
+    }
+
+    .create-activity-title {
+        font-size: var(--font-size-xl);
+    }
+
+    .create-activity-subtitle {
+        font-size: var(--font-size-sm);
+    }
+
+    .create-activity-card-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--spacing-xs);
+    }
+
+    .create-activity-card-body {
+        padding: var(--spacing-sm);
+    }
+
+    .create-activity-form .form-input,
+    .create-activity-form .form-textarea,
+    .create-activity-form .form-select {
+        padding: 10px 12px;
+        font-size: var(--font-size-xs);
+    }
+
+    .create-activity-form .form-label {
+        font-size: var(--font-size-xs);
+    }
+
+    .create-activity-commitment {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+}

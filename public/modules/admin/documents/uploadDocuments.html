@@ -1,0 +1,207 @@
+<!-- uploadDocuments.html - Subida de Documentos Educativos -->
+<section class="upload-section">
+    <!-- Espada de fondo -->
+    <div class="sword-bg subtle">
+        <img class="sword-image" src="/assets/img/espada.svg" alt="" loading="lazy" />
+    </div>
+
+    <div class="upload-container">
+        <!-- Header -->
+        <header class="upload-header">
+            <div class="upload-header-left">
+                <div class="upload-badge">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    BIBLIOTECA DE CONOCIMIENTO
+                </div>
+                <h1 class="upload-title">
+                    COMPARTE <span>CONOCIMIENTO</span>
+                </h1>
+                <p class="upload-subtitle">
+                    Sube recursos educativos, guías y contenido que inspire y fortalezca a la comunidad
+                </p>
+            </div>
+            <div class="upload-header-right">
+                <button class="btn btn-secondary btn-sm" id="refreshDocsBtn">
+                    <i class="fas fa-sync-alt"></i>
+                    ACTUALIZAR
+                </button>
+            </div>
+        </header>
+
+        <!-- Contenido principal -->
+        <div class="upload-content">
+            <!-- Formulario de subida -->
+            <div class="upload-card">
+                <div class="upload-card-header">
+                    <h3 class="upload-card-title">
+                        <i class="fas fa-file-upload"></i>
+                        NUEVO RECURSO
+                    </h3>
+                    <span class="upload-card-subtitle">Comparte sabiduría</span>
+                </div>
+                <div class="upload-card-body">
+                    <form id="uploadForm" class="upload-form">
+                        <!-- Título -->
+                        <div class="form-group">
+                            <label class="form-label" for="docTitle">
+                                <i class="fas fa-heading label-icon"></i>
+                                Título del recurso
+                                <span class="label-required">*</span>
+                            </label>
+                            <input 
+                                type="text" 
+                                id="docTitle" 
+                                class="form-input" 
+                                placeholder="Ej: Guía para Fortalecer la Mente"
+                                required
+                            />
+                        </div>
+
+                        <!-- Descripción -->
+                        <div class="form-group">
+                            <label class="form-label" for="docDescription">
+                                <i class="fas fa-align-left label-icon"></i>
+                                Descripción
+                            </label>
+                            <textarea 
+                                id="docDescription" 
+                                class="form-textarea" 
+                                rows="3"
+                                placeholder="Describe el contenido y cómo puede ayudar a otros..."
+                            ></textarea>
+                        </div>
+
+                        <!-- Categoría -->
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label" for="docCategory">
+                                    <i class="fas fa-tag label-icon"></i>
+                                    Categoría
+                                    <span class="label-required">*</span>
+                                </label>
+                                <select id="docCategory" class="form-select" required>
+                                    <option value="">Seleccionar...</option>
+                                    <option value="guia">Guías y Manuales</option>
+                                    <option value="educacion">Educación</option>
+                                    <option value="bienestar">Bienestar y Salud</option>
+                                    <option value="relato">Relatos Inspiradores</option>
+                                    <option value="poesia">Poesía</option>
+                                    <option value="ensayo">Ensayos</option>
+                                    <option value="investigacion">Investigación</option>
+                                    <option value="otros">Otros</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="docTags">
+                                    <i class="fas fa-hashtag label-icon"></i>
+                                    Etiquetas
+                                </label>
+                                <input 
+                                    type="text" 
+                                    id="docTags" 
+                                    class="form-input" 
+                                    placeholder="crecimiento, mente, fortaleza (separar con comas)"
+                                />
+                            </div>
+                        </div>
+
+                        <!-- Visibilidad -->
+                        <div class="form-group">
+                            <label class="form-label" for="docVisibility">
+                                <i class="fas fa-eye label-icon"></i>
+                                Visibilidad
+                            </label>
+                            <select id="docVisibility" class="form-select">
+                                <option value="public">Público (todos pueden verlo)</option>
+                                <option value="registered">Solo usuarios registrados</option>
+                            </select>
+                        </div>
+
+                        <!-- Área de subida de archivo -->
+                        <div class="form-group">
+                            <label class="form-label">
+                                <i class="fas fa-file-pdf label-icon"></i>
+                                Archivo
+                                <span class="label-required">*</span>
+                            </label>
+                            <div class="upload-dropzone" id="dropzone">
+                                <input type="file" id="fileInput" class="upload-input" accept=".pdf,.doc,.docx,.txt,.jpg,.jpeg,.png" />
+                                <div class="upload-dropzone-content">
+                                    <i class="fas fa-cloud-upload-alt dropzone-icon"></i>
+                                    <p class="dropzone-text">Arrastra y suelta tu archivo aquí</p>
+                                    <span class="dropzone-hint">o haz clic para seleccionar</span>
+                                    <span class="dropzone-formats">Formatos: PDF, DOC, DOCX, TXT, JPG, PNG</span>
+                                </div>
+                                <div class="upload-preview" id="uploadPreview" style="display:none;">
+                                    <i class="fas fa-file-alt preview-icon"></i>
+                                    <span class="preview-name" id="previewName">archivo.pdf</span>
+                                    <span class="preview-size" id="previewSize">2.4 MB</span>
+                                    <button type="button" class="preview-remove" id="removeFileBtn">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <span class="form-help">Máximo 20MB. Solo contenido educativo y constructivo.</span>
+                        </div>
+
+                        <!-- Mensaje de compromiso -->
+                        <div class="upload-commitment">
+                            <i class="fas fa-shield-alt"></i>
+                            <div>
+                                <strong>Compromiso con la comunidad</strong>
+                                <p>Los recursos compartidos deben promover el crecimiento personal, el aprendizaje y el bienestar. Contenido inapropiado será eliminado.</p>
+                            </div>
+                        </div>
+
+                        <!-- Botones -->
+                        <div class="form-actions">
+                            <button type="reset" class="btn btn-ghost">
+                                <i class="fas fa-undo"></i>
+                                LIMPIAR
+                            </button>
+                            <button type="submit" class="btn btn-primary" id="submitDocBtn">
+                                <i class="fas fa-upload"></i>
+                                COMPARTIR RECURSO
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Lista de recursos recientes -->
+            <div class="upload-card documents-list">
+                <div class="upload-card-header">
+                    <h3 class="upload-card-title">
+                        <i class="fas fa-book-open"></i>
+                        RECURSOS RECIENTES
+                    </h3>
+                    <button class="btn btn-ghost btn-sm" id="viewAllDocsBtn">
+                        VER TODOS <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+                <div class="upload-card-body">
+                    <div class="documents-grid" id="documentsGrid">
+                        <!-- Renderizado por JS -->
+                        <div class="document-empty">
+                            <i class="fas fa-book"></i>
+                            <p>No hay recursos disponibles</p>
+                            <span>Sé el primero en compartir conocimiento valioso</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="upload-footer">
+            <div class="motto-divider">
+                <i class="fas fa-grip-lines"></i>
+                <div class="motto-line"></div>
+                <i class="fas fa-grip-lines"></i>
+            </div>
+            <p class="upload-motto">
+                EL <span class="text-primary">CONOCIMIENTO</span> ES EL ARMA MÁS <span class="text-secondary">PODEROSA</span>
+            </p>
+        </footer>
+    </div>
+</section>

@@ -1,0 +1,292 @@
+<!-- stats.html - Estadísticas del Sistema -->
+<section class="admin-stats-section">
+    <!-- Espada de fondo -->
+    <div class="sword-bg">
+        <img class="sword-image" src="/assets/img/espada.svg" alt="" loading="lazy" />
+    </div>
+
+    <div class="admin-stats-container">
+        <!-- Header -->
+        <header class="admin-stats-header">
+            <div class="admin-stats-header-left">
+                <div class="admin-stats-badge">
+                    <i class="fas fa-chart-line"></i>
+                    ESTADÍSTICAS DEL SISTEMA
+                </div>
+                <h1 class="admin-stats-title">
+                    MÉTRICAS DE LA <span>VANGUARDIA</span>
+                </h1>
+                <p class="admin-stats-subtitle">
+                    Visualiza el crecimiento y actividad de tus guerreros en tiempo real
+                </p>
+            </div>
+            <div class="admin-stats-header-right">
+                <button class="btn btn-secondary btn-sm" id="refreshStatsBtn">
+                    <i class="fas fa-sync-alt"></i>
+                    ACTUALIZAR
+                </button>
+                <span class="admin-stats-last-update" id="lastUpdateTime">Última actualización: --:--</span>
+            </div>
+        </header>
+
+        <!-- Stats Overview Grid -->
+        <div class="admin-stats-overview-grid">
+            <div class="admin-stats-overview-card">
+                <div class="admin-stats-overview-icon users">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="admin-stats-overview-info">
+                    <span class="admin-stats-overview-label">Total Usuarios</span>
+                    <span class="admin-stats-overview-value" id="statsTotalUsers">0</span>
+                </div>
+                <div class="admin-stats-overview-change positive">
+                    <i class="fas fa-arrow-up"></i>
+                    <span id="userGrowth">+0%</span>
+                </div>
+            </div>
+
+            <div class="admin-stats-overview-card">
+                <div class="admin-stats-overview-icon active">
+                    <i class="fas fa-user-check"></i>
+                </div>
+                <div class="admin-stats-overview-info">
+                    <span class="admin-stats-overview-label">Usuarios Activos</span>
+                    <span class="admin-stats-overview-value" id="statsActiveUsers">0</span>
+                </div>
+                <div class="admin-stats-overview-change positive">
+                    <i class="fas fa-arrow-up"></i>
+                    <span id="activeGrowth">+0%</span>
+                </div>
+            </div>
+
+            <div class="admin-stats-overview-card">
+                <div class="admin-stats-overview-icon battles">
+                    <i class="fas fa-swords"></i>
+                </div>
+                <div class="admin-stats-overview-info">
+                    <span class="admin-stats-overview-label">Batallas Totales</span>
+                    <span class="admin-stats-overview-value" id="statsTotalBattles">0</span>
+                </div>
+                <div class="admin-stats-overview-change positive">
+                    <i class="fas fa-arrow-up"></i>
+                    <span id="battleGrowth">+0%</span>
+                </div>
+            </div>
+
+            <div class="admin-stats-overview-card">
+                <div class="admin-stats-overview-icon goals">
+                    <i class="fas fa-bullseye"></i>
+                </div>
+                <div class="admin-stats-overview-info">
+                    <span class="admin-stats-overview-label">Metas Completadas</span>
+                    <span class="admin-stats-overview-value" id="statsCompletedGoals">0</span>
+                </div>
+                <div class="admin-stats-overview-change positive">
+                    <i class="fas fa-arrow-up"></i>
+                    <span id="goalGrowth">+0%</span>
+                </div>
+            </div>
+
+            <div class="admin-stats-overview-card">
+                <div class="admin-stats-overview-icon diary">
+                    <i class="fas fa-book"></i>
+                </div>
+                <div class="admin-stats-overview-info">
+                    <span class="admin-stats-overview-label">Entradas de Diario</span>
+                    <span class="admin-stats-overview-value" id="statsDiaryEntries">0</span>
+                </div>
+                <div class="admin-stats-overview-change positive">
+                    <i class="fas fa-arrow-up"></i>
+                    <span id="diaryGrowth">+0%</span>
+                </div>
+            </div>
+
+            <div class="admin-stats-overview-card">
+                <div class="admin-stats-overview-icon admins">
+                    <i class="fas fa-user-shield"></i>
+                </div>
+                <div class="admin-stats-overview-info">
+                    <span class="admin-stats-overview-label">Administradores</span>
+                    <span class="admin-stats-overview-value" id="statsAdmins">0</span>
+                </div>
+                <div class="admin-stats-overview-change neutral">
+                    <i class="fas fa-minus"></i>
+                    <span>0%</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts Row -->
+        <div class="admin-stats-charts-row">
+            <!-- User Growth Chart -->
+            <div class="admin-stats-card">
+                <div class="admin-stats-card-header">
+                    <h3 class="admin-stats-card-title">
+                        <i class="fas fa-user-plus"></i>
+                        CRECIMIENTO DE USUARIOS
+                    </h3>
+                    <span class="admin-stats-card-period">Últimos 7 días</span>
+                </div>
+                <div class="admin-stats-card-body">
+                    <div class="admin-stats-chart-container">
+                        <div class="admin-stats-chart-bars" id="userGrowthBars">
+                            <!-- Barras generadas por JS -->
+                        </div>
+                    </div>
+                    <div class="admin-stats-chart-labels" id="userGrowthLabels">
+                        <!-- Labels generadas por JS -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Activity Chart -->
+            <div class="admin-stats-card">
+                <div class="admin-stats-card-header">
+                    <h3 class="admin-stats-card-title">
+                        <i class="fas fa-activity"></i>
+                        ACTIVIDAD DIARIA
+                    </h3>
+                    <span class="admin-stats-card-period">Últimos 7 días</span>
+                </div>
+                <div class="admin-stats-card-body">
+                    <div class="admin-stats-chart-container">
+                        <div class="admin-stats-chart-bars" id="activityBars">
+                            <!-- Barras generadas por JS -->
+                        </div>
+                    </div>
+                    <div class="admin-stats-chart-labels" id="activityLabels">
+                        <!-- Labels generadas por JS -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Detailed Stats Row -->
+        <div class="admin-stats-detailed-row">
+            <!-- User Distribution -->
+            <div class="admin-stats-card">
+                <div class="admin-stats-card-header">
+                    <h3 class="admin-stats-card-title">
+                        <i class="fas fa-chart-pie"></i>
+                        DISTRIBUCIÓN DE USUARIOS
+                    </h3>
+                </div>
+                <div class="admin-stats-card-body">
+                    <div class="admin-stats-distribution">
+                        <div class="admin-stats-distribution-item">
+                            <div class="admin-stats-distribution-label">
+                                <span class="admin-stats-distribution-dot active"></span>
+                                Activos
+                            </div>
+                            <div class="admin-stats-distribution-bar">
+                                <div class="admin-stats-distribution-fill active" id="activeDistribution" style="width:0%;"></div>
+                            </div>
+                            <span class="admin-stats-distribution-value" id="activePercent">0%</span>
+                        </div>
+                        <div class="admin-stats-distribution-item">
+                            <div class="admin-stats-distribution-label">
+                                <span class="admin-stats-distribution-dot inactive"></span>
+                                Inactivos
+                            </div>
+                            <div class="admin-stats-distribution-bar">
+                                <div class="admin-stats-distribution-fill inactive" id="inactiveDistribution" style="width:0%;"></div>
+                            </div>
+                            <span class="admin-stats-distribution-value" id="inactivePercent">0%</span>
+                        </div>
+                        <div class="admin-stats-distribution-item">
+                            <div class="admin-stats-distribution-label">
+                                <span class="admin-stats-distribution-dot admin"></span>
+                                Administradores
+                            </div>
+                            <div class="admin-stats-distribution-bar">
+                                <div class="admin-stats-distribution-fill admin" id="adminDistribution" style="width:0%;"></div>
+                            </div>
+                            <span class="admin-stats-distribution-value" id="adminPercent">0%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Engagement Metrics -->
+            <div class="admin-stats-card">
+                <div class="admin-stats-card-header">
+                    <h3 class="admin-stats-card-title">
+                        <i class="fas fa-heart"></i>
+                        MÉTRICAS DE ENGAGEMENT
+                    </h3>
+                </div>
+                <div class="admin-stats-card-body">
+                    <div class="admin-stats-metrics">
+                        <div class="admin-stats-metric">
+                            <div class="admin-stats-metric-icon">
+                                <i class="fas fa-fire"></i>
+                            </div>
+                            <div class="admin-stats-metric-info">
+                                <span class="admin-stats-metric-label">Tasa de Retención</span>
+                                <span class="admin-stats-metric-value" id="retentionRate">0%</span>
+                            </div>
+                        </div>
+                        <div class="admin-stats-metric">
+                            <div class="admin-stats-metric-icon">
+                                <i class="fas fa-bullseye"></i>
+                            </div>
+                            <div class="admin-stats-metric-info">
+                                <span class="admin-stats-metric-label">Completitud de Metas</span>
+                                <span class="admin-stats-metric-value" id="goalCompletionRate">0%</span>
+                            </div>
+                        </div>
+                        <div class="admin-stats-metric">
+                            <div class="admin-stats-metric-icon">
+                                <i class="fas fa-trophy"></i>
+                            </div>
+                            <div class="admin-stats-metric-info">
+                                <span class="admin-stats-metric-label">Éxito en Batallas</span>
+                                <span class="admin-stats-metric-value" id="battleSuccessRate">0%</span>
+                            </div>
+                        </div>
+                        <div class="admin-stats-metric">
+                            <div class="admin-stats-metric-icon">
+                                <i class="fas fa-book"></i>
+                            </div>
+                            <div class="admin-stats-metric-info">
+                                <span class="admin-stats-metric-label">Promedio de Diario</span>
+                                <span class="admin-stats-metric-value" id="avgDiaryEntries">0</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Activity -->
+        <div class="admin-stats-card admin-stats-recent">
+            <div class="admin-stats-card-header">
+                <h3 class="admin-stats-card-title">
+                    <i class="fas fa-clock"></i>
+                    ACTIVIDAD RECIENTE
+                </h3>
+                <span class="admin-stats-card-period">Últimas 24 horas</span>
+            </div>
+            <div class="admin-stats-card-body">
+                <div class="admin-stats-recent-list" id="recentActivity">
+                    <div class="admin-stats-recent-item empty">
+                        <i class="fas fa-inbox"></i>
+                        <span>No hay actividad reciente</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="admin-stats-footer">
+            <div class="motto-divider">
+                <i class="fas fa-grip-lines"></i>
+                <div class="motto-line"></div>
+                <i class="fas fa-grip-lines"></i>
+            </div>
+            <p class="admin-stats-motto">
+                DATOS QUE <span class="text-primary">IMPULSAN</span> LA <span class="text-secondary">VICTORIA</span>
+            </p>
+        </footer>
+    </div>
+</section>

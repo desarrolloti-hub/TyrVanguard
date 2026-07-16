@@ -27,6 +27,9 @@
         "oAuthBrandDisplayName": "TYRVANGUARD",
         "supportEmail": "support@undefined.firebaseapp.com"
       }
+    },
+    "emailVerification": {
+      "callbackUri": "https://tyr-vanguard.web.app/vericacionCorreo"
     }
   }
 }

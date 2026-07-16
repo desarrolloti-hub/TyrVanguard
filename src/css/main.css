@@ -83,6 +83,28 @@
 @import url('./components/admin/footerAdmin.css');
 
 
-/* firebase */
-@import url('./shared/firebase/verifyEmail/verifyEmail.css')
+/* stats*/
+@import url('./pages/admin/stats/stats.css');
 
+/* firebase */
+@import url('./shared/firebase/verifyEmail/verifyEmail.css');
+
+/* administrar usuarios */
+@import url('./pages/admin/manageUsers/manageUsers.css');
+
+/* subir documenos */
+@import url('./pages/admin/documents/uploadDocuments.css');
+
+/* leer documentos admin */
+@import url('./pages/admin/documents/readDocuments.css');
+
+/* documentos */
+@import url('./pages/user/documents/readDocuments.css');
+
+/* crear actividad */
+@import url('./pages/admin/activities/createActivities.css');
+/* leer actividad */
+@import url('./pages/admin/activities/readActivities.css');
+
+/* leer actividades user */
+@import url('./pages/user/activities/readActivities.css');

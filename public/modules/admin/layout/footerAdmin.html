@@ -1,19 +1,31 @@
 <!-- footerAdmin.html (partial) - Bottom Navigation para Administradores -->
 <nav class="bottom-nav-admin" id="bottomNavAdmin">
-    <!-- Dashboard (Active) -->
+    <!-- Dashboard -->
     <a class="nav-item active" href="/homeAdmin" data-link data-nav="dashboard">
         <span class="material-symbols-outlined">dashboard</span>
         <span class="nav-label">Dashboard</span>
     </a>
     
     <!-- Usuarios -->
-    <a class="nav-item" href="/homeAdmin#users" data-link data-nav="users">
+    <a class="nav-item" href="/administrarUsuarios" data-link data-nav="users">
         <span class="material-symbols-outlined">groups</span>
         <span class="nav-label">Usuarios</span>
     </a>
     
+    <!-- 🆕 Administrar Documentos -->
+    <a class="nav-item" href="/administrarDocumentos" data-link data-nav="documents">
+        <span class="material-symbols-outlined">description</span>
+        <span class="nav-label">Documentos</span>
+    </a>
+    
+    <!-- 🆕 Gestionar Actividades -->
+    <a class="nav-item" href="/gestionActividades" data-link data-nav="activities">
+        <span class="material-symbols-outlined">fitness_center</span>
+        <span class="nav-label">Actividades</span>
+    </a>
+    
     <!-- Estadísticas -->
-    <a class="nav-item" href="/homeAdmin#stats" data-link data-nav="stats">
+    <a class="nav-item" href="/estadisticas" data-link data-nav="stats">
         <span class="material-symbols-outlined">show_chart</span>
         <span class="nav-label">Stats</span>
     </a>

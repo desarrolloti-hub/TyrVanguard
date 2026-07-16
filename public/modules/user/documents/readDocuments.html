@@ -1,0 +1,86 @@
+<!-- readDocuments.html - Visualización de Documentos (Usuario) -->
+<section class="read-docs-section">
+    <!-- Espada de fondo -->
+    <div class="sword-bg subtle">
+        <img class="sword-image" src="/assets/img/espada.svg" alt="" loading="lazy" />
+    </div>
+
+    <div class="read-docs-container">
+        <!-- Header -->
+        <header class="read-docs-header">
+            <div class="read-docs-header-left">
+                <div class="read-docs-badge">
+                    <i class="fas fa-book-open"></i>
+                    BIBLIOTECA DE CONOCIMIENTO
+                </div>
+                <h1 class="read-docs-title">
+                    DOCUMENTOS <span>DISPONIBLES</span>
+                </h1>
+                <p class="read-docs-subtitle">
+                    Explora recursos educativos, guías y contenido que fortalecerá tu mente y espíritu
+                </p>
+            </div>
+            <div class="read-docs-header-right">
+                <button class="btn btn-secondary btn-sm" id="refreshDocsBtn">
+                    <i class="fas fa-sync-alt"></i>
+                    ACTUALIZAR
+                </button>
+            </div>
+        </header>
+
+        <!-- Filtros y búsqueda -->
+        <div class="read-docs-filters">
+            <div class="read-docs-search">
+                <i class="fas fa-search search-icon"></i>
+                <input 
+                    type="text" 
+                    class="read-docs-search-input" 
+                    id="docsSearchInput" 
+                    placeholder="Buscar documento..."
+                />
+            </div>
+            <div class="read-docs-filter-group">
+                <select class="read-docs-filter-select" id="categoryFilter">
+                    <option value="all">Todas las categorías</option>
+                    <option value="guia">📚 Guías y Manuales</option>
+                    <option value="educacion">🎓 Educación</option>
+                    <option value="bienestar">🧘 Bienestar y Salud</option>
+                    <option value="relato">📖 Relatos Inspiradores</option>
+                    <option value="poesia">✍️ Poesía</option>
+                    <option value="ensayo">📝 Ensayos</option>
+                    <option value="investigacion">🔬 Investigación</option>
+                    <option value="otros">⭐ Otros</option>
+                </select>
+                <select class="read-docs-filter-select" id="typeFilter">
+                    <option value="all">Todos los formatos</option>
+                    <option value="pdf">📄 PDF</option>
+                    <option value="doc">📝 Word</option>
+                    <option value="txt">📃 TXT</option>
+                    <option value="image">🖼️ Imagen</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Grid de documentos -->
+        <div class="read-docs-grid" id="docsGrid">
+            <!-- Renderizado por JS -->
+            <div class="doc-empty">
+                <i class="fas fa-book"></i>
+                <p>No hay documentos disponibles</p>
+                <span>Vuelve más tarde para encontrar nuevos recursos</span>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="read-docs-footer">
+            <div class="motto-divider">
+                <i class="fas fa-grip-lines"></i>
+                <div class="motto-line"></div>
+                <i class="fas fa-grip-lines"></i>
+            </div>
+            <p class="read-docs-motto">
+                EL <span class="text-primary">CONOCIMIENTO</span> ES EL ARMA MÁS <span class="text-secondary">PODEROSA</span>
+            </p>
+        </footer>
+    </div>
+</section>

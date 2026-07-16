@@ -12,7 +12,15 @@ import { battleCreateController } from '../modules/user/battles/create/createBat
 import { readGoalsController } from '../modules/user/goals/read/readGoalsController.js';
 import { createGoalController } from '../modules/user/goals/create/createGoalsController.js';
 import { homeAdminController } from '../modules/admin/home/homeAdminController.js';
-
+import { statsController } from '../modules/admin/stats/statsController.js';
+import { verifyEmailController } from '../modules/shared/firebase/verifyEmail/verifyEmailController.js';
+import { manageUsersController } from '../modules/admin/manageUsers/manageUsersController.js';
+import { uploadDocumentsController } from '../modules/admin/documents/uploadDocumentsController.js';
+import { createActivityController } from '../modules/admin/activities/createActivitiesController.js';
+import { manageActivitiesController } from '../modules/admin/activities/readActivitiesController.js';
+import { readActivitiesController } from '../modules/user/activities/readActivitiesController.js';
+import { initReadDocumentsAdmin } from '../modules/admin/documents/readDocumentsController.js';
+import { initReadDocuments } from '../modules/user/documents/readDocumentsController.js';
 
 
 // ✅ Función síncrona para obtener la ruta del home
@@ -158,9 +166,65 @@ export const routes = {
   
     },
 
+    //stats
+      "/estadisticas": {
+        view: "/modules/admin/stats/stats.html",
+        controller: statsController,
+  
+    },
+
+    // administrador de usuarios
+      "/administrarUsuarios": {
+        view: "/modules/admin/manageUsers/manageUsers.html",
+        controller: manageUsersController,
+    },
+
+    //documentos
+      "/subirDocumentos": {
+        view: "/modules/admin/documents/uploadDocuments.html",
+        controller: uploadDocumentsController,
+      },
+
+    // administrar documentos
+
+    "/administrarDocumentos": {
+        view: "/modules/admin/documents/readDocuments.html",
+        controller: initReadDocumentsAdmin,
+      },
+    
+    //documentos user
+    "/documentos": {
+        view: "/modules/user/documents/readDocuments.html",
+        controller: initReadDocuments, // Aquí deberías asignar el controlador correspondiente si lo tienes
+    }, 
+
+    // crear actividad
+    "/crearActividad": {
+        view: "/modules/admin/activities/createActivities.html",
+        controller: createActivityController,
+    },
+
+    // leer actividades
+    "/gestionActividades": {
+        view: "/modules/admin/activities/readActivities.html",
+        controller: manageActivitiesController, // Aquí deberías asignar el controlador correspondiente si lo tienes
+    },
+
+
+    // leer actividades user
+    "/actividades": {
+        view: "/modules/user/activities/readActivities.html",
+        controller: readActivitiesController, // Aquí deberías asignar el controlador correspondiente si lo tienes
+    },
 
 
 
+    //homeAdmiverificar correo
+      "/vericacionCorreo": {
+        view: "/modules/shared/firebase/verifyEmail/verifyEmail.html",
+        controller: verifyEmailController,
+  
+    },
     // 404
     "/404": {
         view: "/modules/shared/errors/404.html",

@@ -1,0 +1,114 @@
+<!-- manageActivities.html - Gestión de Actividades (Admin) -->
+<section class="manage-activities-section">
+    <!-- Espada de fondo -->
+    <div class="sword-bg subtle">
+        <img class="sword-image" src="/assets/img/espada.svg" alt="" loading="lazy" />
+    </div>
+
+    <div class="manage-activities-container">
+        <!-- Header -->
+        <header class="manage-activities-header">
+            <div class="manage-activities-header-left">
+                <div class="manage-activities-badge">
+                    <i class="fas fa-running"></i>
+                    ADMINISTRACIÓN DE ACTIVIDADES
+                </div>
+                <h1 class="manage-activities-title">
+                    GESTIÓN DE <span>ACTIVIDADES</span>
+                </h1>
+                <p class="manage-activities-subtitle">
+                    Administra todas las actividades distractoras de la Vanguardia
+                </p>
+            </div>
+            <div class="manage-activities-header-right">
+                <a href="/crearActividad" data-link class="btn btn-primary btn-sm">
+                    <i class="fas fa-plus"></i>
+                    NUEVA ACTIVIDAD
+                </a>
+                <button class="btn btn-secondary btn-sm" id="refreshActivitiesBtn">
+                    <i class="fas fa-sync-alt"></i>
+                    ACTUALIZAR
+                </button>
+            </div>
+        </header>
+
+        <!-- Filtros y búsqueda -->
+        <div class="manage-activities-filters">
+            <div class="manage-activities-search">
+                <i class="fas fa-search search-icon"></i>
+                <input 
+                    type="text" 
+                    class="manage-activities-search-input" 
+                    id="activitiesSearchInput" 
+                    placeholder="Buscar actividad..."
+                />
+            </div>
+            <div class="manage-activities-filter-group">
+                <select class="manage-activities-filter-select" id="categoryFilter">
+                    <option value="all">Todas las categorías</option>
+                    <option value="deporte">🏃 Deporte</option>
+                    <option value="creatividad">🎨 Creatividad</option>
+                    <option value="relajacion">🧘 Relajación</option>
+                    <option value="social">👥 Social</option>
+                    <option value="aprendizaje">📚 Aprendizaje</option>
+                    <option value="domestica">🏠 Doméstica</option>
+                    <option value="juego">🎮 Juego</option>
+                    <option value="otros">⭐ Otros</option>
+                </select>
+                <select class="manage-activities-filter-select" id="statusFilter">
+                    <option value="all">Todos los estados</option>
+                    <option value="active">✅ Activas</option>
+                    <option value="inactive">⛔ Inactivas</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Tabla de actividades -->
+        <div class="manage-activities-card">
+            <div class="manage-activities-card-body">
+                <div class="manage-activities-table-wrapper">
+                    <table class="manage-activities-table">
+                        <thead>
+                            <tr>
+                                <th>ACTIVIDAD</th>
+                                <th>CATEGORÍA</th>
+                                <th>DIFICULTAD</th>
+                                <th>DURACIÓN</th>
+                                <th>COMPLETADAS</th>
+                                <th>ESTADO</th>
+                                <th>ACCIONES</th>
+                            </tr>
+                        </thead>
+                        <tbody id="activitiesTableBody">
+                            <!-- Renderizado por JS -->
+                        </tbody>
+                    </table>
+                </div>
+                <div class="manage-activities-table-footer">
+                    <span class="manage-activities-table-info" id="activitiesTableInfo">Mostrando 0 de 0 actividades</span>
+                    <div class="manage-activities-pagination">
+                        <button class="btn btn-ghost btn-sm" id="prevPage" disabled>
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <span class="manage-activities-page-info" id="pageInfo">1 / 1</span>
+                        <button class="btn btn-ghost btn-sm" id="nextPage" disabled>
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="manage-activities-footer">
+            <div class="motto-divider">
+                <i class="fas fa-grip-lines"></i>
+                <div class="motto-line"></div>
+                <i class="fas fa-grip-lines"></i>
+            </div>
+            <p class="manage-activities-motto">
+                FORJANDO <span class="text-primary">DISCIPLINA</span> — UNA ACTIVIDAD A LA <span class="text-secondary">VEZ</span>
+            </p>
+        </footer>
+    </div>
+</section>

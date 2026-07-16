@@ -1,0 +1,122 @@
+<!-- readDocumentsAdmin.html - Gestión de Documentos (Admin) -->
+<section class="manage-documents-section">
+    <!-- Espada de fondo -->
+    <div class="sword-bg subtle">
+        <img class="sword-image" src="/assets/img/espada.svg" alt="" loading="lazy" />
+    </div>
+
+    <div class="manage-documents-container">
+        <!-- Header -->
+        <header class="manage-documents-header">
+            <div class="manage-documents-header-left">
+                <div class="manage-documents-badge">
+                    <i class="fas fa-file-alt"></i>
+                    ADMINISTRACIÓN DE DOCUMENTOS
+                </div>
+                <h1 class="manage-documents-title">
+                    GESTIÓN DE <span>DOCUMENTOS</span>
+                </h1>
+                <p class="manage-documents-subtitle">
+                    Administra todos los recursos educativos y documentos de la Vanguardia
+                </p>
+            </div>
+            <div class="manage-documents-header-right">
+                <a href="/subirDocumentos" data-link class="btn btn-primary btn-sm">
+                    <i class="fas fa-plus"></i>
+                    NUEVO DOCUMENTO
+                </a>
+                <button class="btn btn-secondary btn-sm" id="refreshDocsBtn">
+                    <i class="fas fa-sync-alt"></i>
+                    ACTUALIZAR
+                </button>
+            </div>
+        </header>
+
+        <!-- Filtros y búsqueda -->
+        <div class="manage-documents-filters">
+            <div class="manage-documents-search">
+                <i class="fas fa-search search-icon"></i>
+                <input 
+                    type="text" 
+                    class="manage-documents-search-input" 
+                    id="documentsSearchInput" 
+                    placeholder="Buscar documento..."
+                />
+            </div>
+            <div class="manage-documents-filter-group">
+                <select class="manage-documents-filter-select" id="categoryFilter">
+                    <option value="all">Todas las categorías</option>
+                    <option value="guia">📚 Guías y Manuales</option>
+                    <option value="educacion">🎓 Educación</option>
+                    <option value="bienestar">🧘 Bienestar y Salud</option>
+                    <option value="relato">📖 Relatos Inspiradores</option>
+                    <option value="poesia">✍️ Poesía</option>
+                    <option value="ensayo">📝 Ensayos</option>
+                    <option value="investigacion">🔬 Investigación</option>
+                    <option value="otros">⭐ Otros</option>
+                </select>
+                <select class="manage-documents-filter-select" id="visibilityFilter">
+                    <option value="all">Todas las visibilidades</option>
+                    <option value="public">🌍 Públicos</option>
+                    <option value="registered">🔒 Registrados</option>
+                </select>
+                <select class="manage-documents-filter-select" id="typeFilter">
+                    <option value="all">Todos los formatos</option>
+                    <option value="pdf">📄 PDF</option>
+                    <option value="doc">📝 Word</option>
+                    <option value="docx">📝 Word</option>
+                    <option value="txt">📃 TXT</option>
+                    <option value="image">🖼️ Imagen</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Tabla de documentos -->
+        <div class="manage-documents-card">
+            <div class="manage-documents-card-body">
+                <div class="manage-documents-table-wrapper">
+                    <table class="manage-documents-table">
+                        <thead>
+                            <tr>
+                                <th>DOCUMENTO</th>
+                                <th>CATEGORÍA</th>
+                                <th>FORMATO</th>
+                                <th>TAMAÑO</th>
+                                <th>VISIBILIDAD</th>
+                                <th>SUBIÓ</th>
+                                <th>ACCIONES</th>
+                            </tr>
+                        </thead>
+                        <tbody id="documentsTableBody">
+                            <!-- Renderizado por JS -->
+                        </tbody>
+                    </table>
+                </div>
+                <div class="manage-documents-table-footer">
+                    <span class="manage-documents-table-info" id="documentsTableInfo">Mostrando 0 de 0 documentos</span>
+                    <div class="manage-documents-pagination">
+                        <button class="btn btn-ghost btn-sm" id="prevPage" disabled>
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <span class="manage-documents-page-info" id="pageInfo">1 / 1</span>
+                        <button class="btn btn-ghost btn-sm" id="nextPage" disabled>
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="manage-documents-footer">
+            <div class="motto-divider">
+                <i class="fas fa-grip-lines"></i>
+                <div class="motto-line"></div>
+                <i class="fas fa-grip-lines"></i>
+            </div>
+            <p class="manage-documents-motto">
+                EL <span class="text-primary">CONOCIMIENTO</span> ES EL ARMA MÁS <span class="text-secondary">PODEROSA</span>
+            </p>
+        </footer>
+    </div>
+</section>
